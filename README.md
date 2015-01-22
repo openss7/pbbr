@@ -200,3 +200,10 @@ The Linux kernel native implementation consists of the following elements:
   The **`beb`** driver is similar to a **`br`** driver.  The major difference
   in setting up a **`beb`** bridge, is that the provider and customer ports must
   be distinguished when enslaving them.
+
+6. Possibly an implementation of a **`pbb-te`** bridge.
+
+  The major difference between a **`beb`** bridge and a **`pbb-te`** bridge is
+  the later provides S-TAG aware bridging between separate provider backbone
+  networks.  Because a **`pbb-te`** bridge is not really necessary to achieve
+  virtualization, it will likely be skipped for now.
