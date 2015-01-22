@@ -19,7 +19,7 @@ The primary uses are as follows:
 2. Using QEMU/KVM for virtualization of network interface devices.
 
   In the virtualization role, the bridge acts as a PBB-BEB bridge that enslaves
-  Host network interfaces as provider ports and TAP devices for **`virtio`** as
+  host network interfaces as provider ports and TAP devices for **`virtio`** as
   customer ports.  This enables automatic full-mesh resilient network
   connections for virtualized networks in the cloud.  My primary purpose is for
   enabling resilient networking for NFVI.
@@ -50,7 +50,7 @@ back holes or significant network degradation dues to broadcast/multicast loops.
 SPB (Shortest Path Bridging) using the IS-IS link-state protocol is far more
 resilient to network component and path outages than is STP and MSTP, and
 exhibits faster convergence than STP.  When **`tun/tap`** ports are utilized on a
-BEB bridge in the Host system, there is no longer a need for "learning"
+BEB bridge in the host system, there is no longer a need for "learning"
 customer MACs on these **`virtio`** ports.  This means that network convergence is
 faster, for both startup and shutdown of **`virtio`** NIC instances.
 
@@ -73,14 +73,15 @@ clients (using service identifier) without complex configuration.
 
 Some approaches using Open vSwitch allow for migration of VM images between
 hosts.  However, they require complex coordination between vSwitch instances and
-do no exhibit fast convergence.
+do not exhibit fast convergence.
 
-Utilizing the IS-IS SPB protocol and short-circuiting "learning" at the customer
-port, it is possible to achieve migration change-over times consistent with the
-underlying convergence of the SPB protocol.  This can easily achieve migration
-times of less than 100 milliseconds, or faster on high performance hosts.  It is
-also possible to have VNFs able to perform C-MAC take-over that will also
-converge in the same interval and without disrupting layer-3 traffic.
+Utilizing the IS-IS SPBM protocol and short-circuiting "learning" at the
+customer port, it is possible to achieve migration change-over times consistent
+with the underlying convergence of the SPB protocol.  This can easily achieve
+migration times of less than 100 milliseconds at scale, or faster on high
+performance hosts.  It is also possible to have VNFs able to perform C-MAC
+take-over that will also converge in the same interval and with minimal
+disruption of layer-3 traffic.
 
 Utilizing a **`tun/tap`** **`virtio`** interface to a PBB backbone edge bridge
 internal to the Linux kernel precludes the need for "learning" of customer MACs.
@@ -105,10 +106,10 @@ into the IS-IS SPBM protocol or by utilizing C-LAN approaches such as LLDP.
 ### Port Aggregation
 
 Port aggregation utilizing the **`macvtap`** approach relies on coordination
-between the Host and external bridges.  Port aggregation with GRE and VxLAN
+between the host and external bridges.  Port aggregation with GRE and VxLAN
 approaches is complex and inefficient.
 
-Utilizing SPBM and ECF at the BEB in the Host achieves port aggregation and load
+Utilizing SPBM and ECF at the BEB in the host achieves port aggregation and load
 balancing that is completely transparent to non-participating backbone bridges.
 
 ### Full Mesh
@@ -181,12 +182,16 @@ The Linux kernel native implementation consists of the following elements:
   The **`pbbclan`** driver is similar to the **`macvlan`** driver in that it
   combines a virtual interface with a bridge over a customer port lower device.
   In fact, it may be possible to simply modify the **`macvlan`** driver for
-  direct use over C-VLAN ports.
+  direct use over C-VLAN ports.  The initial implementation of the **`pbbclan`**
+  driver will be modelled after the **`macvlan`** driver in an attempt to
+  integrate the two in the end.
 
 4. An implementation of a **`pbbctap`** driver.
 
   The **`pcbctap`** driver is similar to the **`macvtap`** driver in that it
   combines a **`tun/tap`** interface with a bridge over a customer port lower
   device.  In fact, it may be possible to simply modify the **`macvtap`** driver
-  for direct use of C-VLAN ports.
+  for direct use of C-VLAN ports.  The initial implementation of the
+  **`pbbctap`** driver will be modelled after the **`macvtap`** driver in an
+  attempt to integrate to two in the end.
 
