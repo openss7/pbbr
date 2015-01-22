@@ -195,3 +195,8 @@ The Linux kernel native implementation consists of the following elements:
   **`pbbctap`** driver will be modelled after the **`macvtap`** driver in an
   attempt to integrate to two in the end.
 
+5. An implementation of a **`beb`** bridge driver.
+
+  The **`beb`** driver is similar to a **`br`** driver.  The major difference
+  in setting up a **`beb`** bridge, is that the provider and customer ports must
+  be distinguished when enslaving them.
