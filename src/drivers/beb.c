@@ -385,6 +385,867 @@ dl_restore_i_state(struct dl *dl)
 /* ====================================================== */
 
 /*
+ *  -------------------------------------------------------------------------
+ *
+ *  IO Controls
+ *
+ *  -------------------------------------------------------------------------
+ */
+
+static int
+beb_do_options_br(struct beb_option *p, struct br *br, int cmd)
+{
+	struct beb_opt_conf_br *c = (typeof(c)) (p + 1);
+
+	if (!br)
+		return (-ESRCH);
+	p->id = br->id;
+	if (cmd == BEB_CHA)
+		br->config = *c;
+	*c = br->config;
+	return (sizeof(*p) + sizeof(*c));
+}
+
+static int
+beb_do_options_dl(struct beb_option *p, struct dl *dl, int cmd)
+{
+	struct beb_opt_conf_dl *c = (typeof(c)) (p + 1);
+
+	if (!dl)
+		return (-ESRCH);
+	p->id = dl->id;
+	if (cmd == BEB_CHA)
+		dl->config = *c;
+	*c = dl->config;
+	return (sizeof(*p) + sizeof(*c));
+}
+
+static int
+beb_do_options_df(struct beb_option *p, struct df *df, int cmd)
+{
+	struct beb_opt_conf_df *c = (typeof(c)) (p + 1);
+
+	if (!df)
+		return (-ESRCH);
+#ifdef FIXME
+	p->id = df->id;
+#endif
+	if (cmd == BEB_CHA)
+		df->config = *c;
+	*c = df->config;
+	return (sizeof(*p) + sizeof(*c));
+}
+
+static int
+beb_do_options(mblk_t *dp, int cmd)
+{
+	struct beb_option *p = (typeof(p)) dp->b_rptr;
+	int rtn;
+
+	switch (cmd) {
+	case BEB_GET:		/* get */
+	case BEB_SET:		/* set */
+		switch (p->type) {
+		case BEB_OBJ_TYPE_BR:	/* bridge */
+			rtn = beb_do_options_br(p, br_lookup(p->id), cmd);
+			break;
+		case BEB_OBJ_TYPE_DL:	/* data link */
+			rtn = beb_do_options_br(p, dl_lookup(p->id), cmd);
+			break;
+		case BEB_OBJ_TYPE_DF:	/* defaults */
+			rtn = beb_do_options_br(p, df_lookup(p->id), cmd);
+			break;
+		default:
+			return (EINVAL);
+		}
+		if (rtn < 0)
+			return (-rtn);
+		dp->b_wptr = dp->b_rptr + rtn;
+		return (0);
+	default:
+		return (EINVAL);
+	}
+}
+
+static int
+beb_get_options(mblk_t *dp)
+{
+	return beb_do_options(dp, BEB_GET);
+}
+
+static int
+beb_set_options(mblk_t *dp)
+{
+	return beb_do_options(db, BEB_CHA);
+}
+
+static int
+beb_get_statem_br(struct beb_statem *p, struct br *br)
+{
+	struct beb_statem_br *c = (typeof(c)) (p + 1);
+
+	if (!br)
+		return (-ESRCH);
+	p->id = br->id;
+	p->flags = br->flags;
+	p->state = br->state;
+	/* TODO: add timers and stuff */
+	return (sizeof(*p) + sizeof(*c));
+}
+
+static int
+beb_get_statem_dl(struct beb_statem *p, struct dl *dl)
+{
+	struct beb_statem_dl *c = (typeof(c)) (p + 1);
+
+	if (!dl)
+		return (-ESRCH);
+	p->id = dl->id;
+	p->flags = dl->flags;
+	p->state = dl->state;
+	/* TODO: add timers and stuff */
+	return (sizeof(*p) + sizeof(*c));
+}
+
+static int
+beb_get_statem_df(struct beb_statem *p, struct df *df)
+{
+	struct beb_statem_df *c = (typeof(c)) (p + 1);
+
+	if (!df)
+		return (-ESRCH);
+	p->id = df->id;
+	p->flags = df->flags;
+	p->state = df->state;
+	/* TODO: add timers and stuff */
+	return (sizeof(*p) + sizeof(*c));
+}
+
+static int
+beb_get_statem(mblk_t *dp)
+{
+	struct beb_statem *p = (typeof(p)) dp->b_rptr;
+	int rtn;
+
+	switch (p->type) {
+	case BEB_OBJ_TYPE_BR:
+		rtn = beb_get_statem_br(p, br_lookup(p->id));
+		break;
+	case BEB_OBJ_TYPE_DL:
+		rtn = beb_get_statem_dl(p, dl_lookup(p->id));
+		break;
+	case BEB_OBJ_TYPE_DF:
+		rtn = beb_get_statem_df(p, df_lookup(p->id));
+		break;
+	default:
+		return (EINVAL);
+	}
+	if (rtn < 0)
+		return (-rtn);
+	dp->b_wptr = dp->b_rptr + rtn;
+	return (0);
+}
+
+static int
+beb_get_stats_br(struct beb_stats *p, struct br *br, bool clear)
+{
+	struct beb_stats_br *c = (typeof(c)) (p + 1);
+
+	if (!br)
+		return (-ESRCH);
+	p->id = br->id;
+	*c = br->stats;
+	if (clear)
+		bzero(&br->stats, sizeof(br->stats));
+	return (sizeof(*p) + sizeof(*c));
+}
+
+static int
+beb_get_stats_dl(struct beb_stats *p, struct dl *dl, bool clear)
+{
+	struct beb_stats_dl *c = (typeof(c)) (p + 1);
+
+	if (!dl)
+		return (-ESRCH);
+	p->id = dl->id;
+	*c = dl->stats;
+	if (clear)
+		bzero(&dl->stats, sizeof(dl->stats));
+	return (sizeof(*p) + sizeof(*c));
+}
+
+static int
+beb_get_stats_df(struct beb_stats *p, struct df *df, bool clear)
+{
+	struct beb_stats_df *c = (typeof(c)) (p + 1);
+
+	if (!df)
+		return (-ESRCH);
+	p->id = df->id;
+	*c = df->stats;
+	if (clear)
+		bzero(&df->stats, sizeof(df->stats));
+	return (sizeof(*p) + sizeof(*c));
+}
+
+static int
+beb_get_stats(mblk_t *dp, const bool clear)
+{
+	struct beb_stats *p = (typeof(p)) dp->b_rptr;
+	int rtn;
+
+	p->header = (dl_ulong) drv_hztomsec(jiffies);
+	switch (p->type) {
+	case BEB_OBJ_TYPE_BR:
+		rtn = beb_get_stats_br(p, br_lookup(p->id), clear);
+		break;
+	case BEB_OBJ_TYPE_DL:
+		rtn = beb_get_stats_dl(p, dl_lookup(p->id), clear);
+		break;
+	case BEB_OBJ_TYPE_DF:
+		rtn = beb_get_stats_df(p, df_lookup(p->id), clear);
+		break;
+	default:
+		return (EINVAL);
+	}
+	if (rtn < 0)
+		return (-rtn);
+	dp->b_wptr = dp->b_rptr + rtn;
+	return (0);
+}
+
+static int
+beb_do_notify_br(struct beb_notify *p, struct br *br, int size, int cmd)
+{
+	struct beb_notify_br *c = (typeof(c)) (p + 1);
+
+	if (!br)
+		return (-ESRCH);
+	p->id = br->id;
+	switch (cmd) {
+	case BEB_ADD:
+		br->notify.events |= c->events;
+		break;
+	case BEB_DEL:
+		br->notify.events &= ~c->events;
+		break;
+	}
+	c->events = br->notify.events;
+	return (sizeof(*p) + sizeof(*c));
+}
+
+static int
+beb_do_notify_dl(struct beb_notify *p, struct dl *dl, int size, int cmd)
+{
+	struct beb_notify_dl *c = (typeof(c)) (p + 1);
+
+	if (!dl)
+		return (-ESRCH);
+	p->id = dl->id;
+	switch (cmd) {
+	case BEB_ADD:
+		dl->notify.events |= c->events;
+		break;
+	case BEB_DEL:
+		dl->notify.events &= ~c->events;
+		break;
+	}
+	c->events = dl->notify.events;
+	return (sizeof(*p) + sizeof(*c));
+}
+
+static int
+beb_do_notify_df(struct beb_notify *p, struct df *df, int size, int cmd)
+{
+	struct beb_notify_df *c = (typeof(c)) (p + 1);
+
+	if (!df)
+		return (-ESRCH);
+	p->id = df->id;
+	switch (cmd) {
+	case BEB_ADD:
+		df->notify.events |= c->events;
+		break;
+	case BEB_DEL:
+		df->notify.events &= ~c->events;
+		break;
+	}
+	c->events = df->notify.events;
+	return (sizeof(*p) + sizeof(*c));
+}
+
+static int
+beb_do_notify(mblk_t *dp, int size, int cmd)
+{
+	struct beb_notify *p = (typeof(p)) dp->b_rptr;
+	int rtn;
+
+	switch (cmd) {
+	case BEB_GET:		/* get */
+	case BEB_ADD:		/* add */
+	case BEB_DEL:		/* del */
+		break;
+	default:
+		return (EFAULT);
+	}
+	switch (p->type) {
+	case BEB_OBJ_TYPE_BR:
+		rtn = beb_do_notify_br(p, br_lookup(p->id), size, cmd);
+		break;
+	case BEB_OBJ_TYPE_DL:
+		rtn = beb_do_notify_dl(p, dl_lookup(p->id), size, cmd);
+		break;
+	case BEB_OBJ_TYPE_DF:
+		rtn = beb_do_notify_df(p, df_lookup(p->id), size, cmd);
+		break;
+	default:
+		return (EINVAL);
+	}
+	if (rtn < 0)
+		return (-rtn);
+	dp->b_wptr = dp->b_rptr + rtn;
+	return (0);
+}
+
+static int
+beb_do_statsp_br(struct beb_stats *p, struct br *br, int cmd)
+{
+	if (!br)
+		return (-ESRCH);
+	p->id = br->id;
+	switch (cmd) {
+	case BEB_GET:		/* get */
+		*c = br->statsp;
+		break;
+	case BEB_CHA:		/* set */
+		br->statsp = *c;
+		break;
+	}
+	return (sizeof(*p) + sizeof(*c));
+}
+
+static int
+beb_do_statsp_dl(struct beb_stats *p, struct dl *dl, int cmd)
+{
+	if (!dl)
+		return (-ESRCH);
+	p->id = dl->id;
+	switch (cmd) {
+	case BEB_GET:		/* get */
+		*c = dl->statsp;
+		break;
+	case BEB_CHA:		/* set */
+		dl->statsp = *c;
+		break;
+	}
+	return (sizeof(*p) + sizeof(*c));
+}
+
+static int
+beb_do_statsp_df(struct beb_stats *p, struct df *df, int cmd)
+{
+	if (!df)
+		return (-ESRCH);
+	p->id = df->id;
+	switch (cmd) {
+	case BEB_GET:		/* get */
+		*c = df->statsp;
+		break;
+	case BEB_CHA:		/* set */
+		df->statsp = *c;
+		break;
+	}
+	return (sizeof(*p) + sizeof(*c));
+}
+
+static int
+beb_do_statsp(mblk_t *dp, int cmd)
+{
+	struct beb_stats *p = (typeof(p)) dp->b_rptr;
+	int rtn;
+
+	switch (cmd) {
+	case BEB_GET:		/* get */
+	case BEB_CHA:		/* set */
+		break;
+	default:
+		return (EFAULT);
+	}
+	switch (p->type) {
+	case BEB_OBJ_TYPE_BR:
+		rtn = beb_do_statsp_br(p, br_lookup(p->id), cmd);
+		break;
+	case BEB_OBJ_TYPE_DL:
+		rtn = beb_do_statsp_dl(p, dl_lookup(p->id), cmd);
+		break;
+	case BEB_OBJ_TYPE_DF:
+		rtn = beb_do_statsp_df(p, df_lookup(p->id), cmd);
+		break;
+	default:
+		return (EINVAL);
+	}
+	if (rtn < 0)
+		return (-rtn);
+	dp->b_wptr = dp->b_rptr + rtn;
+	return (0);
+}
+
+/*
+ *  LIST Object Configuration
+ *  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ */
+/** beb_lst_br: - list bridges
+  * @p: configuration header
+  * @br: id lookup bridge structure
+  *
+  * Lists the data link associated with a specified bridge, or if no bridge is specified,
+  * lists all bridge identifiers.
+  */
+static int
+beb_lst_br(struct beb_config *p, struct br *br)
+{
+	struct beb_config *o = p;
+	struct dl *dl;
+	int num = p->cmd;
+
+	if (br) {
+		o++;
+		/* write list of data links */
+		for (dl = br->dl.list; dl && num > 0; dl = dl->br.next, num--, o++) {
+			o->type = BEB_OBJ_TYPE_DL;
+			o->id = dl->id;
+			o->cmd = BEB_GET;
+		}
+	} else {
+		num++;
+		/* write out list of bridges */
+		for (br = master.br.list; br && num > 0; br = br->next, num--, o++) {
+			o->type = BEB_OBJ_TYPE_BR;
+			o->id = br->id;
+			o->cmd = BEB_GET;
+		}
+	}
+	if (num > 0) {
+		/* end list with zero object type */
+		o->type = 0;
+		o->id = 0;
+		o->cmd = 0;
+	}
+	return ((caddr_t) o - (caddr_t) p);
+}
+
+/** beb_lst_dl: - list data links
+  * @p: configuration header
+  * @dl: id lookup of data link structure
+  *
+  * Lists nothing associated with a specified data link, or if no data link is specified,
+  * lists all data link identifiers.
+  */
+static int
+beb_lst_dl(struct beb_config *p, struct dl *dl)
+{
+	struct beb_config *o = p;
+	int num = p->cmd;
+
+	if (dl) {
+		o++;
+	} else {
+		num++;
+		/* write list of data links */
+		for (dl = master.dl.list; dl && num > 0; dl = dl->next, num--, o++) {
+			o->type = BEB_OBJ_TYPE_DL;
+			o->id = dl->id;
+			o->cmd = BEB_GET;
+		}
+	}
+	if (num > 0) {
+		/* end list with zero object type */
+		o->type = 0;
+		o->id = 0;
+		o->cmd = 0;
+	}
+	return ((caddr_t) o - (caddr_t) p);
+}
+
+/** beb_lst_df: - list default
+  * @p: configuration header
+  * @df: id lookup of default structure
+  *
+  * Lists the bridge identifiers associated with the default, or if no default is
+  * specified, lists the default identifier.
+  */
+static int
+beb_lst_df(struct beb_config *p, struct df *df)
+{
+	struct beb_config *o = p;
+	struct br *br;
+	int num = p->cmd;
+
+	if (df) {
+		o++;
+		/* write list of bridge identifiers */
+		for (br = df->br.list; br && num > 0; br = br->next, num--, o++) {
+			o->type = BEB_OBJ_TYPE_BR;
+			o->id = br->id;
+			o->cmd = BEB_GET;
+		}
+	} else {
+		num++;
+		/* write list of default objects */
+		df = &master;
+		o->type = BEB_OBJ_TYPE_DF;
+		o->id = 0;
+		o->cmd = BEB_GET;
+		num--;
+		o++;
+	}
+	if (num > 0) {
+		/* end list with zero object type */
+		o->type = 0;
+		o->id = 0;
+		o->cmd = 0;
+	}
+	return ((caddr_t) o - (caddr_t) p);
+}
+
+/** beb_lst_conf: - list configuration
+  * @dp: data block to fill
+  *
+  * Lists the information associated with the configuration header structure contained in
+  * the data buffer.
+  */
+static inline int
+beb_lst_conf(mblk_t *dp)
+{
+	struct beb_config *p = (typeof(p)) dp->b_rptr;
+	int rtn;
+
+	switch (p->type) {
+	case BEB_OBJ_TYPE_BR:
+		rtn = beb_lst_br(p, br_lookup(p->id));
+		break;
+	case BEB_OBJ_TYPE_DL:
+		rtn = beb_lst_dl(p, dl_lookup(p->id));
+		break;
+	case BEB_OBJ_TYPE_DF:
+		rtn = beb_lst_df(p, df_lookup(p->id));
+		break;
+	default:
+		return (EINVAL);
+	}
+	if (rtn < 0)
+		return (-rtn);
+	dp->b_wptr = dp->b_rptr + rtn;
+	return (0);
+}
+
+/*
+ *  GET Object Configuration
+ *  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ */
+static int
+beb_get_br(struct beb_config *p, struct br *br)
+{
+	struct beb_conf_br *c = (typeof(c)) (p + 1);
+
+	if (!br)
+		return (-ESRCH);
+	/* TODO: add some information to c */
+	p->id = br->id;
+	return (sizeof(*p) + sizeof(*c));
+}
+
+static int
+beb_get_dl(struct beb_config *p, struct dl *dl)
+{
+	struct beb_conf_dl *c = (typeof(c)) (p + 1);
+
+	if (!dl)
+		return (-ESRCH);
+	/* TODO: add some information to c */
+	p->id = dl->id;
+	return (sizeof(*p) + sizeof(*c));
+}
+
+static int
+beb_get_df(struct beb_config *p, struct df *df)
+{
+	struct beb_conf_df *c = (typeof(c)) (p + 1);
+
+	if (!df)
+		return (-ESRCH);
+	/* TODO: add some information to c */
+	p->id = df->id;
+	return (sizeof(*p) + sizeof(*c));
+}
+
+static int
+beb_get_conf(mblk_t *dp)
+{
+	struct beb_config *p = (typeof(p)) dp->b_rptr;
+	int rtn;
+
+	p->cmd = BEB_GET;
+	switch (p->type) {
+	case BEB_OBJ_TYPE_BR:
+		rtn = beb_get_br(p, br_lookup(p->id));
+		break;
+	case BEB_OBJ_TYPE_DL:
+		rtn = beb_get_dl(p, dl_lookup(p->id));
+		break;
+	case BEB_OBJ_TYPE_DF:
+		rtn = beb_get_df(p, df_lookup(p->id));
+		break;
+	default:
+		rare();
+		return (EINVAL);
+	}
+	if (rtn < 0)
+		return (rtn);
+	dp->b_wptr = dp->b_rptr + rtn;
+	return (0);
+}
+
+/*
+ *  ADD Object
+ *  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ */
+static int
+beb_add_br(struct beb_config *p, struct br *br, const bool force, const bool test)
+{
+	struct beb_conf_br *c = (typeof(c)) (p + 1);
+
+	if (br)
+		return (-EEXIST);
+	if (!force) {
+		/* network entity title must not be assigned yet */
+		/* TODO: check this */
+	}
+	if (!test) {
+		if (!(br = beb_alloc_br(br_get_id(p->id), c)))
+			return (-ENOMEM);
+		p->id = br->id;
+	}
+	return (sizeof(*p));
+}
+
+static int
+beb_add_dl(struct beb_config *p, struct dl *dl, const bool force, const bool test)
+{
+	struct br *br;
+	struct beb_conf_dl *c = (typeof(c)) (p + 1);
+
+	if (dl)
+		return (-EEXIST);
+	/* bridge must already exist */
+	if (!(br = br_lookup(c->brid)))
+		return (-ESRCH);
+	/* hardware address must be unique, but don't check */
+	/* TODO */
+	/* data link must be linked */
+	if (!(dl = dl_lookup_mux(c->muxid)))
+		return (-ESRCH);
+	if (!test) {
+		if (!(sl = beb_alloc_dl(dl_get_id(p->id), dl, br, c)))
+			return (-ENOMEM);
+		p->id = dl->id;
+	}
+	return (sizeof(*p));
+}
+
+static int
+beb_add_df(struct beb_config *p, const bool force, const bool test)
+{
+	switch (p->type) {
+	case BEB_OBJ_TYPE_BR:
+		return beb_add_br(p, br_lookup(p->id), force, test);
+	case BEB_OBJ_TYPE_DL:
+		return beb_add_dl(p, dl_lookup(p->id), force, test);
+	case BEB_OBJ_TYPE_DF:
+		return beb_add_df(p, df_lookup(p->id), force, test);
+	default:
+		rare();
+		return (-EINVAL);
+	}
+}
+
+/*
+ *  CHA Object
+ *  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ */
+static int
+beb_cha_br(struct beb_config *p, struct br *br, const bool force, const bool test)
+{
+	struct beb_conf_br *c = (typeof(c)) (p + 1);
+
+	if (!br)
+		return (-ESRCH);
+	if (!force) {
+		/* TODO: check if bridge is being reconfigured in use */
+	}
+	if (!test) {
+		/* TODO: actually change settings of bridge */
+	}
+	return (0);
+}
+
+static int
+beb_cha_dl(struct beb_config *p, struct dl *dl, const bool force, const bool test)
+{
+	struct dl *d;
+	struct beb_conf_dl *c = (typeof(c)) (p + 1);
+
+	if (!dl)
+		return (-ESRCH);
+	if (c->muxid && c->muxid != dl->index)
+		return (-EINVAL);
+	if (c->brid && c->brid != dl->br.br->id)
+		return (-EINVAL);
+	if (!force) {
+		/* TODO: check if data link is being reconfigured in use */
+	}
+	if (!test) {
+		/* TODO: actually change settings of data link */
+	}
+	return (0);
+}
+
+static int
+beb_cha_df(struct beb_config *p, struct df *df, const bool force, const bool test)
+{
+	struct beb_conf_df *c = (typeof(c)) (p + 1);
+
+	if (!df)
+		return (-ESRCH);
+	if (!force) {
+	}
+	if (!test) {
+	}
+	return (0);
+}
+
+static int
+beb_cha_conf(struct beb_config *p, const bool force, const bool test)
+{
+	switch (p->type) {
+	case BEB_OBJ_TYPE_BR:
+		return beb_cha_br(p, br_lookup(p->id), force, test);
+	case BEB_OBJ_TYPE_DL:
+		return beb_cha_dl(p, dl_lookup(p->id), force, test);
+	case BEB_OBJ_TYPE_DF:
+		return beb_cha_df(p, df_lookup(p->id), force, test);
+	default:
+		rare();
+		return (-EINVAL);
+	}
+}
+
+/*
+ *  DEL Object
+ *  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ */
+static int
+beb_del_br(struct beb_config *p, struct br *br, const bool force, const bool test)
+{
+	if (!br)
+		return (-ESRCH);
+	if (!force) {
+		/* check if bound to internal data structures */
+	}
+	if (!test) {
+		beb_free_br(br);
+	}
+	return (0);
+}
+
+static int
+beb_del_dl(struct beb_config *p, struct dl *dl, const bool force, const bool test)
+{
+	if (!dl)
+		return (-ESRCH);
+	if (!force) {
+		/* check if bound to internal data structures */
+	}
+	if (!test) {
+		beb_free_dl(dl);
+	}
+	return (0);
+}
+
+static int
+beb_del_df(struct beb_config *p, struct df *df, const bool force, const bool test)
+{
+	if (!df)
+		return (-ESRCH);
+	if (!force) {
+		return (-EBUSY);
+	}
+	if (!test) {
+		/* can't delete default */
+	}
+	return (0);
+}
+
+static int
+beb_del_conf(struct beb_config *p, const bool force, const bool test)
+{
+	switch (p->type) {
+	case BEB_OBJ_TYPE_BR:
+		return beb_del_br(p, br_lookup(p->id), force, test);
+	case BEB_OBJ_TYPE_DL:
+		return beb_del_dl(p, dl_lookup(p->id), force, test);
+	case BEB_OBJ_TYPE_DF:
+		return beb_del_df(p, df_lookup(p->id), force, test);
+	default:
+		rare();
+		return (-EINVAL);
+	}
+}
+
+static int
+beb_do_conf(mblk_t *dp, const bool force, const bool test)
+{
+	struct beb_config *p = (typeof(p)) dp->b_rptr;
+	int rtn;
+
+	switch (p->cmd) {
+	case BEB_ADD:
+		rtn = beb_add_conf(p, force, test);
+		break;
+	case BEB_CHA:
+		rtn = beb_cha_conf(p, force, test);
+		break;
+	case BEB_DEL:
+		rtn = beb_del_conf(p, force, test);
+		break;
+	default:
+		return (EINVAL);
+	}
+	if (rtn < 0)
+		return (-rtn);
+	dp->b_wptr = dp->b_rptr + rtn;
+	return (0);
+}
+
+static int
+beb_set_conf(mblk_t *dp)
+{
+	return beb_do_conf(dp, false, false);
+}
+
+static int
+beb_test_conf(mblk_t *dp)
+{
+	return beb_do_conf(dp, false, true);
+}
+
+static int
+beb_commit_conf(mblk_t *dp)
+{
+	return beb_do_conf(dp, true, false);
+}
+
+/*
  *  =========================================================================
  *
  *  STREAMS Message Handling
