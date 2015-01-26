@@ -1265,5 +1265,746 @@ ieee8021BridgePortEncodingPriority OBJECT-TYPE
     ::= { ieee8021BridgePortEncodingEntry 6 }
 
 
+-- ============================================================
+-- ieee88021BridgeServiceAccessPriorityTable
+-- ============================================================
+
+ieee8031BridgeServiceAccessPriorityTable OBJECT-TYPE
+    SYNTAX	SEQUENCE OF Ieee8031BridgeServiceAccessPriorityEntry
+    MAX-ACCESS	not-accessible
+    STATUS	current
+    DESCRIPTION
+	"A table that contains information about the Service Access 
+	 Priority Selection function for a provider bridge.  The use of 
+	 this table enables a mechanism for a Customer Bridge attached 
+	 to a Provider Bridged Network to request priority handling of 
+	 frames.  All writable objects in this table must be persisitent 
+	 over power up restart/reboot."
+    ::= { ieee8021BridgePriority 7 }
+
+ieee8031BridgeServiceAccessPriorityEntry OBJECT-TYPE
+    SYNTAX	Ieee8031BridgeServiceAccessPriorityEntry
+    MAX-ACCESS	not-accessible
+    STATUS	current
+    DESCRIPTION
+	"A list of objects contiaining information about the Service 
+	 Access Priority Selection function for a provider bridge."
+    INDEX	{ ieee8021BridgeServiceAccessPriorityComponentId,
+		  ieee8021BridgeServiceAccessPrioirtyPortNum,
+		  ieee8021BridgeServiceAccessPriorityReceived
+		}
+    ::= { ieee8031BridgeServiceAccessPriorityTable 1 }
+
+Ieee8031BridgeServiceAccessPriorityEntry ::=
+    SEQUENCE {
+	ieee802BridgeServiceAccessPriorityComponentId
+	    IEEE8021PbbComponentIdentifier,
+	ieee802BridgeServiceAccessPriorityPortNum
+	    IEEE8021BridgePortNumber,
+	ieee802BridgeServiceAccessPriorityReceived
+	    IEEE8021PriorityValue,
+	ieee802BridgeServiceAccessPriorityValue
+	    IEEE8021PriorityValue
+    }
+
+ieee802BridgeServiceAccessPriorityComponentId OBJECT-TYPE
+    SYNTAX	IEEE8021PbbComponentIdentifier
+    MAX-ACCESS	not-accessible
+    STATUS	current
+    DESCRIPTION
+	"The component identifier is used to distinguish between the 
+	 multiple virtual brige instances within a PBB.  In simple 
+	 situtations where there is only a signle component the default 
+	 values is 1."
+    ::= { ieee8031BridgeServiceAccessPriorityEntry 1 }
+
+ieee802BridgeServiceAccessPriorityPortNum OBJECT-TYPE
+    SYNTAX	IEEE8021BridgePortNumber
+    MAX-ACCESS	not-accessible
+    STATUS	current
+    DESCRIPTION
+	"A unique identifier of a port controlled by this VALN bridging 
+	 entity."
+    ::= { ieee8031BridgeServiceAccessPriorityEntry 2 }
+
+ieee802BridgeServiceAccessPriorityReceived OBJECT-TYPE
+    SYNTAX	IEEE8021PriorityValue
+    MAX-ACCESS	not-accessible
+    STATUS	current
+    DESCRIPTION
+	"The default received priority  value in Table 6-3 (6.7.3): 
+	 (i.e., 0,1,2,3,4,5,6,7)."
+    ::= { ieee8031BridgeServiceAccessPriorityEntry 3 }
+
+ieee802BridgeServiceAccessPriorityValue OBJECT-TYPE
+    SYNTAX	IEEE8021PriorityValue
+    MAX-ACCESS	not-accessible
+    STATUS	current
+    DESCRIPTION
+	"The regenerated priority  value in Table 6-3 (6.7.3): (i.e., 
+	 0,1,2,3,4,5,6,7)."
+    REFERENCE	"12.6.2.19, 12.6.2.19"
+    ::= { ieee8031BridgeServiceAccessPriorityEntry 4 }
+
+-- ============================================================
+-- the ieee8021BridgeMrp subtree
+-- ============================================================
+
+-- ============================================================
+-- The MRP Port Table
+-- ============================================================
+
+ieee8021BridgePortMrpTable OBJECT-TYPE
+    SYNTAX	SEQUENCE OF Ieee8021BridgePortMrpEntry
+    MAX-ACCESS	not-accessible
+    STATUS	current
+    DESCRIPTION
+	"A table of MRP control information about every bridge port.  
+	 This is indexed by ieee8021BridgeBasePortComponentId and 
+	 ieee8021BridgeBasePort."
+    ::= { ieee8021BridgeMrp 1 }
+
+ieee8021BridgePortMrpEntry OBJECT-TYPE
+    SYNTAX	Ieee8021BridgePortMrpEntry
+    MAX-ACCESS	not-accessible
+    STATUS	current
+    DESCRIPTION
+	"MRP control information for a bridge port."
+    AUGMENTS	{ ieee8021BRidgeBasePortEntry }
+    ::= { ieee8021BridgePortMrpTable 1 }
+
+Ieee8021BridgePortMrpEntry ::=
+    SEQUENCE {
+	ieee8021BridgePOrtMrpJoinTime
+	    TimeInterval,
+	ieee8021BridgePortMrpLeaveTime
+	    TimeInterval,
+	ieee8021BridgePortMrpLeaveAllTime
+	    TimeInterval
+    }
+
+ieee8021BridgePOrtMrpJoinTime OBJECT-TYPE
+    SYNTAX	TimeInterval
+    MAX-ACCESS	read-write
+    STATUS	current
+    DESCRIPTION
+	"The MRP Join time, in centiseconds.
+	 
+	 The valu of this object MUST be retained across 
+	 reinitializations of the management system."
+    DEFVAL	{ 20 }
+    ::= { ieee8021BridgePortMrpEntry 1 }
+
+ieee8021BridgePortMrpLeaveTime OBJECT-TYPE
+    SYNTAX	TimeInterval
+    MAX-ACCESS	read-write
+    STATUS	current
+    DESCRIPTION
+	"The MRP Leave time, in centiseconds.
+	 
+	 The value of this object MUST be retained across 
+	 reinitializations of the management system."
+    DEFVAL	{ 60 }
+    ::= { ieee8021BridgePortMrpEntry 2 }
+
+ieee8021BridgePortMrpLeaveAllTime OBJECT-TYPE
+    SYNTAX	TimeInterval
+    MAX-ACCESS	read-write
+    STATUS	current
+    DESCRIPTION
+	"The MRB LeaveALL time, in centiseconds.
+	 
+	 The value of this object MUST be retained across 
+	 reinitializations of the msnagement system."
+    DEFVAL	{ 1000 }
+    ::= { ieee8021BridgePortMrpEntry 3 }
+
+-- ============================================================
+-- The MMRP Port Configuration and Status Table
+-- ============================================================
+
+ieee8021BridgePortMmrpTable OBJECT-TYPE
+    SYNTAX	SEQUENCE OF Ieee8021BridgePortMmrpEntry
+    MAX-ACCESS	not-accessible
+    STATUS	current
+    DESCRIPTION
+	"A table of MMRP control and status information about every 
+	 bridge port.  Augements the ieee8021BridgeBasePortTable."
+    ::= { ieee8021BridgeMmrp 1 }
+
+ieee8021BridgePortMmrpEntry OBJECT-TYPE
+    SYNTAX	Ieee8021BridgePortMmrpEntry
+    MAX-ACCESS	not-accessible
+    STATUS	current
+    DESCRIPTION
+	"MMRP control and status information for a bridge port."
+    AUGMENTS	{ ieee8021BridgeBasePortEntry }
+    ::= { ieee8021BridgePortMmrpTable 1 }
+
+Ieee8021BridgePortMmrpEntry ::=
+    SEQUENCE {
+	ieee8021BridgePortMmrpEnabledStatus
+	    TruthValue,
+	ieee8021BridgePortMmrpFailedRegistrations
+	    Counter64,
+	ieee8021BridgePortMmrpLastPduOrigin
+	    MacAddress,
+	ieee8021BridgePortMmrpRestrictedGroupRegistration
+	    TruthValue
+    }
+
+ieee8021BridgePortMmrpEnabledStatus OBJECT-TYPE
+    SYNTAX	TruthValue
+    MAX-ACCESS	read-write
+    STATUS	current
+    DESCRIPTION
+	"The administrative state of MMRP operation on this port.  The 
+	 value true(1) indicates that MMRP is enabled on this port in 
+	 all VLANs as long as ieee8021BridgeMmrpEnabledStatus is also 
+	 true(1).  A value of false(2) indicates that MMRP is disabled 
+	 on this port in all VLANs: any MMRP packets received will be 
+	 silently discarded, and no MMRP registrations will be 
+	 propagated from other ports.  Setting this to a value of 
+	 true(1) will be stored by the agetn but will only take aeffect 
+	 on the MMRP protocol operation if 
+	 ieee8021BridgeMmrpEnabledStatus also indicates the value 
+	 true(1).  This object affects all MMRP Applicant and Register 
+	 state machines on this port.  A transition from false(2) to 
+	 true(1) will cause a reset ofa ll MMRP state machines on this 
+	 port.
+	 
+	 The value of this object MUST be retained across 
+	 reinitializations of the management system."
+    DEFVAL	{ true }
+    ::= { ieee8021BridgePortMmrpEntry 1 }
+
+ieee8021BridgePortMmrpFailedRegistrations OBJECT-TYPE
+    SYNTAX	Counter64
+    MAX-ACCESS	read-only
+    STATUS	current
+    DESCRIPTION
+	"The total number of failed MMRP registrations, for any reason, 
+	 in all VLANs, on this port."
+    ::= { ieee8021BridgePortMmrpEntry 2 }
+
+ieee8021BridgePortMmrpLastPduOrigin OBJECT-TYPE
+    SYNTAX	MacAddress
+    MAX-ACCESS	read-write
+    STATUS	current
+    DESCRIPTION
+	"The Source MAC Address of the last MMRP message received on 
+	 this port."
+    ::= { ieee8021BridgePortMmrpEntry 3 }
+
+ieee8021BridgePortMmrpRestrictedGroupRegistration OBJECT-TYPE
+    SYNTAX	TruthValue
+    MAX-ACCESS	read-write
+    STATUS	current
+    DESCRIPTION
+	"The stat of Restricted Group Registration on this port.  If the 
+	 value of this control is true(1), then creation of a new 
+	 dynamic entry is permitted only if there is a Static Filtering 
+	 Entry for the VLAN concerned, in which the Registrar 
+	 Administrative Control value is Normal Registration.
+	 
+	 The value of this object MUST be retained across 
+	 reinitializations of the management system."
+    REFERENCE	"11.2.3.2.3, 12.11.1.3"
+    DEFVAL	{ false }
+    ::= { ieee8021BridgePortMmrpEntry 4 }
+
+-- ============================================================
+-- I-LAN Interface configuration table
+-- ============================================================
+
+ieee8021BridegILanIfTable OBJECT-TYPE
+    SYNTAX	SEQUENCE OF Ieee8021BridegILanIfEntry
+    MAX-ACCESS	not-accessible
+    STATUS	current
+    DESCRIPTION
+	"This table is a sparse augmentation of ifTable and controls the 
+	 creation of the I-LAN Interface.  An I-LAN Interface is used to 
+	 create internal connections between bridge ports in a 802.1 
+	 device.  An I-LAN Interfaces can be directly associated with a 
+	 set of bridge ports.  An I-LAN Interfaces can also be used as a 
+	 stacking interface to relate other interfaces before 
+	 association to bridge ports.
+	 
+	 For example, an I-LAN interface can be created to link traffic 
+	 between a PIP and a CBP.  In this case a CBP is created on the 
+	 B-Component and the CBP's related IfEntry is stacked upon the 
+	 IfEntry of the I-LAN.  The PIP is stacked upon the I-LAN using 
+	 the IfStackTable.  Finally, a VIP is created on the I-Component 
+	 and is associated with the PIP, thus completing the pat from 
+	 the I-Component's MAC relay to the CBP on the B-Component.
+	 
+	 Entries in this table must be persistent over power up 
+	 restart/reboot."
+    REFERENCE	"17.3.2.2"
+    ::= { ieee8021BridgeInternalLan 1 }
+
+ieee8021BridegILanIfEntry OBJECT-TYPE
+    SYNTAX	Ieee8021BridegILanIfEntry
+    MAX-ACCESS	not-accessible
+    STATUS	current
+    DESCRIPTION
+	"Each entry consists of a Row Status to control creation."
+    INDEX	{ ifIndex }
+    ::= { ieee8021BridegILanIfTable 1 }
+
+Ieee8021BridegILanIfEntry ::= 
+    SEQUENCE {
+	ieee8021BridgeILanIfRowStatus
+	    RowStatus
+    }
+
+ieee8021BridgeILanIfRowStatus OBJECT-TYPE
+    SYNTAX	RowStatus
+    MAX-ACCESS	read-create
+    STATUS	current
+    DESCRIPTION
+	"This object is used to create and delete entries in this table 
+	 and the Interface table."
+    ::=  { ieee8021BridegILanIfEntry 1 }
+
+-- ============================================================
+-- 802.1D Dynamic Port Creation table
+-- ============================================================
+
+ieee8021BridgeDot1dPortTable OBJECT-TYPE
+    SYNTAX	SEQUENCE OF Ieee8021BridgeDot1dPortEntry
+    MAX-ACCESS	not-accessible
+    STATUS	current
+    DESCRIPTION
+	"This table provides the capability to dynamically create and 
+	 delete 802.1D bridge ports.  Each entry in this table must have 
+	 a corresponding entry int he ieee8021BridgeBasePortTable.
+	 
+	 Entries in this table must be persistent over power up 
+	 restart/reboot."
+    REFERENCE	"17.5.3"
+    ::= { ieee8021BridgeDot1d 1 }
+
+ieee8021BridgeDot1dPortEntry OBJECT-TYPE
+    SYNTAX	Ieee8021BridgeDot1dPortEntry
+    MAX-ACCESS	not-accessible
+    STATUS	current
+    DESCRIPTION
+	"Each entry consists of a Row Status to control creation."
+    INDEX	{ ieee8021BridgeBasePortComponentId,
+		  ieee8021BridgeBasePort }
+    ::= { ieee8021BridgeDot1dPortTable 1 }
+
+Ieee8021BridgeDot1dPortEntry ::=
+    SEQUENCE {
+	ieee8021BridgeDot1dPortRowStatus
+	    RowStatus
+    }
+
+ieee8021BridgeDot1dPortRowStatus OBJECT-TYPE
+    SYNTAX	RowStatus
+    MAX-ACCESS	read-create
+    STATUS	current
+    DESCRIPTION
+	"This object is used to create and delete entries in this table 
+	 and the ieee8021BridgeBasePortTable."
+    ::= { ieee8021BridgeDot1dPortEntry 1 }
+
+-- ============================================================
+-- IEEE 802.1D MIB - Conformance Information
+-- ============================================================
+
+ieee8021BridgeCompliances
+    OBJECT IDENTIFIER ::= { ieee8021BridgeConformance 1 }
+ieee8021BridgeGroups
+    OBJECT IDENTIFIER ::= { ieee8021BridgeConformance 2 }
+
+-- ============================================================
+-- unites of conformance
+-- ============================================================
+
+-- ============================================================
+-- the ieee8021BridgeBase group
+-- ============================================================
+
+ieee8021BridgeBaseBridgeGroup OBJECT-GROUP
+    OBJECTS {
+	ieee8201BridgeBaseBridgeAddress,
+	ieee8021BridgeBaseNumPorts,
+	ieee8021BridgeBaseComponentType
+    }
+    STATUS	current
+    DESCRIPTION
+	"Bridge level information for this device."
+    ::= { ieee8021BridgeGroups 1 }
+
+ieee8021BridgeBasePortGroup OBJECT-GROUP
+    OBJECTS {
+	ieee8021BridgeBasePortIfIndex,
+	ieee8021BridgeBasePortDelayExceededDiscards,
+	ieee8021BridgeBasePortMtuExceededDiscards,
+	ieee8021BridgeBasePortType,
+	ieee8021BridgeBasePortExternal,
+	ieee8021BridgeBasePortAdminPointToPoint,
+	ieee8021BridgeBasePortOperPointToPoint,
+	ieee8021BridgeBasePortName
+    }
+    STATUS	current
+    DESCRIPTION
+	"Information for each port on this device."
+    ::- { ieee8021BridgeGroups 2 }
+
+ieee8021BridgeBaseCapGroup OBJECT-GROUP
+    OBJECTS {
+	ieee8021BridgeBaseDeviceCapabilities,
+	ieee8021BridgeBasePortCapabilities,
+	ieee8021BridgeBasePortTypeCapabilities
+    }
+    STATUS	current
+    DESCRIPTION
+	"A collection of objects indicating the optional capabilities of 
+	 the device."
+    ::= { ieee8021BridgeGroups 3 }
+
+ieee8021BridgeDeviceMmrpGroup OBJECT-GROUP
+    OBJECTS {
+	iee8021BridgeBaseMmrpEnabledStatus
+    }
+    STATUS	current
+    DESCRIPTION
+	"A collection of objects provided device-level control for 
+	 Multicast Filtering extended bridge services."
+    ::= { ieee8201BridgeGroups 4 }
+
+-- ============================================================
+-- the ieee8021BridgeTp group
+-- ============================================================
+
+ieee8021BridgeTpPortGroup OBJECT-GROUP
+    OBJECTS {
+	ieee8021BridgeTpPortMaxInfo,
+	ieee8021BridgeTpPortInFrames,
+	ieee8021BridgeTpPortOutFrames,
+	ieee8021BridgeTpPortInDiscards
+    }
+    STATUS	current
+    DESCRIPTION
+	"Dynamic Filtering Database information for each port of the 
+	 Bridge."
+    ::= { ieee8021BridgeGroups 6 }
+
+-- ============================================================
+-- Bridge Priority groups
+-- ============================================================
+
+ieee8021BridgeDevicePriorityGroup OBJECT_GROUP
+    OBJECTS {
+	ieee8021BridgeBaseTrafficClassesEnabled
+    }
+    STATUS	current
+    DESCRIPTION
+	"A collcation of objects providing device-level control for the 
+	 Priority services."
+    ::= { ieee8021BridgeGroups 7 }
+
+ieee8021BridgeDefaultPriorityGroup OBJECT-GROUP
+    OBJECTS {
+	ieee8021BridgePortDefaultUserPriority,
+	ieee8021BridgePortPriorityCodePointSelection,
+	ieee8021BridgePortUseDEI,
+	ieee8021BridgePortRequireDropEncoding,
+	ieee8021BridgePortServiceAccessPrioritySelection
+    }
+    STATUS	current
+    DESCRIPTION
+	"A collection of objects defining the User Priority applicable 
+	 to each port for media that do not support native User 
+	 Priority."
+    ::= { ieee8021BridgeGroups 8 }
+
+ieee8021BridgeRegenPriorityGroup OBJECT-GROUP
+    OBJECTS {
+	ieee8021BridgeRegenUserPriority
+    }
+    STATUS	current
+    DESCRIPTION
+	"A collection of objects defining the User Priorities applicable 
+	 to each port for media that support native User Priority."
+    ::= { ieee8021BridgeGroups 9 }
+
+ieee8021BridgePriorityGroup OBJECT-GROUP
+    OBJECTS {
+	ieee8021BridgePortNumTrafficClasses,
+	ieee8201BridgeTrafficClass
+    }
+    STATUS	current
+    DESCRIPTION
+	"A collection of objects defining the traffic classses within a 
+	 bridge for each evaluated User Priority."
+    ::= { ieee8021BridgeGroups 10 }
+
+ieee8021BridgeAccessPriorityGroup OBJECT-GROUP
+    OBJECTS {
+	ieee8021BridgePortOutboundAccessPriority
+    }
+    STATUS	current
+    DESCRIPTION
+	"A collection of objects defining the media-dependent outbound 
+	 access level for each priority."
+    ::= { ieee8021BridgeGroups 11 }
+
+ieee8021BridgePortMrpGroup OBJECT-GROUP
+    OBJECTS {
+	ieee8021BridgePortMrpJoinTime,
+	ieee8021BridgePortMrpLeaveTime,
+	ieee8021BridgePortMrpLeaveAllTime
+    }
+    STATUS	current
+    DESCRIPTION
+	"A collection of objects providing port level control and status 
+	 information for MRP operation."
+    ::= { ieee8021BridgeGroups 12 }
+
+ieee8021BridgePortMmrpGroup OBJECT-GROUP
+    OBJECTS {
+	ieee8021BridgePortMmrpEnabledStatus,
+	ieee8021BridgePortMmrpFailedRegistrations,
+	ieee8021BridgePortMmrpLastPduOrigin,
+	ieee8021BridgePortMmrpRestrictedGroupRegistration
+    }
+    STATUS	current
+    DESCRIPTION
+	"A collection of objects providing port level control and status 
+	 information for MMRP operation."
+    ::= { ieee8021BridgeGroups 13 }
+
+ieee8021BridgePortDecodingGroup OBJECT-GROUP
+    OBJECTS {
+	ieee8021BridgePortDecodingPriority,
+	ieee8021BridgePortDecodingDropEligible
+    }
+    STATUS	current
+    DESCRIPTION
+	"A collection of objects providing statistics counters for 
+	 decoding priority and drop eligibility for bridge ports."
+    ::= { ieee8021BridgeGroups 14 }
+
+ieee8021BridgePortEncodingGroup OBJECT-GROUP
+    OBJECTS {
+	ieee8021BridgePortEncodingPriority
+    }
+    STATUS	current
+    DESCRIPTION
+	"A collection of objects providing statistics counters for 
+	 encoding prioirty and drop eligibility for bridge ports."
+    ::= { ieee8021BridgeGroups 15 }
+
+ieee8021BridgeServiceAcessPriorityGroup OBJECT-GROUP
+    OBJECTS {
+	ieee8021BridgeServiceAccessPriorityValue
+    }
+    STATUS	current
+    DESCRIPTION
+	"A collection of objects providing statistics  counters for 
+	 service access priority."
+    ::= { ieee8021BridgeGroups 16 }
+
+-- ============================================================
+-- Internal LAN group
+-- ============================================================
+
+ieee8021BridgeInternalLANGroup OBJECT-GROUP
+    OBJECTS {
+	ieee8021BridgeILanIfRowStatus
+    }
+    STATUS	current
+    DESCRIPTION
+	"A collection of objects providing control of internal LAN 
+	 configuration."
+    ::= { ieee8021BridgeGroups 17 }
+
+
+-- ============================================================
+-- Bridge Creation Group
+-- ============================================================
+
+ieee8021BridgeCreatableBaseBridgeGroup OBJECT-GROUP
+    OBJECTS {
+	ieee8021BridgeBaseRowStatus
+    }
+    STATUS	current
+    DESCRIPTION
+	"Controls the management system directed creation of Bridge 
+	 Components."
+    ::= { ieee8021BridgeGroups 18 }
+
+-- ============================================================
+-- Dot1d Dynamic Port Creation group
+-- ============================================================
+
+ieee8021BridgeDot1dDynamicPortCreationGroup OBJECT-GROUP
+    OBJECTS {
+	ieee8021BridgeDot1dPortRowStatus
+    }
+    STATUS	current
+    DESCRIPTION
+	"A collection of objects providing dynamic creation and deletion 
+	 of 802.1D bridge ports."
+    ::= { ieee8021BridgeGroups 19 }
+
+-- ============================================================
+-- compliance statements
+-- ============================================================
+
+ieee8021BridgeCompliance MODULE-COMPLIANCE
+    STATUS	current
+    DESCRIPTION
+	"The compliance statement for devices supporting bridging 
+	 services as defined in 802.1D-2004.  Such devices support path 
+	 cost values of 32-bits, and bridge and port priority values are 
+	 more restricted thatn in 802.1D-1995.
+	 
+	 Full support for the 802.1D management objects requires 
+	 implementation of the objects listed in the systemGroup from 
+	 the SNMPv2-MIB [RFC3418], as well as the objects listed in the 
+	 ifGeneralInformationGroup from the IF-MIB [RFC2863]."
+
+    MODULE SNMPv2-MIB -- The SNMPv2-MIB, RFC 3418
+	MANDATORY-GROUPS {
+	    systemGroup
+	}
+
+    MODULE IF-MIB -- The interface MIB, RFC 2863
+	MANDATORY-GROUPS {
+	    ifGeneralInformationGroup
+	}
+
+    MODULE -- this module
+	MANDATORY-GROUPS {
+	    ieee8021BridgeBaseBridgeGroup,
+	    ieee8021BridgeBasePortGroup
+	}
+
+	GROUP ieee8021BridgeCreatableBaseBridgeGroup
+	DESCRIPTION
+	    "Implementation of this group is mandatory for bridges that 
+	     allow management systems to add and delete bridge 
+	     components.  Provider Backbone Edge Bridges sould typically 
+	     fall in this category."
+
+	GROUP ieee8021BridgeTpPortGroup
+	DESCRIPTION
+	    "Implementation of this group is mandatory for bridges that 
+	     suppport the transparent bridging mode.  A transparent 
+	     bridge will implement this group."
+
+	GROUP ieee8021BridgeInternalLANGroup
+	DESCRIPTION
+	    "Implementation of this group is optional.  It can be 
+	     supported to provide control over the relationship between 
+	     interfaces and bridge ports where such relationships are 
+	     more complex than a simple 1-to-1 mapping."
+
+	GROUP ieee8021BridgeDot1dDynamicPortCreationGroup
+	DESCRIPTION
+	    "Implementation of this group is optional.  It can be 
+	     supported to provide the ability to dynamically create and 
+	     delete 802.1D bridge ports."
+
+    ::= { ieee8021BridgeCompliances 1 }
+
+ieee8021BridgePriorityAndMulticastFilteringCompliance MODULE-COMPLIANCE
+    STATUS	deprecated
+    DESCRIPTION
+	"The compliance statement for device support of Priority and 
+	 Multicast Filtering extended bridging services."
+
+    MODULE -- this module
+	MANDATORY-GROUPS { ieee8021BridgeCapGroup }
+
+	GROUP	    ieee8021BridgeDeviceMmrpGroup
+	DESCRIPTION
+	    "This group is mandatory for devices supporting the MMRP 
+	     application, defined by IEEE 802.1D Extended Filtering 
+	     Services."
+
+	GROUP	    ieee8021BridgeDevicePriorityGroup
+	DESCRIPTION
+	    "This group is mandatory only for devices supporting the 
+	     priority forwarding operations defined by IEEE 802.1D."
+
+	GROUP	    ieee8021BridgeDefaultPriorityGroup
+	DESCRIPTION
+	    "This group is mandatory only for devices supporting the 
+	     priority forwarding operations defined by the extended 
+	     bridge services with media types, such as Ethernet, that do 
+	     not support native User Priority."
+
+	GROUP	    ieee8021BridgeRegenPriorityGroup
+	DESCRIPTION
+	    "This group is mandatory only for devices supporting the 
+	     prioirty forwarding operations defined by IEEE 802.1D and 
+	     that have interface media types that support native User 
+	     Priority, e.g., IEEE 802.5."
+
+	GROUP	    ieee8021BridgePriorityGroup
+	DESCRIPTION
+	    "This group is mandatory only for devices supporting the 
+	     priority forwarding operations defined by IEEE 802.1D."
+
+	GROUP	    ieee8021BridgeAccessPriorityGroup
+	DESCRIPTION
+	    "This group is optioanl and is relevant only for devices 
+	     supporting the priority forwarding operations defined by 
+	     IEEE 802.1D and that have interface media types that 
+	     support native Access Priority, e.g., IEEE 802.5."
+
+	GROUP	    ieee8021BridgePortMrpGroup
+	DESCRIPTION
+	    "This group is mandatory for devices supporting nay of the 
+	     MRP applications: e.g., MMRP, defined by the extended 
+	     filtering services of 802.1D; or MVRP, defined by 802.1Q 
+	     (refer to the Q-BRIDGE-MIB for conformance statements for 
+	     MVRP)."
+
+	GROUP	    ieee8021BridgePortMmrpGroup
+	DESCRIPTION
+	    "This group is mandatory for devices supporting the MMRP 
+	     application, as adefined by IEEE 802.1D Extended Filtering 
+	     Services."
+
+	GROUP	    ieee8021BridgePortDecodingGroup
+	DESCRIPTION
+	    "This group is optional and supports Priority Code Point 
+	     Decoding Table for a Port of a provider bridge."
+
+	GROUP	    ieee8021BridgePortEncodingGroup
+	DESCRIPTION
+	    "This group is optional and supports Priority Code Point 
+	     Encoding Table for a Port of a provider bridge."
+
+	GROUP	    ieee8021BridgeServiceAccessPriorityGroup
+	DESCRIPTION
+	    "This group is optional and supports Priority Code Point 
+	     Encoding Table for a Port of a provider bridge."
+
+	OBJECT	    ieee8021BridgePortNumTrafficClasses
+	MIN-ACCESS  read-only
+	DESCRIPTION
+	    "Write access is not required."
+
+	OBJECT	    ieee8021BridgeTrafficClass
+	MIN-ACCESS  read-only
+	DESCRIPTION
+	    "Write access is not required."
+
+	OBJECT	    ieee8021BridgeRegenUserPriority
+	MIN-ACCESS  read-only
+	DESCRIPTION
+	    "Write access is not required."
+
+    ::= { ieee8021BridgeCompliances 2 }
+
+END -- IEEE8021-BRIDGE-MIB 
 
 -- vim: ft=mib comments=\f\:\",\b\:\-\-,\:\-\-,\f\b\:- fo+=tcqlornw tw=72 nocin nosi sts=4 sw=4
