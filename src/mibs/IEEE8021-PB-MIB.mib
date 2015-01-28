@@ -18,7 +18,7 @@ IMPORTS
         FROM SNMPv2-TC;
 
 ieee8021PbMib MODULE-IDENTITY
-    LAST-UPDATED "201102270000Z"
+    LAST-UPDATED "201202100000Z"
     ORGANIZATION 
         "IEEE 802.1 Working Group"
     CONTACT-INFO 
@@ -43,6 +43,13 @@ ieee8021PbMib MODULE-IDENTITY
          Copyright (C) IEEE.
          This version of this MIB module is part of IEEE802.1Q; see the 
          draft itself for full legal notices."
+    REVISION    "201202100000Z"
+    DESCRIPTION 
+        "Deprecated ieee8021PbVidTranslationTable moved the new object 
+         to the Q Bridge as part of VID translation for 802.1aq."
+    REVISION    "201104060000Z"
+    DESCRIPTION 
+        "Additions to support Remote Customer Service Interfaces."
     REVISION    "201102270000Z"
     DESCRIPTION 
         "Change to ieee8021PbEdgePortAcceptableFrameTypes permissible 
@@ -71,7 +78,7 @@ ieee8021PbObjects OBJECT IDENTIFIER
 ieee8021PbVidTranslationTable OBJECT-TYPE
     SYNTAX      SEQUENCE OF Ieee8021PbVidTranslationEntry
     MAX-ACCESS  not-accessible
-    STATUS      current
+    STATUS      deprecated
     DESCRIPTION 
         "This table is used to configure the VID Translation Table 
          defined in 12.13.2 (a) of 802.1Q-2006.  The VID Translation 
@@ -96,7 +103,7 @@ ieee8021PbVidTranslationTable OBJECT-TYPE
 ieee8021PbVidTranslationEntry OBJECT-TYPE
     SYNTAX      Ieee8021PbVidTranslationEntry
     MAX-ACCESS  not-accessible
-    STATUS      current
+    STATUS      deprecated
     DESCRIPTION 
         "An entry for the S-VID translation table which includes both 
          the Local and Relay S-VIDs between which the PNP and CNP 
@@ -118,7 +125,7 @@ Ieee8021PbVidTranslationEntry ::= SEQUENCE {
 ieee8021PbVidTranslationLocalVid OBJECT-TYPE
     SYNTAX      VlanId
     MAX-ACCESS  not-accessible
-    STATUS      current
+    STATUS      deprecated
     DESCRIPTION 
         "The S-VID on recieved (transmitted) at the ISS of a CNP or PNP."
     ::= { ieee8021PbVidTranslationEntry 1 }
@@ -126,7 +133,7 @@ ieee8021PbVidTranslationLocalVid OBJECT-TYPE
 ieee8021PbVidTranslationRelayVid OBJECT-TYPE
     SYNTAX      VlanId
     MAX-ACCESS  read-create
-    STATUS      current
+    STATUS      deprecated
     DESCRIPTION 
         "The translated S-VID delivered(recieved) over the EISS from a 
          CNP or PNP.  The default value of this object on creation will 
@@ -137,7 +144,7 @@ ieee8021PbVidTranslationRelayVid OBJECT-TYPE
 ieee8021PbVidTranslationRowStatus OBJECT-TYPE
     SYNTAX      RowStatus
     MAX-ACCESS  read-create
-    STATUS      current
+    STATUS      deprecated
     DESCRIPTION 
         "This indicates the status of an entry in this table, and is 
          used to create/delete entries.
@@ -603,6 +610,193 @@ ieee8021PbCepRowStatus OBJECT-TYPE
     ::= { ieee8021PbCepEntry 3 }
 
 -- ============================================================
+-- ieee8021PbRcapTable
+-- ============================================================
+
+ieee8021PbRcapTable OBJECT-TYPE
+    SYNTAX      SEQUENCE OF Ieee8021PbRcapEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION 
+        "This table is used to create Remote Customer Access Ports, on a 
+         provider edge bridge.  It is indexed by the ComponentId of the 
+         PEB's S-VLAN component and by the port number for the RCAP.  
+         Note that the index port number belongs to the set of port 
+         numbers associated with the PEB's primary S-VLAN component.
+         
+         Entries in this table must be persistent across 
+         reinitializations of the management agent.  However, note that 
+         some column values, as noted below, may change across system 
+         reinitializations."
+    ::= { ieee8021PbObjects 8 }
+
+ieee8021PbRcapEntry OBJECT-TYPE
+    SYNTAX      Ieee8021PbRcapEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION 
+        "The entry of the ieee8021PbRcapTable.  Note that the component 
+         index must refer to the primary S-VLAN component of a PEB, and 
+         that the port number index for the RCAP is allocated from the 
+         port number space of that S-VLAN component."
+    INDEX       { ieee8021BridgeBasePortComponentId, 
+                  ieee8021BridgeBasePort }
+    ::= { ieee8021PbRcapTable 1 }
+
+Ieee8021PbRcapEntry ::= SEQUENCE {
+    ieee8021PbRcapSComponentId      IEEE8021PbbComponentIdentifierOrZero,
+    ieee8021PbRcapPortNumber        IEEE8021BridgePortNumberOrZero,
+    ieee8021PbRcapRowStatus         RowStatus
+}
+
+ieee8021PbRcapSComponentId OBJECT-TYPE
+    SYNTAX      IEEE8021PbbComponentIdentifierOrZero
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "This column is an implementation specific column that may be 
+         used to map the Port-mapping S-VLAN component associated with 
+         this RCAP to other tables within the system, such as the Entity 
+         MIB.  This column may not be created or modified by management 
+         station action.  A value of 0 is always legal, and non-zero 
+         values will be interpreted in an implementation specific 
+         manner.  The value of this column may or may not persist across 
+         system restarts."
+    ::= { ieee8021PbRcapEntry 1 }
+
+ieee8021PbRcapPortNumber OBJECT-TYPE
+    SYNTAX      IEEE8021BridgePortNumberOrZero
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "This column is an implementation specific column that may be 
+         used to map the RCAP to other tables within the system, for 
+         example the Entity MIB.  This column may not be created or 
+         modified by management station action.  A value of 0 is always 
+         legal, and non-zero values will be interpreted in an 
+         implementation specific manner.  The value of this column may 
+         or may not persist across system restarts."
+    ::= { ieee8021PbRcapEntry 2 }
+
+ieee8021PbRcapRowStatus OBJECT-TYPE
+    SYNTAX      RowStatus
+    MAX-ACCESS  read-create
+    STATUS      current
+    DESCRIPTION 
+        "This indicates the status of the entry, and is used to create 
+         and delete entries in this table."
+    ::= { ieee8021PbRcapEntry 3 }
+
+-- ============================================================
+-- ieee8021PbInternalInterfaceTable
+-- ============================================================
+
+ieee8021PbInternalInterfaceTable OBJECT-TYPE
+    SYNTAX      SEQUENCE OF Ieee8021PbInternalInterfaceEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION 
+        "A table used in Port-mapping S-VLAN component associated with a 
+         Remote Customer Access Port to manage the mapping between 
+         external S-VIDs and internal interfaces/S-VIDs.
+         
+         Note that the component ID of entries in this table must refer 
+         to the primary S-VLAN component of a Provider Edge Bridge and 
+         the Port Number must refer to the port number of a Remote 
+         Customer Access Port associated with that S-VLAN component.
+         
+         Entries in this table must be persistent over power up 
+         restart/reboot."
+    REFERENCE   
+        "12.13.4.1, 12.13.4.2"
+    ::= { ieee8021PbObjects 9 }
+
+ieee8021PbTiEntry OBJECT-TYPE
+    SYNTAX      Ieee8021PbInternalInterfaceEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION 
+        "An element of the internal interface table accessed by PB 
+         S-VLAN component ID, Remote Customer Access Port bridge port 
+         number, and external S-VID.  Each element contains the mapping 
+         between an external S-VID and the internal port it selects and, 
+         except in the case of a C-tagged service interface the internal 
+         S-VID which carries the service."
+    INDEX       { ieee8021BridgeBasePortComponentId, 
+                  ieee8021BridgeBasePort, 
+                  ieee8021PbTiExternalSVid }
+    ::= { ieee8021PbInternalInterfaceTable 1 }
+
+Ieee8021PbInternalInterfaceEntry ::= SEQUENCE {
+    ieee8021PbTiExternalSVid        VlanId,
+    ieee8021PbTiInternalPortNumber  IEEE8021BridgePortNumberOrZero,
+    ieee8021PbTiInternalPortType    IEEE8021BridgePortType,
+    ieee8021PbTiInternalSVid        VlanIdOrNone,
+    ieee8021PbTiRowStatus           RowStatus
+}
+
+ieee8021PbTiExternalSVid OBJECT-TYPE
+    SYNTAX      VlanId
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION 
+        "External S-VID for this internal interface table entry."
+    ::= { ieee8021PbTiEntry 1 }
+
+ieee8021PbTiInternalPortNumber OBJECT-TYPE
+    SYNTAX      IEEE8021BridgePortNumberOrZero
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "The port number for the internal port on the primary S-VLAN 
+         component.  This port number is used in FDB entries that 
+         reference an RCSI.
+         
+         The port number of the Remote Customer Access Port can be used 
+         to identify a PNP on the primary S-VLAN component connected to 
+         a PNP on the Port-mapping S-VLAN component."
+    ::= { ieee8021PbTiEntry 2 }
+
+ieee8021PbTiInternalPortType OBJECT-TYPE
+    SYNTAX      IEEE8021BridgePortType
+    MAX-ACCESS  read-create
+    STATUS      current
+    DESCRIPTION 
+        "The port type of the internal port on the primary S-VLAN 
+         component.  This indicates the type of RCSI as follows:
+         
+         providerNetworkPort(3) - indicates a PNP (not an RCSI)
+         customerNetworkPort(4) - indicates a Port-based RCSI
+         customerEdgePort(5) - indicates a C-tagged RCSI
+         
+         Other port type values are not valid for this field."
+    ::= { ieee8021PbTiEntry 3 }
+
+ieee8021PbTiInternalSVid OBJECT-TYPE
+    SYNTAX      VlanIdOrNone
+    MAX-ACCESS  read-create
+    STATUS      current
+    DESCRIPTION 
+        "Internal S-VID for this external S-VID entry."
+    ::= { ieee8021PbTiEntry 4 }
+
+ieee8021PbTiRowStatus OBJECT-TYPE
+    SYNTAX      RowStatus
+    MAX-ACCESS  read-create
+    STATUS      current
+    DESCRIPTION 
+        "This indicates the status of an entry in this table, and is 
+         used to create/delete entries.
+         
+         The value of ieee8021PbTiExternalSVid must be set before an 
+         entry in this table can be made valid.
+         
+         It is an implementation specific decision as to whether any 
+         column in this table may be set while the corresponding 
+         instance of this object is valid(1)."
+    ::= { ieee8021PbTiEntry 5 }
+
+-- ============================================================
 -- Conformance Information
 -- ============================================================
 
@@ -682,6 +876,26 @@ ieee8021PbDynamicCepGroup OBJECT-GROUP
          customer edge ports."
     ::= { ieee8021PbGroups 7 }
 
+ieee8021PbDynamicRcapGroup OBJECT-GROUP
+    OBJECTS     { ieee8021PbRcapSComponentId, 
+                  ieee8021PbRcapPortNumber, 
+                  ieee8201PbCepRowStatus }
+    STATUS      current
+    DESCRIPTION 
+        "A set of objects used for dynamic creation and deletion of 
+         remote customer access ports."
+    ::= { ieee8021PbGroups 8 }
+
+ieee8021PbInternalInterfaceGroup OBJECT-GROUP
+    OBJECTS     { ieee8021PbTiInternalPortNumber, 
+                  ieee8021PbTiInternalPortType, 
+                  ieee8021PbTiInternalSVid, ieee8021PbTiRowStatus }
+    STATUS      current
+    DESCRIPTION 
+        "A set of objects used for dynamic creation and deletion of 
+         internal interfaces on a Port-mapping S-VLAN component."
+    ::= { ieee8021PbGroups 9 }
+
 -- ============================================================
 -- Compliance statements
 -- ============================================================
@@ -714,8 +928,19 @@ ieee8021PbCompliance MODULE-COMPLIANCE
               "This group is optional and supports dynamic creation and 
                deletion of customer edge ports."
 
+        GROUP   ieee8021PbDynamicRcapGroup
+        DESCRIPTION   
+              "This group is optional and supports dynamic creation and 
+               deletion of remote customer access ports."
+
+        GROUP   ieee8021PbInternalInterfaceGroup
+        DESCRIPTION   
+              "This group is optional and supports dynamic creation and 
+               deletion of internal interfaces on Port-mapping S-VLAN 
+               components."
+
     ::= { ieee8021PbCompliances 1 }
 
 END -- end of module IEEE8021-PB-MIB.
 
--- vim: ft=mib comments=\f\:\",\b\:\-\-,\:\-\-,\f\b\:- fo+=tcqlornw tw=72 nocin nosi sts=4 sw=4
+-- vim: ft=mib comments=\f\:\",\b\:\-\-,\:\-\-,\f\b\:- fo+=tcqlornw tw=72 nocin nosi sts=4 sw=4 et

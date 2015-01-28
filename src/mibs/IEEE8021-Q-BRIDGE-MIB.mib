@@ -27,7 +27,7 @@ IMPORTS
         FROM SNMPv2-TC;
 
 ieee8021QBridgeMib MODULE-IDENTITY
-    LAST-UPDATED "201102270000Z"
+    LAST-UPDATED "201112120000Z"
     ORGANIZATION 
         "IEEE 802.1 Working Group"
     CONTACT-INFO 
@@ -56,6 +56,9 @@ ieee8021QBridgeMib MODULE-IDENTITY
          Copyright (C) IEEE.
          This version of this MIB modules is part of IEEE 802.1Q; see 
          the draft itself for full legal notices."
+    REVISION    "201112120000Z"
+    DESCRIPTION 
+        "Addition of the VID Translation MIB Subtree for 802.1aq"
     REVISION    "201102270000Z"
     DESCRIPTION 
         "Minor edits to contact information etc. as part of 2011 
@@ -350,7 +353,7 @@ ieee8021QBridgeFdbLearnedEntryDiscards OBJECT-TYPE
 ieee8021QBridgeFdbAgingTime OBJECT-TYPE
     SYNTAX      Integer32 (10..1000000)
     UNITS       "seconds"
-    MAX-ACCESS  read-only
+    MAX-ACCESS  read-write
     STATUS      current
     DESCRIPTION 
         "The timeout period in seconds for aging out dynamically-learned 
@@ -589,7 +592,7 @@ ieee8021QBridgeForwardAllPorts OBJECT-TYPE
 
 ieee8021QBridgeForwardAllStaticPorts OBJECT-TYPE
     SYNTAX      PortList
-    MAX-ACCESS  read-only
+    MAX-ACCESS  read-write
     STATUS      current
     DESCRIPTION 
         "The set of ports configured by management in this VLAN to which 
@@ -611,7 +614,7 @@ ieee8021QBridgeForwardAllStaticPorts OBJECT-TYPE
 
 ieee8021QBridgeForwardAllForbiddenPorts OBJECT-TYPE
     SYNTAX      PortList
-    MAX-ACCESS  read-only
+    MAX-ACCESS  read-write
     STATUS      current
     DESCRIPTION 
         "The set of ports configured by management in this VLAN for 
@@ -684,7 +687,7 @@ ieee8021QBridgeForwardUnregisteredPorts OBJECT-TYPE
 
 ieee8021QBridgeForwardUnregisteredStaticPorts OBJECT-TYPE
     SYNTAX      PortList
-    MAX-ACCESS  read-only
+    MAX-ACCESS  read-write
     STATUS      current
     DESCRIPTION 
         "The set of ports configured by management, in this VLAN, to 
@@ -705,7 +708,7 @@ ieee8021QBridgeForwardUnregisteredStaticPorts OBJECT-TYPE
 
 ieee8021QBridgeForwardUnregisteredForbiddenPorts OBJECT-TYPE
     SYNTAX      PortList
-    MAX-ACCESS  read-only
+    MAX-ACCESS  read-write
     STATUS      current
     DESCRIPTION 
         "The set of ports configured by management in this VLAN for 
@@ -1920,6 +1923,159 @@ ieee8021QBridgeProtocolPortRowStatus OBJECT-TYPE
     ::= { ieee8021QBridgeProtocolPortEntry 3 }
 
 -- ============================================================
+-- ieee8021QBridgeVIDX subtree
+-- ============================================================
+
+ieee8021QBridgeVIDX OBJECT IDENTIFIER
+    ::= { ieee8021QBridgeMibObjects 6 }
+
+ieee8021QBridgeVIDXTable OBJECT-TYPE
+    SYNTAX      SEQUENCE OF Ieee8021QBridgeVIDXEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION 
+        "This table is used to configure the VID Translation Table 
+         defined in 12.10.1.8 and 6.9.  The Bridge VID Translation Table 
+         is used to implement a mapping between a local VID, and a relay 
+         VID, used by the filtering and forwarding process.  Each row in 
+         this table is indexed by component, port, and local VID value 
+         and a value to be used for the speficied VID as specified in 
+         (6.9).  Entries in this table must be persistent over power up 
+         restart/reboot."
+    REFERENCE   
+        "12.10.1.6"
+    ::= { ieee8021QBridgeVIDX 1 }
+
+ieee8021QBridgeVIDXEntry OBJECT-TYPE
+    SYNTAX      Ieee8021QBridgeVIDXEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION
+        "An entry for the S-VID translation table which includes both 
+         the Local and Relay S-VIDs."
+    INDEX       { ieee8021BridgeBasePortComponentId, 
+                  ieee8021BridgeBasePort, 
+                  ieee8021QBridgeVIDXLocalVid }
+    ::= { ieee8021QBridgeVIDXTable 1 }
+
+Ieee8021QBridgeVIDXEntry ::= SEQUENCE {
+    ieee8021QBridgeVIDXLocalVid     VlanId,
+    ieee8021QBridgeVIDXRelayVid     VlanId,
+    ieee8021QBridgeVIDXRowStatus    RowStatus
+}
+
+ieee8021QBridgeVIDXLocalVid OBJECT-TYPE
+    SYNTAX      VlanId
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION 
+        "The Local VID after translation received at the ISS or EISS."
+    REFERENCE   
+        "12.10.1.8.1, 12.10.1.8.2"
+    ::= { ieee8021QBridgeVIDXEntry 1 }
+
+ieee8021QBridgeVIDXRelayVid OBJECT-TYPE
+    SYNTAX      VlanId
+    MAX-ACCESS  read-create
+    STATUS      current
+    DESCRIPTION 
+        "The Relay VID received before translation received at ISS or 
+         EISS."
+    REFERENCE   
+        "12.10.1.8.1, 12.10.1.8.2"
+    ::= { ieee8021QBridgeVIDXEntry 2 }
+
+ieee8021QBridgeVIDXRowStatus OBJECT-TYPE
+    SYNTAX      RowStatus
+    MAX-ACCESS  read-create
+    STATUS      current
+    DESCRIPTION 
+        "This indicates the status of an entry in this table, and is 
+         used to create/delete entries.  It is an implementation 
+         specific decision as to whether any column in this table may be 
+         set while the corresponding instance of this object is 
+         valid(1)."
+    REFERENCE   
+        "12.10.1.8.1, 12.10.1.8.2"
+    ::= { ieee8021QBridgeVIDXEntry 3 }
+
+-- ============================================================
+-- ieee8021QBridgeEgressVidXTable:
+-- ============================================================
+
+ieee8021QBridgeEgressVidXTable OBJECT-TYPE
+    SYNTAX      SEQUENCE OF Ieee8021QBridgeEgressVidXEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION 
+        "This table is used to configure the VID Translation Table 
+         defined in 12.10.1.9 and 6.0.  The Bridge VID Egress 
+         Translation Table is used to implement a mapping between a 
+         relay VID, and a local VID, used by the filtering and 
+         forwarding process.  Each row in this table is indexed by 
+         component, port, and relay VID value and a value to be used for 
+         the specified local VID value and a value to be used for the 
+         specified local VID as specified in (6.9).  Entries in this 
+         table must be persistent over power up restart/reboot."
+    REFERENCE   
+        "12.10.1.9, 6.9"
+    ::= { ieee8021QBridgeVIDX 2 }
+
+ieee8021QBridgeEgressVidXEntry OBJECT-TYPE
+    SYNTAX      Ieee8021QBridgeEgressVidXEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION 
+        "An entry for the Egress VID translation table which includes 
+         both the relay and local IDs between which the PNP or CNP 
+         translates."
+    INDEX       { ieee8021BridgeBaseEgressPortComponentId, 
+                  ieee8021BridgeEgressBasePort, 
+                  ieee8021QBridgeEgressVidXRelayVid }
+    ::= { ieee8021QBridgeEgressVidXTable 1 }
+
+Ieee8021QBridgeEgressVidXEntry ::= SEQUENCE {
+    ieee8021QBridgeEgressVidXRelayVid   VlanId,
+    ieee8021QBridgeEgressVidXLocalVid   VlanId,
+    ieee8021QBridgeEgressVidXRowStatus  RowStatus
+}
+
+ieee8021QBridgeEgressVidXRelayVid OBJECT-TYPE
+    SYNTAX      VlanId
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION 
+        "The Relay VID after translation transmitted to the ISS or EISS."
+    REFERENCE   
+        "12.10.1.9.1, 12.10.1.9.2"
+    ::= { ieee8021QBridgeEgressVidXEntry 1 }
+
+ieee8021QBridgeEgressVidXLocalVid OBJECT-TYPE
+    SYNTAX      VlanId
+    MAX-ACCESS  read-create
+    STATUS      current
+    DESCRIPTION 
+        "The Local VID before translation transmitted to the ISS or 
+         EISS."
+    REFERENCE   
+        "12.10.1.9.1, 12.10.1.9.2"
+    ::= { ieee8021QBridgeEgressVidXEntry 2 }
+
+ieee8021QBridgeEgressVidXRowStatus OBJECT-TYPE
+    SYNTAX      RowStatus
+    MAX-ACCESS  read-create
+    STATUS      current
+    DESCRIPTION 
+        "This indicates the status of an entry in this table, and is 
+         used to create/delete entries.  It is an implementation 
+         specific decision as to whether any column in this table may be 
+         set while the corresponding instance of this object is 
+         valid(1)."
+    REFERENCE   
+        "12.10.1.9.1, 12.10.1.9.2"
+    ::= { ieee8021QBridgeEgressVidXEntry 3 }
+
+-- ============================================================
 -- IEEE 802.1Q MIB - Conformance Information
 -- ============================================================
 
@@ -2092,6 +2248,22 @@ ieee8021QBridgeCVlanPortGroup OBJECT-GROUP
         "Objects used to create/delete customer VLAN ports."
     ::= { ieee8021QBridgeGroups 14 }
 
+ieee8201QBridgeVIDXGroup OBJECT-GROUP
+    OBJECTS     { ieee8021QBridgeVIDXRelayVid, 
+                  ieee8021QBridgeVIDXRowStatus }
+    STATUS      current
+    DESCRIPTION 
+        "Ingress or Ingress/Egress VID translation for individual ports."
+    ::= { ieee8021QBridgeGroups 15 }
+
+ieee8021QBridgeEgressVIDXGroup OBJECT-GROUP
+    OBJECTS     { ieee8021QBridgeEgressVidXLocalVid, 
+                  ieee8021QBridgeEgressVidXRowStatus }
+    STATUS      current
+    DESCRIPTION 
+        "Egress VID translation for individual ports."
+    ::= { ieee8021QBridgeGroups 15 }
+
 -- ============================================================
 -- compliance statements
 -- ============================================================
@@ -2163,6 +2335,17 @@ ieee8021QBridgeCompliance MODULE-COMPLIANCE
               "This group is mandatory ONLY for devices supporting 
                creation/deletion of customer VLAN ports."
 
+        GROUP   ieee8021QBridgeVIDXGroup
+        DESCRIPTION   
+              "This group is mandatory ONLY for devices supporting VID 
+               translation of customer and/or provider VLAN ports."
+
+        GROUP   ieee8021QBridgeEgressVIDXGroup
+        DESCRIPTION   
+              "This group is mandatory ONLY for devices supporting 
+               separate Ingress and Egress VID translation of customer 
+               and provider VLAN ports."
+
         OBJECT  ieee8021QBridgePortAcceptableFrameTypes
         MIN-ACCESS  read-only
         DESCRIPTION   
@@ -2203,4 +2386,4 @@ ieee8021QBridgeCompliance MODULE-COMPLIANCE
 
 END -- end of module IEEE8021-Q-BRIDGE-MIB.
 
--- vim: ft=mib comments=\f\:\",\b\:\-\-,\:\-\-,\f\b\:- fo+=tcqlornw tw=72 nocin nosi sts=4 sw=4
+-- vim: ft=mib comments=\f\:\",\b\:\-\-,\:\-\-,\f\b\:- fo+=tcqlornw tw=72 nocin nosi sts=4 sw=4 et

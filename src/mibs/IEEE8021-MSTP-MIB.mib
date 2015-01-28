@@ -1,0 +1,393 @@
+IEEE8021-MSTP-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+    MODULE-IDENTITY, OBJECT-TYPE, Integer32, Counter64, Unsigned32, 
+    TimeTicks
+        FROM SNMPv2-SMI
+    TruthValue, RowStatus
+        FROM SNMPv2-TC
+    ieee802dot1mibs, IEEE8021PbbComponentIdentifier,  
+    IEEE8021BridgePortNumber, IEEE8021VlanIndex, IEEE8021MstIdentifier
+        FROM IEEE8021-TC-MIB
+    BridgeId
+        FROM BRIDGE-MIB
+    SnmpAdminString
+        FROM SNMP-FRAMEWORK-MIB
+    MODULE-COMPLIANCE, OBJECT-GROUP
+        FROM SNMPv2-CONF;
+
+ieee8021MstpMib MODULE-IDENTITY
+    LAST-UPDATED "201112120000Z"
+    ORGANIZATION
+        "IEEE 802.1 Working Group"
+    CONTACT-INFO 
+        "  WG-URL: http://grouper.ieee.org/groups/802/1/index.html
+         WG-EMail: stds-802-1@ieee.org
+         
+          Contact: David Levi
+           Postal: C/O IEEE 802.1 Working Group
+                   IEEE Standards Association
+                   445 Hoes Lane
+                   P.O. Box 1331
+                   Piscataway
+                   NJ 08855-1331
+                   USA
+           E-mail: STDS-802-1-L@LISTSERV.IEEE.ORG"
+    DESCRIPTION 
+        "The Bridge Mib modules for managing devices that support 
+         IEEE 802.1Q multiple spanning tree groups.
+         
+         Unless otherwise indicated, the references in this MIB module 
+         are to IEEE 802.1Q-2011.
+         
+         Copyright (C) IEEE.
+         This version of this MIB module is part of IEEE802.1Q; see the 
+         draft itself for full legal notices."
+    REVISION    "201112120000Z"
+    DESCRIPTION 
+        "Deprecated ieee8021MstpFidToMstiTable for an identical 
+         ieee8021MstpFidToMstiV2Table to add 4095 to the range of 
+         ieee8021MstpFidToMstiV2Fid and to add 0 and 4095 to the range 
+         of ieee8021MstpFidToMstiV2MstId for 802.1aq.  Deprecated 
+         ieee8021MstpVlanTable for an identical ieee8021MstpVlanV2Table 
+         to add 0 and 4095 to the range of ieee8021MstpVlanV2MstId for 
+         802.1aq."
+    REVISION    "201103230000Z"
+    DESCRIPTION 
+        "Minor edits to contact information, correction to range of 
+         ieee8021MstpCistMaxHops and addition of fragile bridge as part 
+         of 2011 revision of IEEE Std 802.1Q."
+    REVISION    "200810150000Z"
+    DESCRIPTION 
+        "Initial version."
+    ::= { ieee802dot1mibs 6 }
+
+
+ieee8021MstpNotifications OBJECT IDENTIFIER
+    ::= { ieee8021MstpMib 0 }
+
+ieee8021MstpObjects OBJECT IDENTIFIER
+    ::= { ieee8021MstpMib 1 }
+
+ieee8021MstpConformance OBJECT IDENTIFIER
+    ::= { ieee8021MstpMib 2 }
+
+-- ============================================================
+-- MSTP CIST Table
+-- ============================================================
+
+ieee8021MstpCistTable OBJECT-TYPE
+    SYNTAX      SEQUENCE OF Ieee8021MstpCistEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION 
+        "The Common and Intenral Spanning Tree (CIST) Table.  Each row 
+         in the table represents information regarding a Bridge's Bridge 
+         Protocol Entity for the CIST.
+         
+         Note that entries will exist in this table only for bridge 
+         components for which the corresponding instance of 
+         ieee8021SpanningTreeVersion (from the 
+         IEEE8021-SPANNING-TREE-MIB) has a value of mstp(2).
+         
+         This table contains objects corresponding to the following 
+         items from 12.8.1.1 and 12.8.1.3 of IEEE 802.1Q-2005, and the 
+         802.1ah amendment.  Some of those items are provided in the 
+         IEEE8021-SPANNING-TREE-MIB as noted below.
+         
+         From 12.8.1.1:
+             Items a), c), o), p) and q) are defined in this table.  The 
+             remaining items are covered in the 
+             IEEE8021-SPANNING-TREE-MIB:
+                 b) ieee8021SpanningTreeTimeSinceTopologyChagne
+                 c) ieee8021SpanningTreeTopChanges
+                 e) ieee8021SpanningTreeDesignatedRoot
+                 f) ieee8021SpanningTreeRootCost
+                 g) ieee8021SpanningTreeRootPort
+                 h) ieee8021SpanningTreeMaxAge
+                 i) ieee8021SpanningTreeForwardDelay
+                 j) ieee8021SpanningTreeBridgeMaxAge
+                 k) ieee8021SpanningTreeBridgeHelloTime
+                 l) ieee8021SpanningTreeBridgeForwardDelay
+                 m) ieee8021SpanningTreeHoldTime
+                 n) ieee8021SpanningTreeVersion
+                
+         From 12.8.1.3:
+             Item g) is defined in this table.  The remaining items are 
+             covered in the IEEE8021-SPANNING-TREE-MIB:
+                 a) ieee8021SpanningTreeBridgeMaxAge
+                 b) ieee8021SpanningTreeBridgeHelloTime
+                 c) ieee8021SpanningTreeBridgeForwardingDelay
+                 d) ieee8021SpanningTreePriority
+                 e) ieee8021SpanningTreeVersion
+                 f) ieee8021RstpStpExtTxHoldCount"
+    REFERENCE   
+        "12.8.1.1, 12.8.1.3"
+    ::= { ieee8021MstpObjects 1 }
+
+ieee8021MstpCistEntry OBJECT-TYPE
+    SYNTAX      Ieee8021MstpCistEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION 
+        "A CIST Table entry."
+    INDEX       { ieee8021MstpCistComponentId }
+    ::= { ieee8021MstpCistTable 1 }
+
+Ieee8021MstpCistEntry ::= SEQUENCE {
+    ieee8021MstpCistCompnentId              IEEE8021PbbComponentIdentifier,
+    ieee8021MstpCistBridgeIdentifier        BridgeId,
+    ieee8021MstpCistTopologyChange          TruthValue,
+    ieee8021MstpCistRegionalRootIdentifier  BridgeId,
+    ieee8021MstpCistPathCost                Unsigned32,
+    ieee8021MstpCistMaxHops                 Integer32
+}
+
+ieee8021MstpCistCompnentId OBJECT-TYPE
+    SYNTAX      IEEE8021PbbComponentIdentifier
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION 
+        "The component identifier is used to distinguish between the 
+         multiple virtual bridge instances within a PBB.  In simple 
+         sistuations where there is only a single component the default 
+         value is 1."
+    ::= { ieee8021MstpCistEntry 1 }
+
+ieee8021MstpCistBridgeIdentifier OBJECT-TYPE
+    SYNTAX      BridgeId
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "The Bridge Identifier for the CIST."
+    REFERENCE   
+        "9.2.5 of IEEE Std 802.1D-2004"
+    ::= { ieee8021MstpCistEntry 2 }
+
+ieee8021MstpCistTopologyChange OBJECT-TYPE
+    SYNTAX      TruthValue
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "In an STP Bridge, the value of the Topology Change parameter 
+         (14.8.1.1.3, item d of IEEE Std 802.1D, 2004 Edition), or in an 
+         RST or MST Bridge, asserted if the tcWhile timer for any Port 
+         for the Cist is non-zero."
+    REFERENCE   
+        "14.8.1.1.3 (d) of IEEE 802.1D-2004"
+    ::= { ieee8021MstpCistEntry 3 }
+
+ieee8021MstpCistRegionalRootIdentifier OBJECT-TYPE
+    SYNTAX      BridgeId
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "In an MST Bridge, the CIST Regional Root Identifier parameter 
+         i.e. the Bridge Identifier of the current CIST Regional Root."
+    REFERENCE   
+        "13.16.4"
+    ::= { ieee8021MstpCistEntry 4 }
+
+ieee8021MstpCistPathCost OBJECT-TYPE
+    SYNTAX      Unsigned32 (0..2147483647)
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "In an MST Bridge, the CIST Path Cost parameter, i.e. the CIST 
+         path cost from the transmitting Bridge to the CIST Regional 
+         Root.  The sum (about 20 possible out of the given range) or 
+         multiple port path costs.  Also, if the 'transmitting bridge' 
+         is the 'CIST Regional Root', then this value could be zero."
+    ::= { ieee8021MstpCistEntry 5 }
+
+ieee8021MstpCistMaxHops OBJECT-TYPE
+    SYNTAX      Integer32 (6..40)
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "In an MST Bridge, the MaxHops parameter.
+         
+         The value of this object MUST be retained across 
+         reinitializaitons of the management system."
+    REFERENCE   
+        "13.22.1"
+    ::= { ieee8021MstpCistEntry 6 }
+
+-- ============================================================
+-- ieee8021MstpTable
+-- ============================================================
+
+ieee8021MstpTable OBJECT-TYPE
+    SYNTAX      SEQUENCE OF Ieee8021MstpEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION 
+        "In an MST Bridge, the MSTP Table.  Each row in the Table 
+         represents information regarding a Bridge's Bridge Protocol 
+         Entity for the specified Spanning Tree instance.
+         
+         Entries in this table MUST be retained across reinitialization 
+         of the management system.
+         
+         Note that entries can be created in this table only for bridge 
+         components for which the corresponding instance of 
+         ieee8021SpanningTreeVersion (from IEEE8021-SPANNING-TREE-MIB) 
+         has a value of mstp(2)."
+    REFERENCE   
+        "12.8.1.2, 12.8.1.4, 12.12.3.2, 12.12.1"
+    ::= { ieee8021MstpObjects 2 }
+
+ieee8021MstpEntry OBJECT-TYPE
+    SYNTAX      Ieee8021MstpEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION 
+        "A MST Table entry."
+    INDEX       { ieee8021MstComponentId, ieee8021MstpId }
+    ::= { ieee8021MstpTable 1 }
+
+Ieee8021MstpEntry ::= SEQUENCE {
+    ieee8021MstpComponentId             IEEE8021PbbComponentIdentifier,
+    ieee8021MstpId                      IEEE8021MstIdentifier,
+    ieee8021MstpBridgeId                BridgeId,
+    ieee8021MstpTimeSinceTopologyChange TimeTicks,
+    ieee8021MstpTopologyChanges         Counter64,
+    ieee8021MstpTopologyChange          TruthValue,
+    ieee8021MstpDesignatedRoot          BridgeId,
+    ieee8021MstpRootPathCost            Integer32,
+    ieee8021MstpRootPort                IEEE8021BridgePortNumber,
+    ieee8021MstpBridgePriority          Integer32,
+    ieee8021MstpVids0                   OCTET STRING,
+    ieee8021MstpVids1                   OCTET STRING,
+    ieee8021MstpVids2                   OCTET STRING,
+    ieee8021MstpVids3                   OCTET STRING,
+    ieee8021MstpRowStatus               RowStatus
+}
+
+ieee8021MstpComponentId OBJECT-TYPE
+    SYNTAX      IEEE8021PbbComponentIdentifier
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION 
+        ""
+    ::= { ieee8021MstpEntry 1 }
+
+ieee8021MstpId OBJECT-TYPE
+    SYNTAX      IEEE8021MstIdentifier
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION 
+        ""
+    ::= { ieee8021MstpEntry 2 }
+
+ieee8021MstpBridgeId OBJECT-TYPE
+    SYNTAX      BridgeId
+    MAX-ACCESS  read-create
+    STATUS      current
+    DESCRIPTION 
+        ""
+    ::= { ieee8021MstpEntry 3 }
+
+ieee8021MstpTimeSinceTopologyChange OBJECT-TYPE
+    SYNTAX      TimeTicks
+    MAX-ACCESS  read-create
+    STATUS      current
+    DESCRIPTION 
+        ""
+    ::= { ieee8021MstpEntry 4 }
+
+ieee8021MstpTopologyChanges OBJECT-TYPE
+    SYNTAX      Counter64
+    MAX-ACCESS  read-create
+    STATUS      current
+    DESCRIPTION 
+        ""
+    ::= { ieee8021MstpEntry 5 }
+
+ieee8021MstpTopologyChange OBJECT-TYPE
+    SYNTAX      TruthValue
+    MAX-ACCESS  read-create
+    STATUS      current
+    DESCRIPTION 
+        ""
+    ::= { ieee8021MstpEntry 6 }
+
+ieee8021MstpDesignatedRoot OBJECT-TYPE
+    SYNTAX      BridgeId
+    MAX-ACCESS  read-create
+    STATUS      current
+    DESCRIPTION 
+        ""
+    ::= { ieee8021MstpEntry 7 }
+
+ieee8021MstpRootPathCost OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-create
+    STATUS      current
+    DESCRIPTION 
+        ""
+    ::= { ieee8021MstpEntry 8 }
+
+ieee8021MstpRootPort OBJECT-TYPE
+    SYNTAX      IEEE8021BridgePortNumber
+    MAX-ACCESS  read-create
+    STATUS      current
+    DESCRIPTION 
+        ""
+    ::= { ieee8021MstpEntry 9 }
+
+ieee8021MstpBridgePriority OBJECT-TYPE
+    SYNTAX      Integer32
+    MAX-ACCESS  read-create
+    STATUS      current
+    DESCRIPTION 
+        ""
+    ::= { ieee8021MstpEntry 10 }
+
+ieee8021MstpVids0 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-create
+    STATUS      current
+    DESCRIPTION 
+        ""
+    ::= { ieee8021MstpEntry 11 }
+
+ieee8021MstpVids1 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-create
+    STATUS      current
+    DESCRIPTION 
+        ""
+    ::= { ieee8021MstpEntry 12 }
+
+ieee8021MstpVids2 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-create
+    STATUS      current
+    DESCRIPTION 
+        ""
+    ::= { ieee8021MstpEntry 13 }
+
+ieee8021MstpVids3 OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-create
+    STATUS      current
+    DESCRIPTION 
+        ""
+    ::= { ieee8021MstpEntry 14 }
+
+ieee8021MstpRowStatus OBJECT-TYPE
+    SYNTAX      RowStatus
+    MAX-ACCESS  read-create
+    STATUS      current
+    DESCRIPTION 
+        ""
+    ::= { ieee8021MstpEntry 15 }
+
+
+
+
+END -- end of module IEEE8021-MSTP-MIB
+
+-- ============================================================
+-- vim: ft=mib comments=\f\:\",\b\:\-\-,\:\-\-,\f\b\:- fo+=tcqlornw tw=72 nocin nosi sts=4 sw=4 et
