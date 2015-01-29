@@ -3,8 +3,8 @@ IEEE8021-PB-MIB DEFINITIONS ::= BEGIN
 IMPORTS
     ieee8021BridgeBasePort, ieee8021BridgeBasePortComponentId
         FROM IEEE8021-BRIDGE-MIB
-    IEEE8021BridgePortNumberOrZero, IEEE8021PbbComponentIdentifier, 
-    IEEE8021PbbComponentIdentifierOrZero, 
+    IEEE8021BridgePortNumberOrZero, IEEE8021BridgePortType, 
+    IEEE8021PbbComponentIdentifier, IEEE8021PbbComponentIdentifierOrZero, 
     IEEE8021PortAcceptableFrameTypes, IEEE8021PriorityValue, 
     ieee802dot1mibs
         FROM IEEE8021-TC-MIB
@@ -644,9 +644,9 @@ ieee8021PbRcapEntry OBJECT-TYPE
     ::= { ieee8021PbRcapTable 1 }
 
 Ieee8021PbRcapEntry ::= SEQUENCE {
-    ieee8021PbRcapSComponentId      IEEE8021PbbComponentIdentifierOrZero,
-    ieee8021PbRcapPortNumber        IEEE8021BridgePortNumberOrZero,
-    ieee8021PbRcapRowStatus         RowStatus
+    ieee8021PbRcapSComponentId  IEEE8021PbbComponentIdentifierOrZero,
+    ieee8021PbRcapPortNumber    IEEE8021BridgePortNumberOrZero,
+    ieee8021PbRcapRowStatus     RowStatus
 }
 
 ieee8021PbRcapSComponentId OBJECT-TYPE
@@ -692,7 +692,7 @@ ieee8021PbRcapRowStatus OBJECT-TYPE
 -- ============================================================
 
 ieee8021PbInternalInterfaceTable OBJECT-TYPE
-    SYNTAX      SEQUENCE OF Ieee8021PbInternalInterfaceEntry
+    SYNTAX      SEQUENCE OF Ieee8021PbIiEntry
     MAX-ACCESS  not-accessible
     STATUS      current
     DESCRIPTION 
@@ -711,8 +711,8 @@ ieee8021PbInternalInterfaceTable OBJECT-TYPE
         "12.13.4.1, 12.13.4.2"
     ::= { ieee8021PbObjects 9 }
 
-ieee8021PbTiEntry OBJECT-TYPE
-    SYNTAX      Ieee8021PbInternalInterfaceEntry
+ieee8021PbIiEntry OBJECT-TYPE
+    SYNTAX      Ieee8021PbIiEntry
     MAX-ACCESS  not-accessible
     STATUS      current
     DESCRIPTION 
@@ -723,11 +723,10 @@ ieee8021PbTiEntry OBJECT-TYPE
          except in the case of a C-tagged service interface the internal 
          S-VID which carries the service."
     INDEX       { ieee8021BridgeBasePortComponentId, 
-                  ieee8021BridgeBasePort, 
-                  ieee8021PbTiExternalSVid }
+                  ieee8021BridgeBasePort, ieee8021PbTiExternalSVid }
     ::= { ieee8021PbInternalInterfaceTable 1 }
 
-Ieee8021PbInternalInterfaceEntry ::= SEQUENCE {
+Ieee8021PbIiEntry ::= SEQUENCE {
     ieee8021PbTiExternalSVid        VlanId,
     ieee8021PbTiInternalPortNumber  IEEE8021BridgePortNumberOrZero,
     ieee8021PbTiInternalPortType    IEEE8021BridgePortType,
@@ -741,7 +740,7 @@ ieee8021PbTiExternalSVid OBJECT-TYPE
     STATUS      current
     DESCRIPTION 
         "External S-VID for this internal interface table entry."
-    ::= { ieee8021PbTiEntry 1 }
+    ::= { ieee8021PbIiEntry 1 }
 
 ieee8021PbTiInternalPortNumber OBJECT-TYPE
     SYNTAX      IEEE8021BridgePortNumberOrZero
@@ -755,7 +754,7 @@ ieee8021PbTiInternalPortNumber OBJECT-TYPE
          The port number of the Remote Customer Access Port can be used 
          to identify a PNP on the primary S-VLAN component connected to 
          a PNP on the Port-mapping S-VLAN component."
-    ::= { ieee8021PbTiEntry 2 }
+    ::= { ieee8021PbIiEntry 2 }
 
 ieee8021PbTiInternalPortType OBJECT-TYPE
     SYNTAX      IEEE8021BridgePortType
@@ -770,7 +769,7 @@ ieee8021PbTiInternalPortType OBJECT-TYPE
          customerEdgePort(5) - indicates a C-tagged RCSI
          
          Other port type values are not valid for this field."
-    ::= { ieee8021PbTiEntry 3 }
+    ::= { ieee8021PbIiEntry 3 }
 
 ieee8021PbTiInternalSVid OBJECT-TYPE
     SYNTAX      VlanIdOrNone
@@ -778,7 +777,7 @@ ieee8021PbTiInternalSVid OBJECT-TYPE
     STATUS      current
     DESCRIPTION 
         "Internal S-VID for this external S-VID entry."
-    ::= { ieee8021PbTiEntry 4 }
+    ::= { ieee8021PbIiEntry 4 }
 
 ieee8021PbTiRowStatus OBJECT-TYPE
     SYNTAX      RowStatus
@@ -794,7 +793,7 @@ ieee8021PbTiRowStatus OBJECT-TYPE
          It is an implementation specific decision as to whether any 
          column in this table may be set while the corresponding 
          instance of this object is valid(1)."
-    ::= { ieee8021PbTiEntry 5 }
+    ::= { ieee8021PbIiEntry 5 }
 
 -- ============================================================
 -- Conformance Information
@@ -877,9 +876,8 @@ ieee8021PbDynamicCepGroup OBJECT-GROUP
     ::= { ieee8021PbGroups 7 }
 
 ieee8021PbDynamicRcapGroup OBJECT-GROUP
-    OBJECTS     { ieee8021PbRcapSComponentId, 
-                  ieee8021PbRcapPortNumber, 
-                  ieee8201PbCepRowStatus }
+    OBJECTS     { ieee8021PbRcapSComponentId, ieee8021PbRcapPortNumber, 
+                  ieee8021PbRcapRowStatus }
     STATUS      current
     DESCRIPTION 
         "A set of objects used for dynamic creation and deletion of 
@@ -888,8 +886,8 @@ ieee8021PbDynamicRcapGroup OBJECT-GROUP
 
 ieee8021PbInternalInterfaceGroup OBJECT-GROUP
     OBJECTS     { ieee8021PbTiInternalPortNumber, 
-                  ieee8021PbTiInternalPortType, 
-                  ieee8021PbTiInternalSVid, ieee8021PbTiRowStatus }
+                  ieee8021PbTiInternalPortType, ieee8021PbTiInternalSVid, 
+                  ieee8021PbTiRowStatus }
     STATUS      current
     DESCRIPTION 
         "A set of objects used for dynamic creation and deletion of 
