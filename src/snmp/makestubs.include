@@ -1,209 +1,209 @@
-MIBPREFIXES += ieeeTcMIB
+MIBPREFIXES += ieee8021TcMib
 
-ieeeTcMIB.mib: ../mibs/IEEE8021-TC-MIB.mib
+ieee8021TcMib.mib: ../mibs/IEEE8021-TC-MIB.mib
 	smidump -k ../mibs/IEEE8021-TC-MIB.mib>$@ || :
 
-ieeeTcMIB.lint: ../mibs/IEEE8021-TC-MIB.mib
+ieee8021TcMib.lint: ../mibs/IEEE8021-TC-MIB.mib
 	smilint $(SMILINTIGNORES) -ms ../mibs/IEEE8021-TC-MIB.mib>$@ 2>&1 || :
 
-ieeeTcMIB.tree: ../mibs/IEEE8021-TC-MIB.mib
-	snmptranslate -Tp IEEE8021-TC-MIB::ieeeTcMIB>$@ || :
+ieee8021TcMib.tree: ../mibs/IEEE8021-TC-MIB.mib
+	snmptranslate -Tp IEEE8021-TC-MIB::ieee8021TcMib>$@ || :
 
-ieeeTcMIB_simple.c ieeeTcMIB_simple.h: mib2c mib2c.conf ../mibs/IEEE8021-TC-MIB.mib
-	./mib2c -c ./mib2c.conf -f ieeeTcMIB_simple IEEE8021-TC-MIB::ieeeTcMIB
-	indent -nhnl ieeeTcMIB_simple.[ch]
+ieee8021TcMib_simple.c ieee8021TcMib_simple.h: mib2c mib2c.conf ../mibs/IEEE8021-TC-MIB.mib
+	./mib2c -c ./mib2c.conf -f ieee8021TcMib_simple IEEE8021-TC-MIB::ieee8021TcMib
+	indent -nhnl ieee8021TcMib_simple.[ch]
 
-ieeeTcMIB_storage.c ieeeTcMIB_storage.h: mib2c mib2c.conf ../mibs/IEEE8021-TC-MIB.mib
-	./mib2c -c ./mib2c.storage.conf -f ieeeTcMIB_storage IEEE8021-TC-MIB::ieeeTcMIB
-	indent -nhnl ieeeTcMIB_storage.[ch]
+ieee8021TcMib_storage.c ieee8021TcMib_storage.h: mib2c mib2c.conf ../mibs/IEEE8021-TC-MIB.mib
+	./mib2c -c ./mib2c.storage.conf -f ieee8021TcMib_storage IEEE8021-TC-MIB::ieee8021TcMib
+	indent -nhnl ieee8021TcMib_storage.[ch]
 
-ieeeTcMIB_openss7.c ieeeTcMIB_openss7.h: mib2c mib2c.conf ../mibs/IEEE8021-TC-MIB.mib
-	./mib2c -c ./mib2c.openss7.conf -f ieeeTcMIB_openss7 IEEE8021-TC-MIB::ieeeTcMIB
-	indent -nhnl ieeeTcMIB_openss7.[ch]
+ieee8021TcMib_openss7.c ieee8021TcMib_openss7.h: mib2c mib2c.conf ../mibs/IEEE8021-TC-MIB.mib
+	./mib2c -c ./mib2c.openss7.conf -f ieee8021TcMib_openss7 IEEE8021-TC-MIB::ieee8021TcMib
+	indent -nhnl ieee8021TcMib_openss7.[ch]
 
-MIBPREFIXES += ieeeBridgeMIB
+MIBPREFIXES += ieee8021BridgeMib
 
-ieeeBridgeMIB.mib: ../mibs/IEEE8021-BRIDGE-MIB.mib
+ieee8021BridgeMib.mib: ../mibs/IEEE8021-BRIDGE-MIB.mib
 	smidump -k ../mibs/IEEE8021-BRIDGE-MIB.mib>$@ || :
 
-ieeeBridgeMIB.lint: ../mibs/IEEE8021-BRIDGE-MIB.mib
+ieee8021BridgeMib.lint: ../mibs/IEEE8021-BRIDGE-MIB.mib
 	smilint $(SMILINTIGNORES) -ms ../mibs/IEEE8021-BRIDGE-MIB.mib>$@ 2>&1 || :
 
-ieeeBridgeMIB.tree: ../mibs/IEEE8021-BRIDGE-MIB.mib
-	snmptranslate -Tp IEEE8021-BRIDGE-MIB::ieeeBridgeMIB>$@ || :
+ieee8021BridgeMib.tree: ../mibs/IEEE8021-BRIDGE-MIB.mib
+	snmptranslate -Tp IEEE8021-BRIDGE-MIB::ieee8021BridgeMib>$@ || :
 
-ieeeBridgeMIB_simple.c ieeeBridgeMIB_simple.h: mib2c mib2c.conf ../mibs/IEEE8021-BRIDGE-MIB.mib
-	./mib2c -c ./mib2c.conf -f ieeeBridgeMIB_simple IEEE8021-BRIDGE-MIB::ieeeBridgeMIB
-	indent -nhnl ieeeBridgeMIB_simple.[ch]
+ieee8021BridgeMib_simple.c ieee8021BridgeMib_simple.h: mib2c mib2c.conf ../mibs/IEEE8021-BRIDGE-MIB.mib
+	./mib2c -c ./mib2c.conf -f ieee8021BridgeMib_simple IEEE8021-BRIDGE-MIB::ieee8021BridgeMib
+	indent -nhnl ieee8021BridgeMib_simple.[ch]
 
-ieeeBridgeMIB_storage.c ieeeBridgeMIB_storage.h: mib2c mib2c.conf ../mibs/IEEE8021-BRIDGE-MIB.mib
-	./mib2c -c ./mib2c.storage.conf -f ieeeBridgeMIB_storage IEEE8021-BRIDGE-MIB::ieeeBridgeMIB
-	indent -nhnl ieeeBridgeMIB_storage.[ch]
+ieee8021BridgeMib_storage.c ieee8021BridgeMib_storage.h: mib2c mib2c.conf ../mibs/IEEE8021-BRIDGE-MIB.mib
+	./mib2c -c ./mib2c.storage.conf -f ieee8021BridgeMib_storage IEEE8021-BRIDGE-MIB::ieee8021BridgeMib
+	indent -nhnl ieee8021BridgeMib_storage.[ch]
 
-ieeeBridgeMIB_openss7.c ieeeBridgeMIB_openss7.h: mib2c mib2c.conf ../mibs/IEEE8021-BRIDGE-MIB.mib
-	./mib2c -c ./mib2c.openss7.conf -f ieeeBridgeMIB_openss7 IEEE8021-BRIDGE-MIB::ieeeBridgeMIB
-	indent -nhnl ieeeBridgeMIB_openss7.[ch]
+ieee8021BridgeMib_openss7.c ieee8021BridgeMib_openss7.h: mib2c mib2c.conf ../mibs/IEEE8021-BRIDGE-MIB.mib
+	./mib2c -c ./mib2c.openss7.conf -f ieee8021BridgeMib_openss7 IEEE8021-BRIDGE-MIB::ieee8021BridgeMib
+	indent -nhnl ieee8021BridgeMib_openss7.[ch]
 
-MIBPREFIXES += ieeeStpMIB
+MIBPREFIXES += ieee8021SpanningTreeMib
 
-ieeeStpMIB.mib: ../mibs/IEEE8021-SPANNING-TREE-MIB.mib
+ieee8021SpanningTreeMib.mib: ../mibs/IEEE8021-SPANNING-TREE-MIB.mib
 	smidump -k ../mibs/IEEE8021-SPANNING-TREE-MIB.mib>$@ || :
 
-ieeeStpMIB.lint: ../mibs/IEEE8021-SPANNING-TREE-MIB.mib
+ieee8021SpanningTreeMib.lint: ../mibs/IEEE8021-SPANNING-TREE-MIB.mib
 	smilint $(SMILINTIGNORES) -ms ../mibs/IEEE8021-SPANNING-TREE-MIB.mib>$@ 2>&1 || :
 
-ieeeStpMIB.tree: ../mibs/IEEE8021-SPANNING-TREE-MIB.mib
-	snmptranslate -Tp IEEE8021-SPANNING-TREE-MIB::ieeeStpMIB>$@ || :
+ieee8021SpanningTreeMib.tree: ../mibs/IEEE8021-SPANNING-TREE-MIB.mib
+	snmptranslate -Tp IEEE8021-SPANNING-TREE-MIB::ieee8021SpanningTreeMib>$@ || :
 
-ieeeStpMIB_simple.c ieeeStpMIB_simple.h: mib2c mib2c.conf ../mibs/IEEE8021-SPANNING-TREE-MIB.mib
-	./mib2c -c ./mib2c.conf -f ieeeStpMIB_simple IEEE8021-SPANNING-TREE-MIB::ieeeStpMIB
-	indent -nhnl ieeeStpMIB_simple.[ch]
+ieee8021SpanningTreeMib_simple.c ieee8021SpanningTreeMib_simple.h: mib2c mib2c.conf ../mibs/IEEE8021-SPANNING-TREE-MIB.mib
+	./mib2c -c ./mib2c.conf -f ieee8021SpanningTreeMib_simple IEEE8021-SPANNING-TREE-MIB::ieee8021SpanningTreeMib
+	indent -nhnl ieee8021SpanningTreeMib_simple.[ch]
 
-ieeeStpMIB_storage.c ieeeStpMIB_storage.h: mib2c mib2c.conf ../mibs/IEEE8021-SPANNING-TREE-MIB.mib
-	./mib2c -c ./mib2c.storage.conf -f ieeeStpMIB_storage IEEE8021-SPANNING-TREE-MIB::ieeeStpMIB
-	indent -nhnl ieeeStpMIB_storage.[ch]
+ieee8021SpanningTreeMib_storage.c ieee8021SpanningTreeMib_storage.h: mib2c mib2c.conf ../mibs/IEEE8021-SPANNING-TREE-MIB.mib
+	./mib2c -c ./mib2c.storage.conf -f ieee8021SpanningTreeMib_storage IEEE8021-SPANNING-TREE-MIB::ieee8021SpanningTreeMib
+	indent -nhnl ieee8021SpanningTreeMib_storage.[ch]
 
-ieeeStpMIB_openss7.c ieeeStpMIB_openss7.h: mib2c mib2c.conf ../mibs/IEEE8021-SPANNING-TREE-MIB.mib
-	./mib2c -c ./mib2c.openss7.conf -f ieeeStpMIB_openss7 IEEE8021-SPANNING-TREE-MIB::ieeeStpMIB
-	indent -nhnl ieeeStpMIB_openss7.[ch]
+ieee8021SpanningTreeMib_openss7.c ieee8021SpanningTreeMib_openss7.h: mib2c mib2c.conf ../mibs/IEEE8021-SPANNING-TREE-MIB.mib
+	./mib2c -c ./mib2c.openss7.conf -f ieee8021SpanningTreeMib_openss7 IEEE8021-SPANNING-TREE-MIB::ieee8021SpanningTreeMib
+	indent -nhnl ieee8021SpanningTreeMib_openss7.[ch]
 
-MIBPREFIXES += ieeeQBridgeMIB
+MIBPREFIXES += ieee8021QBridgeMib
 
-ieeeQBridgeMIB.mib: ../mibs/IEEE8021-Q-BRIDGE-MIB.mib
+ieee8021QBridgeMib.mib: ../mibs/IEEE8021-Q-BRIDGE-MIB.mib
 	smidump -k ../mibs/IEEE8021-Q-BRIDGE-MIB.mib>$@ || :
 
-ieeeQBridgeMIB.lint: ../mibs/IEEE8021-Q-BRIDGE-MIB.mib
+ieee8021QBridgeMib.lint: ../mibs/IEEE8021-Q-BRIDGE-MIB.mib
 	smilint $(SMILINTIGNORES) -ms ../mibs/IEEE8021-Q-BRIDGE-MIB.mib>$@ 2>&1 || :
 
-ieeeQBridgeMIB.tree: ../mibs/IEEE8021-Q-BRIDGE-MIB.mib
-	snmptranslate -Tp IEEE8021-Q-BRIDGE-MIB::ieeeQBridgeMIB>$@ || :
+ieee8021QBridgeMib.tree: ../mibs/IEEE8021-Q-BRIDGE-MIB.mib
+	snmptranslate -Tp IEEE8021-Q-BRIDGE-MIB::ieee8021QBridgeMib>$@ || :
 
-ieeeQBridgeMIB_simple.c ieeeQBridgeMIB_simple.h: mib2c mib2c.conf ../mibs/IEEE8021-Q-BRIDGE-MIB.mib
-	./mib2c -c ./mib2c.conf -f ieeeQBridgeMIB_simple IEEE8021-Q-BRIDGE-MIB::ieeeQBridgeMIB
-	indent -nhnl ieeeQBridgeMIB_simple.[ch]
+ieee8021QBridgeMib_simple.c ieee8021QBridgeMib_simple.h: mib2c mib2c.conf ../mibs/IEEE8021-Q-BRIDGE-MIB.mib
+	./mib2c -c ./mib2c.conf -f ieee8021QBridgeMib_simple IEEE8021-Q-BRIDGE-MIB::ieee8021QBridgeMib
+	indent -nhnl ieee8021QBridgeMib_simple.[ch]
 
-ieeeQBridgeMIB_storage.c ieeeQBridgeMIB_storage.h: mib2c mib2c.conf ../mibs/IEEE8021-Q-BRIDGE-MIB.mib
-	./mib2c -c ./mib2c.storage.conf -f ieeeQBridgeMIB_storage IEEE8021-Q-BRIDGE-MIB::ieeeQBridgeMIB
-	indent -nhnl ieeeQBridgeMIB_storage.[ch]
+ieee8021QBridgeMib_storage.c ieee8021QBridgeMib_storage.h: mib2c mib2c.conf ../mibs/IEEE8021-Q-BRIDGE-MIB.mib
+	./mib2c -c ./mib2c.storage.conf -f ieee8021QBridgeMib_storage IEEE8021-Q-BRIDGE-MIB::ieee8021QBridgeMib
+	indent -nhnl ieee8021QBridgeMib_storage.[ch]
 
-ieeeQBridgeMIB_openss7.c ieeeQBridgeMIB_openss7.h: mib2c mib2c.conf ../mibs/IEEE8021-Q-BRIDGE-MIB.mib
-	./mib2c -c ./mib2c.openss7.conf -f ieeeQBridgeMIB_openss7 IEEE8021-Q-BRIDGE-MIB::ieeeQBridgeMIB
-	indent -nhnl ieeeQBridgeMIB_openss7.[ch]
+ieee8021QBridgeMib_openss7.c ieee8021QBridgeMib_openss7.h: mib2c mib2c.conf ../mibs/IEEE8021-Q-BRIDGE-MIB.mib
+	./mib2c -c ./mib2c.openss7.conf -f ieee8021QBridgeMib_openss7 IEEE8021-Q-BRIDGE-MIB::ieee8021QBridgeMib
+	indent -nhnl ieee8021QBridgeMib_openss7.[ch]
 
-MIBPREFIXES += ieeePbMIB
+MIBPREFIXES += ieee8021PbMib
 
-ieeePbMIB.mib: ../mibs/IEEE8021-PB-MIB.mib
+ieee8021PbMib.mib: ../mibs/IEEE8021-PB-MIB.mib
 	smidump -k ../mibs/IEEE8021-PB-MIB.mib>$@ || :
 
-ieeePbMIB.lint: ../mibs/IEEE8021-PB-MIB.mib
+ieee8021PbMib.lint: ../mibs/IEEE8021-PB-MIB.mib
 	smilint $(SMILINTIGNORES) -ms ../mibs/IEEE8021-PB-MIB.mib>$@ 2>&1 || :
 
-ieeePbMIB.tree: ../mibs/IEEE8021-PB-MIB.mib
-	snmptranslate -Tp IEEE8021-PB-MIB::ieeePbMIB>$@ || :
+ieee8021PbMib.tree: ../mibs/IEEE8021-PB-MIB.mib
+	snmptranslate -Tp IEEE8021-PB-MIB::ieee8021PbMib>$@ || :
 
-ieeePbMIB_simple.c ieeePbMIB_simple.h: mib2c mib2c.conf ../mibs/IEEE8021-PB-MIB.mib
-	./mib2c -c ./mib2c.conf -f ieeePbMIB_simple IEEE8021-PB-MIB::ieeePbMIB
-	indent -nhnl ieeePbMIB_simple.[ch]
+ieee8021PbMib_simple.c ieee8021PbMib_simple.h: mib2c mib2c.conf ../mibs/IEEE8021-PB-MIB.mib
+	./mib2c -c ./mib2c.conf -f ieee8021PbMib_simple IEEE8021-PB-MIB::ieee8021PbMib
+	indent -nhnl ieee8021PbMib_simple.[ch]
 
-ieeePbMIB_storage.c ieeePbMIB_storage.h: mib2c mib2c.conf ../mibs/IEEE8021-PB-MIB.mib
-	./mib2c -c ./mib2c.storage.conf -f ieeePbMIB_storage IEEE8021-PB-MIB::ieeePbMIB
-	indent -nhnl ieeePbMIB_storage.[ch]
+ieee8021PbMib_storage.c ieee8021PbMib_storage.h: mib2c mib2c.conf ../mibs/IEEE8021-PB-MIB.mib
+	./mib2c -c ./mib2c.storage.conf -f ieee8021PbMib_storage IEEE8021-PB-MIB::ieee8021PbMib
+	indent -nhnl ieee8021PbMib_storage.[ch]
 
-ieeePbMIB_openss7.c ieeePbMIB_openss7.h: mib2c mib2c.conf ../mibs/IEEE8021-PB-MIB.mib
-	./mib2c -c ./mib2c.openss7.conf -f ieeePbMIB_openss7 IEEE8021-PB-MIB::ieeePbMIB
-	indent -nhnl ieeePbMIB_openss7.[ch]
+ieee8021PbMib_openss7.c ieee8021PbMib_openss7.h: mib2c mib2c.conf ../mibs/IEEE8021-PB-MIB.mib
+	./mib2c -c ./mib2c.openss7.conf -f ieee8021PbMib_openss7 IEEE8021-PB-MIB::ieee8021PbMib
+	indent -nhnl ieee8021PbMib_openss7.[ch]
 
-MIBPREFIXES += ieeePbbMIB
+MIBPREFIXES += ieee8021PbbMib
 
-ieeePbbMIB.mib: ../mibs/IEEE8021-PBB-MIB.mib
+ieee8021PbbMib.mib: ../mibs/IEEE8021-PBB-MIB.mib
 	smidump -k ../mibs/IEEE8021-PBB-MIB.mib>$@ || :
 
-ieeePbbMIB.lint: ../mibs/IEEE8021-PBB-MIB.mib
+ieee8021PbbMib.lint: ../mibs/IEEE8021-PBB-MIB.mib
 	smilint $(SMILINTIGNORES) -ms ../mibs/IEEE8021-PBB-MIB.mib>$@ 2>&1 || :
 
-ieeePbbMIB.tree: ../mibs/IEEE8021-PBB-MIB.mib
-	snmptranslate -Tp IEEE8021-PBB-MIB::ieeePbbMIB>$@ || :
+ieee8021PbbMib.tree: ../mibs/IEEE8021-PBB-MIB.mib
+	snmptranslate -Tp IEEE8021-PBB-MIB::ieee8021PbbMib>$@ || :
 
-ieeePbbMIB_simple.c ieeePbbMIB_simple.h: mib2c mib2c.conf ../mibs/IEEE8021-PBB-MIB.mib
-	./mib2c -c ./mib2c.conf -f ieeePbbMIB_simple IEEE8021-PBB-MIB::ieeePbbMIB
-	indent -nhnl ieeePbbMIB_simple.[ch]
+ieee8021PbbMib_simple.c ieee8021PbbMib_simple.h: mib2c mib2c.conf ../mibs/IEEE8021-PBB-MIB.mib
+	./mib2c -c ./mib2c.conf -f ieee8021PbbMib_simple IEEE8021-PBB-MIB::ieee8021PbbMib
+	indent -nhnl ieee8021PbbMib_simple.[ch]
 
-ieeePbbMIB_storage.c ieeePbbMIB_storage.h: mib2c mib2c.conf ../mibs/IEEE8021-PBB-MIB.mib
-	./mib2c -c ./mib2c.storage.conf -f ieeePbbMIB_storage IEEE8021-PBB-MIB::ieeePbbMIB
-	indent -nhnl ieeePbbMIB_storage.[ch]
+ieee8021PbbMib_storage.c ieee8021PbbMib_storage.h: mib2c mib2c.conf ../mibs/IEEE8021-PBB-MIB.mib
+	./mib2c -c ./mib2c.storage.conf -f ieee8021PbbMib_storage IEEE8021-PBB-MIB::ieee8021PbbMib
+	indent -nhnl ieee8021PbbMib_storage.[ch]
 
-ieeePbbMIB_openss7.c ieeePbbMIB_openss7.h: mib2c mib2c.conf ../mibs/IEEE8021-PBB-MIB.mib
-	./mib2c -c ./mib2c.openss7.conf -f ieeePbbMIB_openss7 IEEE8021-PBB-MIB::ieeePbbMIB
-	indent -nhnl ieeePbbMIB_openss7.[ch]
+ieee8021PbbMib_openss7.c ieee8021PbbMib_openss7.h: mib2c mib2c.conf ../mibs/IEEE8021-PBB-MIB.mib
+	./mib2c -c ./mib2c.openss7.conf -f ieee8021PbbMib_openss7 IEEE8021-PBB-MIB::ieee8021PbbMib
+	indent -nhnl ieee8021PbbMib_openss7.[ch]
 
-MIBPREFIXES += ieeePbbTeMIB
+MIBPREFIXES += ieee8021PbbTeMib
 
-ieeePbbTeMIB.mib: ../mibs/IEEE8021-PBBTE-MIB.mib
+ieee8021PbbTeMib.mib: ../mibs/IEEE8021-PBBTE-MIB.mib
 	smidump -k ../mibs/IEEE8021-PBBTE-MIB.mib>$@ || :
 
-ieeePbbTeMIB.lint: ../mibs/IEEE8021-PBBTE-MIB.mib
+ieee8021PbbTeMib.lint: ../mibs/IEEE8021-PBBTE-MIB.mib
 	smilint $(SMILINTIGNORES) -ms ../mibs/IEEE8021-PBBTE-MIB.mib>$@ 2>&1 || :
 
-ieeePbbTeMIB.tree: ../mibs/IEEE8021-PBBTE-MIB.mib
-	snmptranslate -Tp IEEE8021-PBBTE-MIB::ieeePbbTeMIB>$@ || :
+ieee8021PbbTeMib.tree: ../mibs/IEEE8021-PBBTE-MIB.mib
+	snmptranslate -Tp IEEE8021-PBBTE-MIB::ieee8021PbbTeMib>$@ || :
 
-ieeePbbTeMIB_simple.c ieeePbbTeMIB_simple.h: mib2c mib2c.conf ../mibs/IEEE8021-PBBTE-MIB.mib
-	./mib2c -c ./mib2c.conf -f ieeePbbTeMIB_simple IEEE8021-PBBTE-MIB::ieeePbbTeMIB
-	indent -nhnl ieeePbbTeMIB_simple.[ch]
+ieee8021PbbTeMib_simple.c ieee8021PbbTeMib_simple.h: mib2c mib2c.conf ../mibs/IEEE8021-PBBTE-MIB.mib
+	./mib2c -c ./mib2c.conf -f ieee8021PbbTeMib_simple IEEE8021-PBBTE-MIB::ieee8021PbbTeMib
+	indent -nhnl ieee8021PbbTeMib_simple.[ch]
 
-ieeePbbTeMIB_storage.c ieeePbbTeMIB_storage.h: mib2c mib2c.conf ../mibs/IEEE8021-PBBTE-MIB.mib
-	./mib2c -c ./mib2c.storage.conf -f ieeePbbTeMIB_storage IEEE8021-PBBTE-MIB::ieeePbbTeMIB
-	indent -nhnl ieeePbbTeMIB_storage.[ch]
+ieee8021PbbTeMib_storage.c ieee8021PbbTeMib_storage.h: mib2c mib2c.conf ../mibs/IEEE8021-PBBTE-MIB.mib
+	./mib2c -c ./mib2c.storage.conf -f ieee8021PbbTeMib_storage IEEE8021-PBBTE-MIB::ieee8021PbbTeMib
+	indent -nhnl ieee8021PbbTeMib_storage.[ch]
 
-ieeePbbTeMIB_openss7.c ieeePbbTeMIB_openss7.h: mib2c mib2c.conf ../mibs/IEEE8021-PBBTE-MIB.mib
-	./mib2c -c ./mib2c.openss7.conf -f ieeePbbTeMIB_openss7 IEEE8021-PBBTE-MIB::ieeePbbTeMIB
-	indent -nhnl ieeePbbTeMIB_openss7.[ch]
+ieee8021PbbTeMib_openss7.c ieee8021PbbTeMib_openss7.h: mib2c mib2c.conf ../mibs/IEEE8021-PBBTE-MIB.mib
+	./mib2c -c ./mib2c.openss7.conf -f ieee8021PbbTeMib_openss7 IEEE8021-PBBTE-MIB::ieee8021PbbTeMib
+	indent -nhnl ieee8021PbbTeMib_openss7.[ch]
 
-MIBPREFIXES += ieeeMstpMIB
+MIBPREFIXES += ieee8021MstpMib
 
-ieeeMstpMIB.mib: ../mibs/IEEE8021-MSTP-MIB.mib
+ieee8021MstpMib.mib: ../mibs/IEEE8021-MSTP-MIB.mib
 	smidump -k ../mibs/IEEE8021-MSTP-MIB.mib>$@ || :
 
-ieeeMstpMIB.lint: ../mibs/IEEE8021-MSTP-MIB.mib
+ieee8021MstpMib.lint: ../mibs/IEEE8021-MSTP-MIB.mib
 	smilint $(SMILINTIGNORES) -ms ../mibs/IEEE8021-MSTP-MIB.mib>$@ 2>&1 || :
 
-ieeeMstpMIB.tree: ../mibs/IEEE8021-MSTP-MIB.mib
-	snmptranslate -Tp IEEE8021-MSTP-MIB::ieeeMstpMIB>$@ || :
+ieee8021MstpMib.tree: ../mibs/IEEE8021-MSTP-MIB.mib
+	snmptranslate -Tp IEEE8021-MSTP-MIB::ieee8021MstpMib>$@ || :
 
-ieeeMstpMIB_simple.c ieeeMstpMIB_simple.h: mib2c mib2c.conf ../mibs/IEEE8021-MSTP-MIB.mib
-	./mib2c -c ./mib2c.conf -f ieeeMstpMIB_simple IEEE8021-MSTP-MIB::ieeeMstpMIB
-	indent -nhnl ieeeMstpMIB_simple.[ch]
+ieee8021MstpMib_simple.c ieee8021MstpMib_simple.h: mib2c mib2c.conf ../mibs/IEEE8021-MSTP-MIB.mib
+	./mib2c -c ./mib2c.conf -f ieee8021MstpMib_simple IEEE8021-MSTP-MIB::ieee8021MstpMib
+	indent -nhnl ieee8021MstpMib_simple.[ch]
 
-ieeeMstpMIB_storage.c ieeeMstpMIB_storage.h: mib2c mib2c.conf ../mibs/IEEE8021-MSTP-MIB.mib
-	./mib2c -c ./mib2c.storage.conf -f ieeeMstpMIB_storage IEEE8021-MSTP-MIB::ieeeMstpMIB
-	indent -nhnl ieeeMstpMIB_storage.[ch]
+ieee8021MstpMib_storage.c ieee8021MstpMib_storage.h: mib2c mib2c.conf ../mibs/IEEE8021-MSTP-MIB.mib
+	./mib2c -c ./mib2c.storage.conf -f ieee8021MstpMib_storage IEEE8021-MSTP-MIB::ieee8021MstpMib
+	indent -nhnl ieee8021MstpMib_storage.[ch]
 
-ieeeMstpMIB_openss7.c ieeeMstpMIB_openss7.h: mib2c mib2c.conf ../mibs/IEEE8021-MSTP-MIB.mib
-	./mib2c -c ./mib2c.openss7.conf -f ieeeMstpMIB_openss7 IEEE8021-MSTP-MIB::ieeeMstpMIB
-	indent -nhnl ieeeMstpMIB_openss7.[ch]
+ieee8021MstpMib_openss7.c ieee8021MstpMib_openss7.h: mib2c mib2c.conf ../mibs/IEEE8021-MSTP-MIB.mib
+	./mib2c -c ./mib2c.openss7.conf -f ieee8021MstpMib_openss7 IEEE8021-MSTP-MIB::ieee8021MstpMib
+	indent -nhnl ieee8021MstpMib_openss7.[ch]
 
-MIBPREFIXES += ieeeSpbMIB
+MIBPREFIXES += ieee8021SpbMib
 
-ieeeSpbMIB.mib: ../mibs/IEEE8021-SPB-MIB.mib
+ieee8021SpbMib.mib: ../mibs/IEEE8021-SPB-MIB.mib
 	smidump -k ../mibs/IEEE8021-SPB-MIB.mib>$@ || :
 
-ieeeSpbMIB.lint: ../mibs/IEEE8021-SPB-MIB.mib
+ieee8021SpbMib.lint: ../mibs/IEEE8021-SPB-MIB.mib
 	smilint $(SMILINTIGNORES) -ms ../mibs/IEEE8021-SPB-MIB.mib>$@ 2>&1 || :
 
-ieeeSpbMIB.tree: ../mibs/IEEE8021-SPB-MIB.mib
-	snmptranslate -Tp IEEE8021-SPB-MIB::ieeeSpbMIB>$@ || :
+ieee8021SpbMib.tree: ../mibs/IEEE8021-SPB-MIB.mib
+	snmptranslate -Tp IEEE8021-SPB-MIB::ieee8021SpbMib>$@ || :
 
-ieeeSpbMIB_simple.c ieeeSpbMIB_simple.h: mib2c mib2c.conf ../mibs/IEEE8021-SPB-MIB.mib
-	./mib2c -c ./mib2c.conf -f ieeeSpbMIB_simple IEEE8021-SPB-MIB::ieeeSpbMIB
-	indent -nhnl ieeeSpbMIB_simple.[ch]
+ieee8021SpbMib_simple.c ieee8021SpbMib_simple.h: mib2c mib2c.conf ../mibs/IEEE8021-SPB-MIB.mib
+	./mib2c -c ./mib2c.conf -f ieee8021SpbMib_simple IEEE8021-SPB-MIB::ieee8021SpbMib
+	indent -nhnl ieee8021SpbMib_simple.[ch]
 
-ieeeSpbMIB_storage.c ieeeSpbMIB_storage.h: mib2c mib2c.conf ../mibs/IEEE8021-SPB-MIB.mib
-	./mib2c -c ./mib2c.storage.conf -f ieeeSpbMIB_storage IEEE8021-SPB-MIB::ieeeSpbMIB
-	indent -nhnl ieeeSpbMIB_storage.[ch]
+ieee8021SpbMib_storage.c ieee8021SpbMib_storage.h: mib2c mib2c.conf ../mibs/IEEE8021-SPB-MIB.mib
+	./mib2c -c ./mib2c.storage.conf -f ieee8021SpbMib_storage IEEE8021-SPB-MIB::ieee8021SpbMib
+	indent -nhnl ieee8021SpbMib_storage.[ch]
 
-ieeeSpbMIB_openss7.c ieeeSpbMIB_openss7.h: mib2c mib2c.conf ../mibs/IEEE8021-SPB-MIB.mib
-	./mib2c -c ./mib2c.openss7.conf -f ieeeSpbMIB_openss7 IEEE8021-SPB-MIB::ieeeSpbMIB
-	indent -nhnl ieeeSpbMIB_openss7.[ch]
+ieee8021SpbMib_openss7.c ieee8021SpbMib_openss7.h: mib2c mib2c.conf ../mibs/IEEE8021-SPB-MIB.mib
+	./mib2c -c ./mib2c.openss7.conf -f ieee8021SpbMib_openss7 IEEE8021-SPB-MIB::ieee8021SpbMib
+	indent -nhnl ieee8021SpbMib_openss7.[ch]
 
 #IEEE8021-TC-MIB.mib
 #IEEE8021-BRIDGE-MIB.mib

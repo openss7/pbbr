@@ -1,3 +1,8 @@
 .*.sw[nop]
 *.lint
+*.tree
 *.mib
+*_openss7.[ch]
+*_openss7.[ch]~
+*_master.[ch]
+*_master.[ch]~
