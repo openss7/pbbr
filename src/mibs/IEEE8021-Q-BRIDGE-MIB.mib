@@ -1954,8 +1954,7 @@ ieee8021QBridgeVIDXEntry OBJECT-TYPE
         "An entry for the S-VID translation table which includes both 
          the Local and Relay S-VIDs."
     INDEX       { ieee8021BridgeBasePortComponentId, 
-                  ieee8021BridgeBasePort, 
-                  ieee8021QBridgeVIDXLocalVid }
+                  ieee8021BridgeBasePort, ieee8021QBridgeVIDXLocalVid }
     ::= { ieee8021QBridgeVIDXTable 1 }
 
 Ieee8021QBridgeVIDXEntry ::= SEQUENCE {
@@ -2029,8 +2028,8 @@ ieee8021QBridgeEgressVidXEntry OBJECT-TYPE
         "An entry for the Egress VID translation table which includes 
          both the relay and local IDs between which the PNP or CNP 
          translates."
-    INDEX       { ieee8021BridgeBaseEgressPortComponentId, 
-                  ieee8021BridgeEgressBasePort, 
+    INDEX       { ieee8021BridgeBasePortComponentId, 
+                  ieee8021BridgeBasePort, 
                   ieee8021QBridgeEgressVidXRelayVid }
     ::= { ieee8021QBridgeEgressVidXTable 1 }
 
@@ -2248,7 +2247,7 @@ ieee8021QBridgeCVlanPortGroup OBJECT-GROUP
         "Objects used to create/delete customer VLAN ports."
     ::= { ieee8021QBridgeGroups 14 }
 
-ieee8201QBridgeVIDXGroup OBJECT-GROUP
+ieee8021QBridgeVIDXGroup OBJECT-GROUP
     OBJECTS     { ieee8021QBridgeVIDXRelayVid, 
                   ieee8021QBridgeVIDXRowStatus }
     STATUS      current
@@ -2262,7 +2261,7 @@ ieee8021QBridgeEgressVIDXGroup OBJECT-GROUP
     STATUS      current
     DESCRIPTION 
         "Egress VID translation for individual ports."
-    ::= { ieee8021QBridgeGroups 15 }
+    ::= { ieee8021QBridgeGroups 16 }
 
 -- ============================================================
 -- compliance statements
