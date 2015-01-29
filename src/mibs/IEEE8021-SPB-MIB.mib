@@ -5,24 +5,24 @@
 IEEE8021-SPB-MIB DEFINITIONS ::= BEGIN
 
 IMPORTS
-    MODULE-IDENTITY, OBJECT-TYPE, Integer32, Unsigned32
-        FROM SNMPv2-SMI
-    RowStatus, MacAddress, TruthValue, TEXTUAL-CONVENTION
-        FROM SNMPv2-TC
-    ieee802dot1mibs, IEEE8021PbbIngressEgress, IEEE8021BridgePortNumber
+    IEEE8021BridgePortNumber, IEEE8021PbbIngressEgress, ieee802dot1mibs
         FROM IEEE8021-TC-MIB
-    VlanId, VlanIdOrNone, VlanIdOrAny
-        FROM Q-BRIDGE-MIB
     InterfaceIndexOrZero
         FROM IF-MIB
+    VlanId, VlanIdOrAny, VlanIdOrNone
+        FROM Q-BRIDGE-MIB
     SnmpAdminString
         FROM SNMP-FRAMEWORK-MIB
     MODULE-COMPLIANCE, OBJECT-GROUP
-        FROM SNMPv2-CONF;
+        FROM SNMPv2-CONF
+    Integer32, MODULE-IDENTITY, OBJECT-TYPE, Unsigned32
+        FROM SNMPv2-SMI
+    MacAddress, RowStatus, TEXTUAL-CONVENTION, TruthValue
+        FROM SNMPv2-TC;
 
 ieee8021SpbMib MODULE-IDENTITY
     LAST-UPDATED "201202030000Z"
-    ORGANIZATION
+    ORGANIZATION 
         "IEEE 802.1 WOrking Group"
     CONTACT-INFO 
         "  WG-URL: http://grouper.ieee.org/groups/802/1/index.html
@@ -40,7 +40,7 @@ ieee8021SpbMib MODULE-IDENTITY
     DESCRIPTION 
         "802.1 SPB MIB"
     REVISION    "201202030000Z"
-    DESCRIPTION
+    DESCRIPTION 
         "802.1 Shortest Path Bridging MIB Initial Version"
     ::= { ieee802dot1mibs 26 }
 
@@ -48,7 +48,7 @@ ieee8021SpbMib MODULE-IDENTITY
 --  TYPE DEFINITIONS
 -- ============================================================
 
-IEEE8021SpbAreaAddrss ::= TEXTUAL-CONVENTION
+IEEE8021SpbAreaAddress ::= TEXTUAL-CONVENTION
     DISPLAY-HINT "1x:"
     STATUS      current
     DESCRIPTION 
@@ -114,7 +114,7 @@ IEEE8021SpbAdjState ::= TEXTUAL-CONVENTION
         "12.25.6.1.3 (d), 12.25.6.2.3 (d), 12.25.7.1.3 (e)"
     SYNTAX      INTEGER { up(1), down(2), testing(3) }
 
-IEEE8021SpbSPsourceId ::= TEXTUAL-CONVENTION
+IEEE8021SpbSPSourceId ::= TEXTUAL-CONVENTION
     DISPLAY-HINT "1x:"
     STATUS      current
     DESCRIPTION 
@@ -263,7 +263,7 @@ ieee8021SpbSysBridgePriority OBJECT-TYPE
     ::= { ieee8021SpbSys 5 }
 
 ieee8021SpbmSysSPSourceId OBJECT-TYPE
-    SYNTAX      IEEE8021SpbmSPSourceId
+    SYNTAX      IEEE8021SpbSPSourceId
     MAX-ACCESS  read-write
     STATUS      current
     DESCRIPTION 
@@ -288,12 +288,12 @@ ieee8021SpbvSysMode OBJECT-TYPE
              enable SPBV mode and auto allocate SPVIDs.
          manual(2), 
              enable SPBV mode and manually assign SPVIDs.
-
+         
          This object is persistent."
     REFERENCE   
         "12.25.1.3.3, 3.20"
     DEFVAL      { auto }
-    ::= { ieee8201SpbSys 7 }
+    ::= { ieee8021SpbSys 7 }
 
 ieee8021SpbmSysMode OBJECT-TYPE
     SYNTAX      IEEE8021SpbMode
@@ -303,9 +303,9 @@ ieee8021SpbmSysMode OBJECT-TYPE
         "Indication of supporting SPBM mode.
          
          auto(1), 
-             enable SPBM mode and auto allocate SPsourceID.
+             enable SPBM mode and auto allocate SPSourceID.
          manual(2), 
-             enable SPBM mode and manually assign SPsourceID.
+             enable SPBM mode and manually assign SPSourceID.
              
          This object is persistent."
     REFERENCE   
@@ -444,17 +444,17 @@ ieee8021SpbTopIxDynamicEntry OBJECT-TYPE
          bridge.  A bridge configures this information in MTID 0 only."
     REFERENCE   
         "12.25.3"
-    INDEX       { iee8021SpbTopIxDynamicEntryTopIx }
+    INDEX       { ieee8021SpbTopIxDynamicEntryTopIx }
     ::= { ieee8021SpbTopIxDynamicTable 1 }
 
 Ieee8021SpbTopIxDynamicEntry ::= SEQUENCE {
-    ieee8201SpbTopIxDynamicEntryTopIx       IEEE8021SpbMTID,
-    ieee8021SpbTopIxDynamicEntryAgreeDigest IEEE8021SpbDigest,
-    ieee8021SpbTopIxDynamicEntryMCID        IEEE8021SpbMCID,
-    ieee8021SpbTopIxDynamicEntryAuxMCID     IEEE8021SpbMCID
+    ieee8021SpbTopIxDynamicEntryTopIx           IEEE8021SpbMTID,
+    ieee8021SpbTopIxDynamicEntryAgreeDigest     IEEE8021SpbDigest,
+    ieee8021SpbTopIxDynamicEntryMCID            IEEE8021SpbMCID,
+    ieee8021SpbTopIxDynamicEntryAuxMCID         IEEE8021SpbMCID
 }
 
-ieee8201SpbTopIxDynamicEntryTopIx OBJECT-TYPE
+ieee8021SpbTopIxDynamicEntryTopIx OBJECT-TYPE
     SYNTAX      IEEE8021SpbMTID
     MAX-ACCESS  not-accessible
     STATUS      current
@@ -573,7 +573,7 @@ ieee8021SpbEctStaticEntryEctAlgorithm OBJECT-TYPE
          persistent."
     REFERENCE   
         "12.25.4.1, 12.25.4.2.3, 3.6"
-    DEFVAL  { "00-80-c2-01" }
+    DEFVAL      { "00-80-c2-01" }
     ::= { ieee8021SpbEctStaticEntry 3 }
 
 ieee8021SpbvEctStaticEntrySpvid OBJECT-TYPE
@@ -1041,7 +1041,7 @@ Ieee8021SpbTopNodeEntry ::= SEQUENCE {
     ieee8021SpbTopNodeEntryTopIx            IEEE8021SpbMTID,
     ieee8021SpbTopNodeEntrySysId            MacAddress,
     ieee8021SpbTopNodeEntryBridgePriority   IEEE8021SpbBridgePriority,
-    ieee8021SpbmTopNodeEntrySPSourceID      IEEE8201SpbmSPsourceId,
+    ieee8021SpbmTopNodeEntrySPSourceID      IEEE8021SpbSPSourceId,
     ieee8021SpbTopNodeEntrySysName          SnmpAdminString
 }
 
@@ -1086,7 +1086,7 @@ ieee8021SpbTopNodeEntryBridgePriority OBJECT-TYPE
     ::= { ieee8021SpbTopNodeEntry 3 }
 
 ieee8021SpbmTopNodeEntrySPSourceID OBJECT-TYPE
-    SYNTAX      IEEE8201SpbmSPsourceId
+    SYNTAX      IEEE8021SpbSPSourceId
     MAX-ACCESS  read-only
     STATUS      current
     DESCRIPTION 
@@ -1219,10 +1219,10 @@ ieee8021SpbvTopEctSysMode OBJECT-TYPE
     DESCRIPTION 
         "Indication of supporting SPBV mode: auto(1) or manual(2):
          
-             auto(1), 
-                 SPBV mode and auto allocate SPVIDs.
-             manual(2), 
-                 SPBV mode and manually assign SPVIDs."
+         auto(1), 
+             SPBV mode and auto allocate SPVIDs.
+         manual(2), 
+             SPBV mode and manually assign SPVIDs."
     REFERENCE   
         "12.25.9.1.3, 3.18"
     ::= { ieee8021SpbTopEctEntry 6 }
@@ -1277,19 +1277,19 @@ ieee8021SpbTopEdgeEntry OBJECT-TYPE
     REFERENCE   
         "12.25.10"
     INDEX       { ieee8021SpbTopEdgeEntryTopIx, 
-                  ieee8021SpbTopEdgeSysIdNear, 
+                  ieee8021SpbTopEdgeEntrySysIdNear, 
                   ieee8021SpbTopEdgeEntrySysIdFar }
     ::= { ieee8021SpbTopEdgeTable 1 }
 
 Ieee8021SpbTopEdgeEntry ::= SEQUENCE {
-    ieee8201SpbTopEdgeEntryTopIx            IEEE8021SpbMTID,
-    ieee8201SpbTopEdgeEntrySysIdNear        MacAddress,
-    ieee8201SpbTopEdgeEntrySysIdFar         MacAddress,
-    ieee8201SpbTopEdgeEntryMetricNear2Far   IEEE8021SpbLinkMetric,
-    ieee8201SpbTopEdgeEntryMetricFar2Near   IEEE8021SpbLinkMetric
+    ieee8021SpbTopEdgeEntryTopIx            IEEE8021SpbMTID,
+    ieee8021SpbTopEdgeEntrySysIdNear        MacAddress,
+    ieee8021SpbTopEdgeEntrySysIdFar         MacAddress,
+    ieee8021SpbTopEdgeEntryMetricNear2Far   IEEE8021SpbLinkMetric,
+    ieee8021SpbTopEdgeEntryMetricFar2Near   IEEE8021SpbLinkMetric
 }
 
-ieee8201SpbTopEdgeEntryTopIx OBJECT-TYPE
+ieee8021SpbTopEdgeEntryTopIx OBJECT-TYPE
     SYNTAX      IEEE8021SpbMTID
     MAX-ACCESS  not-accessible
     STATUS      current
@@ -1302,7 +1302,7 @@ ieee8201SpbTopEdgeEntryTopIx OBJECT-TYPE
         "12.25.10.1.2, 12.25.10.1.3, 28.12"
     ::= { ieee8021SpbTopEdgeEntry 1 }
 
-ieee8201SpbTopEdgeEntrySysIdNear OBJECT-TYPE
+ieee8021SpbTopEdgeEntrySysIdNear OBJECT-TYPE
     SYNTAX      MacAddress
     MAX-ACCESS  not-accessible
     STATUS      current
@@ -1314,7 +1314,7 @@ ieee8201SpbTopEdgeEntrySysIdNear OBJECT-TYPE
         "12.25.10.1.2, 12.25.10.1.3, 3.21"
     ::= { ieee8021SpbTopEdgeEntry 2 }
 
-ieee8201SpbTopEdgeEntrySysIdFar OBJECT-TYPE
+ieee8021SpbTopEdgeEntrySysIdFar OBJECT-TYPE
     SYNTAX      MacAddress
     MAX-ACCESS  not-accessible
     STATUS      current
@@ -1326,7 +1326,7 @@ ieee8201SpbTopEdgeEntrySysIdFar OBJECT-TYPE
         "12.25.10.1.2, 12.25.10.1.3, 3.21"
     ::= { ieee8021SpbTopEdgeEntry 3 }
 
-ieee8201SpbTopEdgeEntryMetricNear2Far OBJECT-TYPE
+ieee8021SpbTopEdgeEntryMetricNear2Far OBJECT-TYPE
     SYNTAX      IEEE8021SpbLinkMetric
     MAX-ACCESS  read-only
     STATUS      current
@@ -1339,7 +1339,7 @@ ieee8201SpbTopEdgeEntryMetricNear2Far OBJECT-TYPE
         "12.25.10.1.3, 28.12.7"
     ::= { ieee8021SpbTopEdgeEntry 4 }
 
-ieee8201SpbTopEdgeEntryMetricFar2Near OBJECT-TYPE
+ieee8021SpbTopEdgeEntryMetricFar2Near OBJECT-TYPE
     SYNTAX      IEEE8021SpbLinkMetric
     MAX-ACCESS  read-only
     STATUS      current
@@ -1476,7 +1476,7 @@ ieee8021SpbvTopSrvTable OBJECT-TYPE
         "The SPBV group services in this network."
     REFERENCE   
         "12.25.12"
-    ::= { ieee8201SpbObjects 12}
+    ::= { ieee8021SpbObjects 12 }
 
 ieee8021SpbvTopSrvEntry OBJECT-TYPE
     SYNTAX      Ieee8021SpbvTopSrvEntry
@@ -1494,14 +1494,14 @@ ieee8021SpbvTopSrvEntry OBJECT-TYPE
     ::= { ieee8021SpbvTopSrvTable 1 }
 
 Ieee8021SpbvTopSrvEntry ::= SEQUENCE {
-    ieee8201SpbvTopSrvEntryTopIx        IEEE8021SpbMTID,
-    ieee8201SpbvTopSrvEntrySysId        MacAddress,
-    ieee8201SpbvTopSrvEntryMMac         MacAddress,
-    ieee8201SpbvTopSrvEntryBaseVid      VlanId,
-    ieee8201SpbvTopSrvEntryMMacFlags    IEEE8021PbbIngressEgress
+    ieee8021SpbvTopSrvEntryTopIx        IEEE8021SpbMTID,
+    ieee8021SpbvTopSrvEntrySysId        MacAddress,
+    ieee8021SpbvTopSrvEntryMMac         MacAddress,
+    ieee8021SpbvTopSrvEntryBaseVid      VlanId,
+    ieee8021SpbvTopSrvEntryMMacFlags    IEEE8021PbbIngressEgress
 }
 
-ieee8201SpbvTopSrvEntryTopIx OBJECT-TYPE
+ieee8021SpbvTopSrvEntryTopIx OBJECT-TYPE
     SYNTAX      IEEE8021SpbMTID
     MAX-ACCESS  not-accessible
     STATUS      current
@@ -1514,7 +1514,7 @@ ieee8201SpbvTopSrvEntryTopIx OBJECT-TYPE
         "12.25.12.1.2, 12.25.12.1.3, 28.12"
     ::= { ieee8021SpbvTopSrvEntry 1 }
 
-ieee8201SpbvTopSrvEntrySysId OBJECT-TYPE
+ieee8021SpbvTopSrvEntrySysId OBJECT-TYPE
     SYNTAX      MacAddress
     MAX-ACCESS  not-accessible
     STATUS      current
@@ -1525,7 +1525,7 @@ ieee8201SpbvTopSrvEntrySysId OBJECT-TYPE
         "12.25.12.1.2, 12.25.12.1.3, 3.21"
     ::= { ieee8021SpbvTopSrvEntry 2 }
 
-ieee8201SpbvTopSrvEntryMMac OBJECT-TYPE
+ieee8021SpbvTopSrvEntryMMac OBJECT-TYPE
     SYNTAX      MacAddress
     MAX-ACCESS  not-accessible
     STATUS      current
@@ -1536,7 +1536,7 @@ ieee8201SpbvTopSrvEntryMMac OBJECT-TYPE
         "12.25.12.1.2, 12.25.12.1.3, 28.12.9"
     ::= { ieee8021SpbvTopSrvEntry 3 }
 
-ieee8201SpbvTopSrvEntryBaseVid OBJECT-TYPE
+ieee8021SpbvTopSrvEntryBaseVid OBJECT-TYPE
     SYNTAX      VlanId
     MAX-ACCESS  read-only
     STATUS      current
@@ -1548,7 +1548,7 @@ ieee8201SpbvTopSrvEntryBaseVid OBJECT-TYPE
         "12.25.12.1.3, 3.3"
     ::= { ieee8021SpbvTopSrvEntry 4 }
 
-ieee8201SpbvTopSrvEntryMMacFlags OBJECT-TYPE
+ieee8021SpbvTopSrvEntryMMacFlags OBJECT-TYPE
     SYNTAX      IEEE8021PbbIngressEgress
     MAX-ACCESS  read-only
     STATUS      current
@@ -1577,32 +1577,30 @@ ieee8021SpbCompliances OBJECT IDENTIFIER
 -- SPBM Units of conformance
 -- ============================================================
 
-ieee8021SpbSysGroup OBJECT-GROUP
-    OBJECTS         { ieee8021SpbSysAreaAddress, ieee8021SpbSysId, 
-                      ieee8021SpbSysControlAddr, 
-                      ieee8021SpbSysControlAddr, ieee8021SpbSysName, 
-                      ieee8021SpbSysBridgePriority, 
-                      ieee8021SpbSysSPSourceId, ieee8021SpbSysMode, 
-                      ieee8021SpbmSysMode, 
-                      ieee8021SpbSysDigestConvention }
+ieee8021SpbSysGroupSPBM OBJECT-GROUP
+    OBJECTS     { ieee8021SpbSysAreaAddress, ieee8021SpbSysId, 
+                  ieee8021SpbSysControlAddr, ieee8021SpbSysControlAddr, 
+                  ieee8021SpbSysName, ieee8021SpbSysBridgePriority, 
+                  ieee8021SpbmSysSPSourceId, ieee8021SpbmSysMode, 
+                  ieee8021SpbSysDigestConvention }
     STATUS      current
     DESCRIPTION 
         "The collection of objects used to represent ieee8021SpbSys."
     ::= { ieee8021SpbGroups 1 }
 
 ieee8021SpbMtidStaticTableGroupSPBM OBJECT-GROUP
-    OBJECTS         { ieee8021SpbMtidStaticEntryMtidOverload, 
-                      ieee8021SpbMtidStaticEntryRowStatus }
+    OBJECTS     { ieee8021SpbMtidStaticEntryMtidOverload, 
+                  ieee8021SpbMtidStaticEntryRowStatus }
     STATUS      current
     DESCRIPTION 
         "The collection of objects used to represent 
          ieee8021SpbMtidStaticTable."
     ::= { ieee8021SpbGroups 2 }
 
-ieee8021SpbTopIxDynamicTableGroupSBMN OBJECT-GROUP
-    OBJECTS         { ieee8021SpbTopIxDynamicEntryAgreeDigest, 
-                      ieee8021SpbTopIxDynamicEntryMCID, 
-                      ieee8021SpbTopIxDynamicEntryAuxMCID }
+ieee8021SpbTopIxDynamicTableGroupSPBM OBJECT-GROUP
+    OBJECTS     { ieee8021SpbTopIxDynamicEntryAgreeDigest, 
+                  ieee8021SpbTopIxDynamicEntryMCID, 
+                  ieee8021SpbTopIxDynamicEntryAuxMCID }
     STATUS      current
     DESCRIPTION 
         "The collection of objects used to represent 
@@ -1610,19 +1608,19 @@ ieee8021SpbTopIxDynamicTableGroupSBMN OBJECT-GROUP
     ::= { ieee8021SpbGroups 3 }
 
 ieee8021SpbEctStaticTableGroupSPBM OBJECT-GROUP
-    OBJECTS         { ieee8021SpbEctStaticEntryEctAlgorithm, 
-                      ieee8021SpbEctStaticEntryRowStatus }
+    OBJECTS     { ieee8021SpbEctStaticEntryEctAlgorithm, 
+                  ieee8021SpbEctStaticEntryRowStatus }
     STATUS      current
     DESCRIPTION 
         "The collection of objects used to represent 
-         ieee8201SpbEctStaticTable."
+         ieee8021SpbEctStaticTable."
     ::= { ieee8021SpbGroups 4 }
 
 ieee8021SpbEctDynamicTableGroupSPBM OBJECT-GROUP
-    OBJECTS         { ieee8021SpbEctDynamicEntryMode, 
-                      ieee8021SpbEctDynamicEntryLocalUse, 
-                      ieee8021SpbEctDynamicEntryRemoteUse, 
-                      ieee8021SpbEctDynamicEntryIngressCheckDiscards }
+    OBJECTS     { ieee8021SpbEctDynamicEntryMode, 
+                  ieee8021SpbEctDynamicEntryLocalUse, 
+                  ieee8021SpbEctDynamicEntryRemoteUse, 
+                  ieee8021SpbEctDynamicEntryIngressCheckDiscards }
     STATUS      current
     DESCRIPTION 
         "The collection of objects used to represent 
@@ -1630,9 +1628,9 @@ ieee8021SpbEctDynamicTableGroupSPBM OBJECT-GROUP
     ::= { ieee8021SpbGroups 5 }
 
 ieee8021SpbAdjStaticTableGroupSPBM OBJECT-GROUP
-    OBJECTS         { ieee8021SpbAdjStaticEntryMetric, 
-                      ieee8021SpbAdjStaticEntryIfAdminState, 
-                      ieee8021SpbAdjStaticEntryRowStatus }
+    OBJECTS     { ieee8021SpbAdjStaticEntryMetric, 
+                  ieee8021SpbAdjStaticEntryIfAdminState, 
+                  ieee8021SpbAdjStaticEntryRowStatus }
     STATUS      current
     DESCRIPTION 
         "The collection of objectgs used to represent 
@@ -1640,17 +1638,17 @@ ieee8021SpbAdjStaticTableGroupSPBM OBJECT-GROUP
     ::= { ieee8021SpbGroups 6 }
 
 ieee8021SpbAdjDynamicTableGroupSPBM OBJECT-GROUP
-    OBJECTS         { ieee8021SpbAdjDynamicEntryPort, 
-                      ieee8021SpbAdjDynamicEntryIfOperState, 
-                      ieee8021SpbAdjDynamicEntryPeerSysName, 
-                      ieee8021SpbAdjDynamicEntryPeerAgreeDigest, 
-                      ieee8021SpbAdjDynamicEntryPeerMCID, 
-                      ieee8021SpbAdjDynamicEntryPeerAuxMCID, 
-                      ieee8021SpbAdjDynamicEntryLocalCircuitID, 
-                      ieee8021SpbAdjDynamicEntryPeerLocalCircuitID, 
-                      ieee8021SpbAdjDynamicEntryPortIdentifier, 
-                      ieee8021SpbAdjDynamicEntryPeerPortIdentifier, 
-                      ieee8021SpbAdjDynamicEntryIsisCircIndex }
+    OBJECTS     { ieee8021SpbAdjDynamicEntryPort, 
+                  ieee8021SpbAdjDynamicEntryIfOperState, 
+                  ieee8021SpbAdjDynamicEntryPeerSysName, 
+                  ieee8021SpbAdjDynamicEntryPeerAgreeDigest, 
+                  ieee8021SpbAdjDynamicEntryPeerMCID, 
+                  ieee8021SpbAdjDynamicEntryPeerAuxMCID, 
+                  ieee8021SpbAdjDynamicEntryLocalCircuitID, 
+                  ieee8021SpbAdjDynamicEntryPeerLocalCircuitID, 
+                  ieee8021SpbAdjDynamicEntryPortIdentifier, 
+                  ieee8021SpbAdjDynamicEntryPeerPortIdentifier, 
+                  ieee8021SpbAdjDynamicEntryIsisCircIndex }
     STATUS      current
     DESCRIPTION 
         "The collection of objects used to represent 
@@ -1658,9 +1656,9 @@ ieee8021SpbAdjDynamicTableGroupSPBM OBJECT-GROUP
     ::= { ieee8021SpbGroups 7 }
 
 ieee8021SpbTopNodeTableGroupSPBM OBJECT-GROUP
-    OBJECTS         { ieee8021SpbTopNodeEntryBridgePriority, 
-                      ieee8021SpbTopNodeEntrySPsourceID, 
-                      ieee8021SpbTopNodeEntrySysName }
+    OBJECTS     { ieee8021SpbTopNodeEntryBridgePriority, 
+                  ieee8021SpbmTopNodeEntrySPSourceID, 
+                  ieee8021SpbTopNodeEntrySysName }
     STATUS      current
     DESCRIPTION 
         "The collection of objects used to represent 
@@ -1668,9 +1666,9 @@ ieee8021SpbTopNodeTableGroupSPBM OBJECT-GROUP
     ::= { ieee8021SpbGroups 8 }
 
 ieee8021SpbTopEctTableGroupSPBM OBJECT-GROUP
-    OBJECTS         { ieee8021SpbTopEctEntryEctAlgorithm, 
-                      ieee8021SpbTopEctEntryMode, 
-                      ieee8021SpbTopEctEntryLocalUse }
+    OBJECTS     { ieee8021SpbTopEctEntryEctAlgorithm, 
+                  ieee8021SpbTopEctEntryMode, 
+                  ieee8021SpbTopEctEntryLocalUse }
     STATUS      current
     DESCRIPTION 
         "The collection of objects used to represent 
@@ -1678,8 +1676,8 @@ ieee8021SpbTopEctTableGroupSPBM OBJECT-GROUP
     ::= { ieee8021SpbGroups 9 }
 
 ieee8021SpbTopEdgeTableGroupSPBM OBJECT-GROUP
-    OBJECTS         { ieee8021SpbTopEdeEntryMetricNear2Far, 
-                      ieee8021SpbTopEdeEntryMetricFar2Near }
+    OBJECTS     { ieee8021SpbTopEdgeEntryMetricNear2Far, 
+                  ieee8021SpbTopEdgeEntryMetricFar2Near }
     STATUS      current
     DESCRIPTION 
         "The collection of objects used to represent 
@@ -1687,7 +1685,7 @@ ieee8021SpbTopEdgeTableGroupSPBM OBJECT-GROUP
     ::= { ieee8021SpbGroups 10 }
 
 ieee8021SpbmTopSrvTableGroupSPBM OBJECT-GROUP
-    OBJECTS         { ieee8021SpbmTopSrvEntryIsidFlags }
+    OBJECTS     { ieee8021SpbmTopSrvEntryIsidFlags }
     STATUS      current
     DESCRIPTION 
         "The collection of objects used to represent 
@@ -1698,19 +1696,19 @@ ieee8021SpbmTopSrvTableGroupSPBM OBJECT-GROUP
 -- SPBV Units of conformance
 -- ============================================================
 
-ieee8201SpbSysGroupSPBV OBJECT-GROUP
-    OBJECTS         { ieee8021SpbSysAreaAddress, ieee8021SpbSysId, 
-                      ieee8021SpbSysControlAddr, ieee8021SpbSysName, 
-                      ieee8021SpbSysBridgePriority, ieee8021SpbvSysMode, 
-                      ieee8021SpbSysDigestConvention }
+ieee8021SpbSysGroupSPBV OBJECT-GROUP
+    OBJECTS     { ieee8021SpbSysAreaAddress, ieee8021SpbSysId, 
+                  ieee8021SpbSysControlAddr, ieee8021SpbSysName, 
+                  ieee8021SpbSysBridgePriority, ieee8021SpbvSysMode, 
+                  ieee8021SpbSysDigestConvention }
     STATUS      current
     DESCRIPTION 
         "The collection of objects used to represent ieee8021SpbSys."
     ::= { ieee8021SpbGroups 12 }
 
 ieee8021SpbMtidStaticTableGroupSPBV OBJECT-GROUP
-    OBJECTS         { ieee8021SpbMtidStaticEntryMtidOverload, 
-                      ieee8021SpbMtidStaticEntryRowStatus }
+    OBJECTS     { ieee8021SpbMtidStaticEntryMtidOverload, 
+                  ieee8021SpbMtidStaticEntryRowStatus }
     STATUS      current
     DESCRIPTION 
         "The collection of objects used to represent 
@@ -1718,19 +1716,19 @@ ieee8021SpbMtidStaticTableGroupSPBV OBJECT-GROUP
     ::= { ieee8021SpbGroups 13 }
 
 ieee8021SpbTopIxDynamicTableGroupSPBV OBJECT-GROUP
-    OBJECTS         { ieee8021SpbTopIxDynamicEntryAgreeDigest, 
-                      ieee8021SpbTopIxDynamicEntryMCID, 
-                      ieee8021SpbTopIxDynamicEntryAuxMCID }
+    OBJECTS     { ieee8021SpbTopIxDynamicEntryAgreeDigest, 
+                  ieee8021SpbTopIxDynamicEntryMCID, 
+                  ieee8021SpbTopIxDynamicEntryAuxMCID }
     STATUS      current
     DESCRIPTION 
         "The collectino of objects used to represent 
-         ieee8201SpbTopIxDynamicTable."
+         ieee8021SpbTopIxDynamicTable."
     ::= { ieee8021SpbGroups 14 }
 
 ieee8021SpbEctStaticTableGroupSPBV OBJECT-GROUP
-    OBJECTS         { ieee8021SpbEctStaticEntryEctAlgorithm, 
-                      ieee8021SpbvEctStaticEntrySpvid, 
-                      ieee8021SpbEctStaticEntryRowStatus }
+    OBJECTS     { ieee8021SpbEctStaticEntryEctAlgorithm, 
+                  ieee8021SpbvEctStaticEntrySpvid, 
+                  ieee8021SpbEctStaticEntryRowStatus }
     STATUS      current
     DESCRIPTION 
         "The collection of objects used to represent 
@@ -1738,10 +1736,10 @@ ieee8021SpbEctStaticTableGroupSPBV OBJECT-GROUP
     ::= { ieee8021SpbGroups 15 }
 
 ieee8021SpbEctDynamicTableGroupSPBV OBJECT-GROUP
-    OBJECTS         { ieee8021SpbEctDynamicEntryMode, 
-                      ieee8021SpbEctDynamicEntryLocalUse, 
-                      ieee8021SpbEctDynamicEntryRemoteUse, 
-                      ieee8021SpbEctDynamicEntryIngressCheckDiscards }
+    OBJECTS     { ieee8021SpbEctDynamicEntryMode, 
+                  ieee8021SpbEctDynamicEntryLocalUse, 
+                  ieee8021SpbEctDynamicEntryRemoteUse, 
+                  ieee8021SpbEctDynamicEntryIngressCheckDiscards }
     STATUS      current
     DESCRIPTION 
         "The collection of objects used to represent 
@@ -1749,9 +1747,9 @@ ieee8021SpbEctDynamicTableGroupSPBV OBJECT-GROUP
     ::= { ieee8021SpbGroups 16 }
 
 ieee8021SpbAdjStaticTableGroupSPBV OBJECT-GROUP
-    OBJECTS         { ieee8021SpbAdjStaticEntryMetric, 
-                      ieee8021SpbAdjStaticEntryIfAdminState, 
-                      ieee8021SpbAdjStaticEntryRowStatus }
+    OBJECTS     { ieee8021SpbAdjStaticEntryMetric, 
+                  ieee8021SpbAdjStaticEntryIfAdminState, 
+                  ieee8021SpbAdjStaticEntryRowStatus }
     STATUS      current
     DESCRIPTION 
         "The collection of objects used to represent 
@@ -1759,17 +1757,17 @@ ieee8021SpbAdjStaticTableGroupSPBV OBJECT-GROUP
     ::= { ieee8021SpbGroups 17 }
 
 ieee8021SpbAdjDynamicTableGroupSPBV OBJECT-GROUP
-    OBJECTS         { ieee8021SpbAdjDynamicEntryPort, 
-                      ieee8021SpbAdjDynamicEntryIfOperState, 
-                      ieee8021SpbAdjDynamicEntryPeerSysName, 
-                      ieee8021SpbAdjDynamicEntryPeerAgreeDigest, 
-                      ieee8021SpbAdjDynamicEntryPeerMCID, 
-                      ieee8021SpbAdjDynamicEntryPeerAuxMCID, 
-                      ieee8021SpbAdjDynamicEntryLocalCircuitID, 
-                      ieee8021SpbAdjDynamicEntryPeerLocalCircuitID, 
-                      ieee8021SpbAdjDynamicEntryPortIdentifier, 
-                      ieee8021SpbAdjDynamicEntryPeerPortIdentifier, 
-                      ieee8021SpbAdjDynamicEntryIsisCircIndex }
+    OBJECTS     { ieee8021SpbAdjDynamicEntryPort, 
+                  ieee8021SpbAdjDynamicEntryIfOperState, 
+                  ieee8021SpbAdjDynamicEntryPeerSysName, 
+                  ieee8021SpbAdjDynamicEntryPeerAgreeDigest, 
+                  ieee8021SpbAdjDynamicEntryPeerMCID, 
+                  ieee8021SpbAdjDynamicEntryPeerAuxMCID, 
+                  ieee8021SpbAdjDynamicEntryLocalCircuitID, 
+                  ieee8021SpbAdjDynamicEntryPeerLocalCircuitID, 
+                  ieee8021SpbAdjDynamicEntryPortIdentifier, 
+                  ieee8021SpbAdjDynamicEntryPeerPortIdentifier, 
+                  ieee8021SpbAdjDynamicEntryIsisCircIndex }
     STATUS      current
     DESCRIPTION 
         "The collection of objects used to represent 
@@ -1777,8 +1775,8 @@ ieee8021SpbAdjDynamicTableGroupSPBV OBJECT-GROUP
     ::= { ieee8021SpbGroups 18 }
 
 ieee8021SpbTopNodeTableGroupSPBV OBJECT-GROUP
-    OBJECTS         { ieee8021SpbTopNodeEntryBridgePriority, 
-                      ieee8021SpbTopNodeEntrySysName }
+    OBJECTS     { ieee8021SpbTopNodeEntryBridgePriority, 
+                  ieee8021SpbTopNodeEntrySysName }
     STATUS      current
     DESCRIPTION 
         "The collection of objects used to represent 
@@ -1786,11 +1784,10 @@ ieee8021SpbTopNodeTableGroupSPBV OBJECT-GROUP
     ::= { ieee8021SpbGroups 19 }
 
 ieee8021SpbTopEctTableGroupSPBV OBJECT-GROUP
-    OBJECTS         { ieee8021SpbTopEctEntryEctAlgorithm, 
-                      ieee8021SpbTopEctEntryMode, 
-                      ieee8021SpbTopEctSysMode, 
-                      ieee8021SpbTopEctEntrySpvid, 
-                      ieee8021SpbTopEctEntryLocalUse }
+    OBJECTS     { ieee8021SpbTopEctEntryEctAlgorithm, 
+                  ieee8021SpbTopEctEntryMode, ieee8021SpbvTopEctSysMode, 
+                  ieee8021SpbvTopEctEntrySpvid, 
+                  ieee8021SpbTopEctEntryLocalUse }
     STATUS      current
     DESCRIPTION 
         "The collection of objects used to represent 
@@ -1798,8 +1795,8 @@ ieee8021SpbTopEctTableGroupSPBV OBJECT-GROUP
     ::= { ieee8021SpbGroups 20 }
 
 ieee8021SpbTopEdgeTableGroupSPBV OBJECT-GROUP
-    OBJECTS         { ieee8021SpbTopEdgeEntryMetricNear2Far, 
-                      ieee8021SpbTopEdgeEntryMetricFar2Near }
+    OBJECTS     { ieee8021SpbTopEdgeEntryMetricNear2Far, 
+                  ieee8021SpbTopEdgeEntryMetricFar2Near }
     STATUS      current
     DESCRIPTION 
         "The collection of objects used to represent 
@@ -1807,8 +1804,8 @@ ieee8021SpbTopEdgeTableGroupSPBV OBJECT-GROUP
     ::= { ieee8021SpbGroups 21 }
 
 ieee8021SpbvTopSrvTableGroupSPBV OBJECT-GROUP
-    OBJECTS         { ieee8021SpbvTopSrvEntryBaseVid, 
-                      ieee8021SPbvTopSrvEntryMMacFlags }
+    OBJECTS     { ieee8021SpbvTopSrvEntryBaseVid, 
+                  ieee8021SpbvTopSrvEntryMMacFlags }
     STATUS      current
     DESCRIPTION 
         "The collection of objects used to represent 
@@ -1823,18 +1820,21 @@ ieee8021SpbComplianceSPBM MODULE-COMPLIANCE
     STATUS      current
     DESCRIPTION 
         "Compliance to IEEE 802.1 SPBM mode"
+
     MODULE      -- this module
-        MANDATORY-GROUPS    { ieee8021SpbSysGroupSPBM, 
-                              ieee8021SpbMtidStaticTableGroupSPBM, 
-                              ieee8021SpbTopIxDynamicTableGroupSPBM, 
-                              ieee8021SpbEctStaticTableGroupSPBM, 
-                              ieee8021SpbEctDynamicTableGroupSPBM, 
-                              ieee8021SpbAdjStaticTableGroupSPBM, 
-                              ieee8021SpbAdjDynamicTableGroupSPBM, 
-                              ieee8201SpbTopNodeTableGroupSPBM, 
-                              ieee8021SpbTopEctTableGroupSPBM, 
-                              ieee8021SpbTopEdgeTableGroupSPBM, 
-                              ieee8021SpbmTopSrvTableGroupSPBM }
+
+        MANDATORY-GROUPS        { ieee8021SpbSysGroupSPBM, 
+                  ieee8021SpbMtidStaticTableGroupSPBM, 
+                  ieee8021SpbTopIxDynamicTableGroupSPBM, 
+                  ieee8021SpbEctStaticTableGroupSPBM, 
+                  ieee8021SpbEctDynamicTableGroupSPBM, 
+                  ieee8021SpbAdjStaticTableGroupSPBM, 
+                  ieee8021SpbAdjDynamicTableGroupSPBM, 
+                  ieee8021SpbTopNodeTableGroupSPBM, 
+                  ieee8021SpbTopEctTableGroupSPBM, 
+                  ieee8021SpbTopEdgeTableGroupSPBM, 
+                  ieee8021SpbmTopSrvTableGroupSPBM }
+
     ::= { ieee8021SpbCompliances 1 }
 
 -- ============================================================
@@ -1845,21 +1845,24 @@ ieee8021SpbComplianceSPBV MODULE-COMPLIANCE
     STATUS      current
     DESCRIPTION 
         "Compliance to IEEE 802.1 SPBV mode"
-    MODULE
-        MANDATORY-GROUPS    { ieee8021SpbSysGroupSPBV, 
-                              ieee8021SpbMtidStaticTableGroupSPBV, 
-                              ieee8021SpbTopIxDynamicTableGroupSPBV, 
-                              ieee8021SpbEtcStaticTableGroupSPBV, 
-                              ieee8021SpbEctDynamicTableGroupSPBV, 
-                              ieee8021SpbAdjStaticTableGroupSPBV, 
-                              ieee8021SpbAdjDynamicTableGroupSPBV, 
-                              ieee8021SpbTopNodeTableGroupSPBV, 
-                              ieee8021SpbTopEctTableGroupSPBV, 
-                              ieee8021SpbTopEdgeTableGroupSPBV, 
-                              ieee8021SpbvTopSrvTableGroupSPBV }
+
+    MODULE      -- this module
+
+        MANDATORY-GROUPS        { ieee8021SpbSysGroupSPBV, 
+                  ieee8021SpbMtidStaticTableGroupSPBV, 
+                  ieee8021SpbTopIxDynamicTableGroupSPBV, 
+                  ieee8021SpbEctStaticTableGroupSPBV, 
+                  ieee8021SpbEctDynamicTableGroupSPBV, 
+                  ieee8021SpbAdjStaticTableGroupSPBV, 
+                  ieee8021SpbAdjDynamicTableGroupSPBV, 
+                  ieee8021SpbTopNodeTableGroupSPBV, 
+                  ieee8021SpbTopEctTableGroupSPBV, 
+                  ieee8021SpbTopEdgeTableGroupSPBV, 
+                  ieee8021SpbvTopSrvTableGroupSPBV }
+
     ::= { ieee8021SpbCompliances 2 }
 
-END -- end of module IEEE8021-SPB-MIB
+END -- end of module IEEE8021-SPB-MIB.
 
 -- ============================================================
 -- vim: ft=mib comments=\f\:\",\b\:\-\-,\:\-\-,\f\b\:- fo+=tcqlornw tw=72 nocin nosi sts=4 sw=4 et
