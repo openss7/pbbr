@@ -17,7 +17,7 @@ IMPORTS
         FROM SNMPv2-TC;
 
 ieee8021MstpMib MODULE-IDENTITY
-    LAST-UPDATED "201112120000Z"
+    LAST-UPDATED "201208100000Z" -- August 10, 2012
     ORGANIZATION 
         "IEEE 802.1 Working Group"
     CONTACT-INFO 
@@ -34,30 +34,34 @@ ieee8021MstpMib MODULE-IDENTITY
                    USA
            E-mail: STDS-802-1-L@LISTSERV.IEEE.ORG"
     DESCRIPTION 
-        "The Bridge Mib modules for managing devices that support 
+        "The Bridge MIB modules for managing devices that support 
          IEEE 802.1Q multiple spanning tree groups.
          
-         Unless otherwise indicated, the references in this MIB module 
-         are to IEEE 802.1Q-2011.
+         Unless otherwise indicated, the references in this MIB 
+         module are to IEEE 802.1Q-2011.
          
          Copyright (C) IEEE.
-         This version of this MIB module is part of IEEE802.1Q; see the 
-         draft itself for full legal notices."
-    REVISION    "201112120000Z"
+         This version of this MIB module is part of IEEE802.1Q; 
+         see the draft itself for full legal notices."
+    REVISION    "201208100000Z" -- August 10, 2012
+    DESCRIPTION
+        "Updated cross references to other clauses, particularly 
+         Clause 13, as part of 802.1Q Cor-2."       
+    REVISION    "201112120000Z" -- December 12, 2011
     DESCRIPTION 
         "Deprecated ieee8021MstpFidToMstiTable for an identical 
-         ieee8021MstpFidToMstiV2Table to add 4095 to the range of 
-         ieee8021MstpFidToMstiV2Fid and to add 0 and 4095 to the range 
-         of ieee8021MstpFidToMstiV2MstId for 802.1aq.  Deprecated 
-         ieee8021MstpVlanTable for an identical ieee8021MstpVlanV2Table 
-         to add 0 and 4095 to the range of ieee8021MstpVlanV2MstId for 
-         802.1aq."
-    REVISION    "201103230000Z"
+         ieee8021MstpFidToMstiV2Table to add 4095 to the range 
+         of ieee8021MstpFidToMstiV2Fid and to add 0 and 4095 to 
+         the range of ieee8021MstpFidToMstiV2MstId for 802.1aq.  
+         Deprecated ieee8021MstpVlanTable for an identical 
+         ieee8021MstpVlanV2Table to add 0 & 4095 to the range 
+         of ieee8021MstpVlanV2MstId for 802.1aq"
+    REVISION    "201103230000Z" -- March 23, 2011
     DESCRIPTION 
         "Minor edits to contact information, correction to range of 
-         ieee8021MstpCistMaxHops and addition of fragile bridge as part 
-         of 2011 revision of IEEE Std 802.1Q."
-    REVISION    "200810150000Z"
+         ieee8021MstpCistMaxHops and addition of fragile bridge 
+         as part of 2011 revision of IEEE Std 802.1Q."
+    REVISION    "200810150000Z" -- October 15, 2008
     DESCRIPTION 
         "Initial version."
     ::= { ieee802dot1mibs 6 }
@@ -78,25 +82,25 @@ ieee8021MstpCistTable OBJECT-TYPE
     MAX-ACCESS  not-accessible
     STATUS      current
     DESCRIPTION 
-        "The Common and Intenral Spanning Tree (CIST) Table.  Each row 
-         in the table represents information regarding a Bridge's Bridge 
+        "The Common and Internal Spanning Tree (CIST) Table.  Each row in 
+         the table represents information regarding a Bridge's Bridge 
          Protocol Entity for the CIST.
          
          Note that entries will exist in this table only for bridge 
          components for which the corresponding instance of 
-         ieee8021SpanningTreeVersion (from the 
-         IEEE8021-SPANNING-TREE-MIB) has a value of mstp(2).
+         ieee8021SpanningTreeVersion (from the IEEE8021-SPANNING-TREE-MIB) 
+         has a value of mstp(2).
          
-         This table contains objects corresponding to the following 
-         items from 12.8.1.1 and 12.8.1.3 of IEEE 802.1Q-2005, and the 
-         802.1ah amendment.  Some of those items are provided in the 
+         This table contains objects corresponding to the following items 
+         from 12.8.1.1 and 12.8.1.3 of IEEE 802.1Q-2005, and the 
+         802.1ah amendement.  Some of those items are provided in the 
          IEEE8021-SPANNING-TREE-MIB as noted below.
          
          From 12.8.1.1:
-             Items a), c), o), p) and q) are defined in this table.  The 
-             remaining items are covered in the 
+             Items a), c), o), p), and q) are defined in this table
+             The remaining items are covered in the 
              IEEE8021-SPANNING-TREE-MIB:
-                 b) ieee8021SpanningTreeTimeSinceTopologyChagne
+                 b) ieee8021SpanningTreeTimeSinceTopologyChange
                  c) ieee8021SpanningTreeTopChanges
                  e) ieee8021SpanningTreeDesignatedRoot
                  f) ieee8021SpanningTreeRootCost
@@ -108,13 +112,13 @@ ieee8021MstpCistTable OBJECT-TYPE
                  l) ieee8021SpanningTreeBridgeForwardDelay
                  m) ieee8021SpanningTreeHoldTime
                  n) ieee8021SpanningTreeVersion
-                
          From 12.8.1.3:
-             Item g) is defined in this table.  The remaining items are 
-             covered in the IEEE8021-SPANNING-TREE-MIB:
+             Item g) is defined in this table
+             The remaining items are covered in the 
+             IEEE8021-SPANNING-TREE-MIB:
                  a) ieee8021SpanningTreeBridgeMaxAge
                  b) ieee8021SpanningTreeBridgeHelloTime
-                 c) ieee8021SpanningTreeBridgeForwardingDelay
+                 c) ieee8021SpanningTreeBridgeForwardDelay
                  d) ieee8021SpanningTreePriority
                  e) ieee8021SpanningTreeVersion
                  f) ieee8021RstpStpExtTxHoldCount"
@@ -147,7 +151,7 @@ ieee8021MstpCistComponentId OBJECT-TYPE
     DESCRIPTION 
         "The component identifier is used to distinguish between the 
          multiple virtual bridge instances within a PBB.  In simple 
-         sistuations where there is only a single component the default 
+         situations where there is only a single component the default 
          value is 1."
     ::= { ieee8021MstpCistEntry 1 }
 
@@ -167,11 +171,11 @@ ieee8021MstpCistTopologyChange OBJECT-TYPE
     STATUS      current
     DESCRIPTION 
         "In an STP Bridge, the value of the Topology Change parameter 
-         (14.8.1.1.3, item d of IEEE Std 802.1D, 2004 Edition), or in an 
-         RST or MST Bridge, asserted if the tcWhile timer for any Port 
-         for the Cist is non-zero."
+         (14.8.1.1.3, item d of IEEE Std 802.1D, 2004 Edition), or in 
+         an RSTP or MSTP Bridge, asserted if the tcWhile timer for any 
+         Port for the CIST is non-zero."
     REFERENCE   
-        "14.8.1.1.3 (d) of IEEE 802.1D-2004"
+        "14.8.1.1.3:d of IEEE 802.1D-2004"
     ::= { ieee8021MstpCistEntry 3 }
 
 ieee8021MstpCistRegionalRootIdentifier OBJECT-TYPE
@@ -179,7 +183,7 @@ ieee8021MstpCistRegionalRootIdentifier OBJECT-TYPE
     MAX-ACCESS  read-only
     STATUS      current
     DESCRIPTION 
-        "In an MST Bridge, the CIST Regional Root Identifier parameter 
+        "In an MSTP Bridge, the CIST Regional Root Identifier parameter, 
          i.e. the Bridge Identifier of the current CIST Regional Root."
     REFERENCE   
         "13.16.4"
@@ -190,24 +194,24 @@ ieee8021MstpCistPathCost OBJECT-TYPE
     MAX-ACCESS  read-only
     STATUS      current
     DESCRIPTION 
-        "In an MST Bridge, the CIST Path Cost parameter, i.e. the CIST 
-         path cost from the transmitting Bridge to the CIST Regional 
-         Root.  The sum (about 20 possible out of the given range) or 
-         multiple port path costs.  Also, if the 'transmitting bridge' 
-         is the 'CIST Regional Root', then this value could be zero."
+        "In an MSTP Bridge, the CIST Path Cost parameter, i.e. the CIST 
+         path cost from the transmitting Bridge to the CIST Regional Root.  
+         The sum (about 20 possible out of the given range) of multiple 
+         port path costs.  Also, if the 'transmitting Bridge' is 
+         the 'CIST Regional Root', then this value could be zero."
     ::= { ieee8021MstpCistEntry 5 }
 
 ieee8021MstpCistMaxHops OBJECT-TYPE
     SYNTAX      Integer32 (6..40)
-    MAX-ACCESS  read-only
+    MAX-ACCESS  read-write
     STATUS      current
     DESCRIPTION 
-        "In an MST Bridge, the MaxHops parameter.
+        "In an MSTP Bridge, the MaxHops parameter.
          
          The value of this object MUST be retained across 
-         reinitializaitons of the management system."
+         reinitializations of the management system."
     REFERENCE   
-        "13.22.1"
+        "13.26.4"
     ::= { ieee8021MstpCistEntry 6 }
 
 -- ============================================================
@@ -219,16 +223,16 @@ ieee8021MstpTable OBJECT-TYPE
     MAX-ACCESS  not-accessible
     STATUS      current
     DESCRIPTION 
-        "In an MST Bridge, the MSTP Table.  Each row in the Table 
+        "In an MSTP Bridge, the MSTP Table.  Each row in the Table 
          represents information regarding a Bridge's Bridge Protocol 
          Entity for the specified Spanning Tree instance.
          
-         Entries in this table MUST be retained across reinitialization 
-         of the management system.
+         Entries in this table MUST be retained across 
+         reinitializations of the management system.
          
          Note that entries can be created in this table only for bridge 
          components for which the corresponding instance of 
-         ieee8021SpanningTreeVersion (from IEEE8021-SPANNING-TREE-MIB) 
+         ieee8021SpanningTreeVersion (from the IEEE8021-SPANNING-TREE-MIB) 
          has a value of mstp(2)."
     REFERENCE   
         "12.8.1.2, 12.8.1.4, 12.12.3.2, 12.12.1"
@@ -239,7 +243,7 @@ ieee8021MstpEntry OBJECT-TYPE
     MAX-ACCESS  not-accessible
     STATUS      current
     DESCRIPTION 
-        "A MST Table entry."
+        "A MSTP Table entry."
     INDEX       { ieee8021MstpComponentId, ieee8021MstpId }
     ::= { ieee8021MstpTable 1 }
 
@@ -268,8 +272,8 @@ ieee8021MstpComponentId OBJECT-TYPE
     DESCRIPTION 
         "The component identifier is used to distinguish between the 
          multiple virtual bridge instances within a PBB.  In simple 
-         situations where there is a single component the default value 
-         is 1."
+         situations where there is only a single component the default 
+         value is 1."
     ::= { ieee8021MstpEntry 1 }
 
 ieee8021MstpId OBJECT-TYPE
@@ -277,7 +281,7 @@ ieee8021MstpId OBJECT-TYPE
     MAX-ACCESS  not-accessible
     STATUS      current
     DESCRIPTION 
-        "In an MST Bridge, thie parameter is the MSTID, i.e. the 
+        "In an MSTP Bridge, this parameter is the MSTID, i.e. the 
          identifier of a Spanning Tree (or MST) Instance."
     ::= { ieee8021MstpEntry 2 }
 
@@ -286,7 +290,7 @@ ieee8021MstpBridgeId OBJECT-TYPE
     MAX-ACCESS  read-only
     STATUS      current
     DESCRIPTION 
-        "In an MST Bridge, the Bridge Identifier for the MSTI."
+        "In an MSTP Bridge, the Bridge Identifier for the MSTI."
     REFERENCE   
         "13.23.2"
     ::= { ieee8021MstpEntry 3 }
@@ -297,10 +301,10 @@ ieee8021MstpTimeSinceTopologyChange OBJECT-TYPE
     MAX-ACCESS  read-only
     STATUS      current
     DESCRIPTION 
-        "In an MST Bridge, count in seconds of the time elapsed since 
-         tcWhile (13,21) was last non-zero for any Port for the MSTI."
+        "In an MSTP Bridge, count in seconds of the time elapsed since 
+         tcWhile was last non-zero for any Port for the MSTI."
     REFERENCE   
-        "13.21"
+	"13.25.9"
     ::= { ieee8021MstpEntry 4 }
 
 ieee8021MstpTopologyChanges OBJECT-TYPE
@@ -309,11 +313,11 @@ ieee8021MstpTopologyChanges OBJECT-TYPE
     MAX-ACCESS  read-only
     STATUS      current
     DESCRIPTION 
-        "In an MST Bridge, count of the times tcWhile (13.21) has been 
+        "In an MSTP Bridge, count of the times tcWhile has been 
          non-zero for any Port for the MSTI since the Bridge was powered 
          on or initialized."
     REFERENCE   
-        "13.21"
+	"13.25.9"
     ::= { ieee8021MstpEntry 5 }
 
 ieee8021MstpTopologyChange OBJECT-TYPE
@@ -321,10 +325,10 @@ ieee8021MstpTopologyChange OBJECT-TYPE
     MAX-ACCESS  read-only
     STATUS      current
     DESCRIPTION 
-        "In an MST Bridge, the Topology Change parameter value: true(1) 
+        "In an MSTP Bridge, the Topology Change parameter value: true(1) 
          if tcWhile is non-zero for any Port for the MSTI."
     REFERENCE   
-        "13.21"
+	"13.25.9"
     ::= { ieee8021MstpEntry 6 }
 
 ieee8021MstpDesignatedRoot OBJECT-TYPE
@@ -332,10 +336,10 @@ ieee8021MstpDesignatedRoot OBJECT-TYPE
     MAX-ACCESS  read-only
     STATUS      current
     DESCRIPTION 
-        "In an MST Bridge, the Designated Root parameter value, i.e. the 
+        "In an MSTP Bridge, the Designated Root parameter value, i.e. the 
          Bridge Identifier of the Root Bridge for the MSTI."
     REFERENCE   
-        "13.24.2"
+	"13.27.20"
     ::= { ieee8021MstpEntry 7 }
 
 ieee8021MstpRootPathCost OBJECT-TYPE
@@ -343,11 +347,11 @@ ieee8021MstpRootPathCost OBJECT-TYPE
     MAX-ACCESS  read-only
     STATUS      current
     DESCRIPTION 
-        "In an MST Bridge, the Root Path Cost parameter value, i.e. the 
+        "In an MSTP Bridge, the Root Path Cost parameter value, i.e. the 
          path cost from the transmitting Bridge to the Root Bridge for 
          the MSTI."
     REFERENCE   
-        "13.24.2"
+	"13.27.20"
     ::= { ieee8021MstpEntry 8 }
 
 ieee8021MstpRootPort OBJECT-TYPE
@@ -355,8 +359,10 @@ ieee8021MstpRootPort OBJECT-TYPE
     MAX-ACCESS  read-only
     STATUS      current
     DESCRIPTION 
-        "In an MST Bridge, the Root Port parameter value, i.e. the Root 
+        "In an MSTP Bridge, the Root Port parameter value, i.e. the Root 
          Port for the MSTI."
+    REFERENCE   
+        "13.26.9"
     ::= { ieee8021MstpEntry 9 }
 
 ieee8021MstpBridgePriority OBJECT-TYPE
@@ -364,11 +370,11 @@ ieee8021MstpBridgePriority OBJECT-TYPE
     MAX-ACCESS  read-create
     STATUS      current
     DESCRIPTION 
-        "In an MST Bridge, the Bridge Priority paramter value for the 
-         MSTI, i.e. the four most significant bits of the Bridge 
-         Identifier for the MSTI."
+        "In an MSTP Bridge, the Bridge Priority parameter value for the 
+         MSTI, i.e. the four most significant bits of the Bridge Identifier 
+         for the MSTI."
     REFERENCE   
-        "13.23.2"
+	"13.26.2"
     ::= { ieee8021MstpEntry 10 }
 
 ieee8021MstpVids0 OBJECT-TYPE
@@ -377,12 +383,11 @@ ieee8021MstpVids0 OBJECT-TYPE
     STATUS      current
     DESCRIPTION 
         "This object contains the first 1024 bits of the 4096 bit vector 
-         indicating which VIDs are assigned to the MSTID.  The high 
-         order bit of the first octet corresponds to the first bit of 
-         the vector, while the low order bit of the last octet 
-         corresponds to the last bit of this portion of the vector.  A 
-         bit that is on (equal to 1) indicates that the corresponding 
-         VID is assigned to this MSTID."
+         indicating which VIDs are assigned to this MSTID.  The high order 
+         bit of the first octet corresponds to the first bit of the vector, 
+         while the low order bit of the last octet corresponds to the last 
+         bit of this portion of the vector.  A bit that is on (equal to 1) 
+         indicates that the corresponding VID is assigned to this MSTID."
     ::= { ieee8021MstpEntry 11 }
 
 ieee8021MstpVids1 OBJECT-TYPE
@@ -391,12 +396,12 @@ ieee8021MstpVids1 OBJECT-TYPE
     STATUS      current
     DESCRIPTION 
         "This object contains the second 1024 bits of the 4096 bit vector 
-         indicating which VIDs are assigned to the MSTID.  The high 
-         order bit of the first octet corresponds to the first bit of 
-         the vector, while the low order bit of the last octet 
-         corresponds to the last bit of this portion of the vector.  A 
-         bit that is on (equal to 1) indicates that the corresponding 
-         VID is assigned to this MSTID."
+         indicating which VIDs are assigned to this MSTID.  The high order 
+         bit of the first octet corresponds to the first bit of this 
+         portion of the vector, while the low order bit of the last octet 
+         corresponds to the last bit of this portion of the vector.  A bit 
+         that is on (equal to 1) indicates that the corresponding VID is 
+         assigned to this MSTID."
     ::= { ieee8021MstpEntry 12 }
 
 ieee8021MstpVids2 OBJECT-TYPE
@@ -405,12 +410,12 @@ ieee8021MstpVids2 OBJECT-TYPE
     STATUS      current
     DESCRIPTION 
         "This object contains the third 1024 bits of the 4096 bit vector 
-         indicating which VIDs are assigned to the MSTID.  The high 
-         order bit of the first octet corresponds to the first bit of 
-         the vector, while the low order bit of the last octet 
-         corresponds to the last bit of this portion of the vector.  A 
-         bit that is on (equal to 1) indicates that the corresponding 
-         VID is assigned to this MSTID."
+         indicating which VIDs are assigned to this MSTID.  The high order 
+         bit of the first octet corresponds to the first bit of this 
+         portion of the vector, while the low order bit of the last octet 
+         corresponds to the last bit of this portion of the vector.  A bit 
+         that is on (equal to 1) indicates that the corresponding VID is 
+         assigned to this MSTID."
     ::= { ieee8021MstpEntry 13 }
 
 ieee8021MstpVids3 OBJECT-TYPE
@@ -419,12 +424,12 @@ ieee8021MstpVids3 OBJECT-TYPE
     STATUS      current
     DESCRIPTION 
         "This object contains the fourth 1024 bits of the 4096 bit vector 
-         indicating which VIDs are assigned to the MSTID.  The high 
-         order bit of the first octet corresponds to the first bit of 
-         the vector, while the low order bit of the last octet 
-         corresponds to the last bit of this portion of the vector.  A 
-         bit that is on (equal to 1) indicates that the corresponding 
-         VID is assigned to this MSTID."
+         indicating which VIDs are assigned to this MSTID.  The high order 
+         bit of the first octet corresponds to the first bit of this 
+         portion of the vector, while the low order bit of the last octet 
+         corresponds to the last bit of this portion of the vector.  A bit 
+         that is on (equal to 1) indicates that the corresponding VID is 
+         assigned to this MSTID."
     ::= { ieee8021MstpEntry 14 }
 
 ieee8021MstpRowStatus OBJECT-TYPE
@@ -434,12 +439,12 @@ ieee8021MstpRowStatus OBJECT-TYPE
     DESCRIPTION 
         "The status of the row.
          
-         Read SNMPv2-TC (RFC2579) for an explanation of the possible 
-         values this object can take.
+         Read SNMPv2-TC (RFC2579) for an 
+         explanation of the possible values this object can take.
          
-         The writable columns in a row can not be changed if the row is 
-         active.  All columns must have a valid value before a row can 
-         be activated."
+         The writable columns in a row can not be changed if the row 
+         is active.  All columns must have a valid value before a row 
+         can be activated."
     ::= { ieee8021MstpEntry 15 }
 
 -- ============================================================
@@ -451,45 +456,46 @@ ieee8021MstpCistPortTable OBJECT-TYPE
     MAX-ACCESS  not-accessible
     STATUS      current
     DESCRIPTION 
-        "The CIST Port Table.  Each row in the Table represents 
-         information regarding a specific Port within the Bridge's 
-         Bridge Protocol Entity, for the CLIST.
+        "The CIST Port Table.  Each row in the Table represents information 
+         regarding a specific Port within the Bridge's Bridge Protocol 
+         Entity, for the CIST.
          
-         The value of all writable objects in this table MUST be 
+         The values of all writable objects in this table MUST be 
          retained across reinitializations of the management system.
          
          Note that entries will exist in this table only for bridge 
          components for which the corresponding instance of 
-         ieee8021SpanningTreeVersion (from the 
-         IEEE8021-SPANNING-TREE-MIB) has a value of mstp(2).
+         ieee8021SpanningTreeVersion (from the IEEE8021-SPANNING-TREE-MIB) 
+         has a value of mstp(2).
          
-         This table contains objects corresponding to the following 
-         items from 12.8.2.1, 12.8.2.3, and 12.8.1.5 of IEEE 
-         802.1Q-2005, and the 802.1ah amendment.  Some of those items 
-         are provided in the IEEE8021-SPANNING-TREE-MIB as noted below.
+         This table contains objects corresponding to the following items 
+         from 12.8.2.1, 12.8.2.3, and 12.8.1.5 of IEEE 802.1Q-2005, and the 
+         802.1ah amendement.  Some of those items are provided in the 
+         IEEE8021-SPANNING-TREE-MIB as noted below.
          
          From 12.8.2.1:
-             Items a), d), e) and i) through w) are defined in this 
-             table.  The remaining items are covered in the 
+             Items a), d), e), and i) through w) are defined in this table
+             The remaining items are covered in the 
              IEEE8021-SPANNING-TREE-MIB:
                  b) ieee8021SpanningTreePortState
                  c) ieee8021SpanningTreePortPriority
-                 d) ieee8021SpanningTreePortPathCost32
+                 d) ieee8021SpanningTreePortPathCost32,
                  f) ieee8021SpanningTreePortDesignatedCost
                  g) ieee8021SpanningTreePortDesignatedBridge
                  h) ieee8021SpanningTreePortDesignatedPort
          From 12.8.2.3:
              Items a), b), and d) through h) are defined in this table 
-             (item a is the index).  The remaining items are covered in 
-             the IEEE8021-SPANNING-TREE-MIB:
-                 b) ieee8021SpanningTreePortPathCost
+             (item a is the index)
+             The remaining items are covered in the 
+             IEEE8021-SPANNING-TREE-MIB:
+                 b) ieee8021SpanningTreePortPathCost,
                  c) ieee8021SpanningTreePortPriority
          From 12.8.2.5:
-             All items are defined in this table.
+             All items are defined in this table
          From 802.1ah 12.8.2.1:
-             Items u), v), w), and x) are defined in this table.
+             Items u), v), w), and x) are defined in this table
          From 802.1ah 12.8.2.3:
-             Items i), j), k), and l) are defined in this table."
+             Items i), j), k), and l) are defined in this table"
     REFERENCE   
         "12.8.2.1, 12.8.2.3, 12.8.2.5"
     ::= { ieee8021MstpObjects 3 }
@@ -500,8 +506,7 @@ ieee8021MstpCistPortEntry OBJECT-TYPE
     STATUS      current
     DESCRIPTION 
         "A CIST Port Table entry."
-    INDEX       { ieee8021MstpCistPortComponentId, 
-                  ieee8021MstpCistPortNum }
+    INDEX       { ieee8021MstpCistPortComponentId, ieee8021MstpCistPortNum }
     ::= { ieee8021MstpCistPortTable 1 }
 
 Ieee8021MstpCistPortEntry ::= SEQUENCE {
@@ -536,7 +541,7 @@ ieee8021MstpCistPortComponentId OBJECT-TYPE
     DESCRIPTION 
         "The component identifier is used to distinguish between the 
          multiple virtual bridge instances within a PBB.  In simple 
-         situations where there is only a single component, the default 
+         situations where there is only a single component the default 
          value is 1."
     ::= { ieee8021MstpCistPortEntry 1 }
 
@@ -545,7 +550,7 @@ ieee8021MstpCistPortNum OBJECT-TYPE
     MAX-ACCESS  not-accessible
     STATUS      current
     DESCRIPTION 
-        "The Port's Port NUmber parameter value for the CIST, i.e. the 
+        "The Port's Port Number parameter value for the CIST, i.e. the 
          number of the Bridge Port for the CIST."
     ::= { ieee8021MstpCistPortEntry 2 }
 
@@ -557,7 +562,7 @@ ieee8021MstpCistPortUptime OBJECT-TYPE
     DESCRIPTION 
         "The Port's Uptime parameter value for the CIST, i.e. the count 
          in seconds of the time elapsed since the Port was last reset or 
-         initialized (BEGIN, 13.23)."
+         initialized (BEGIN, Annex E)."
     ::= { ieee8021MstpCistPortEntry 3 }
 
 ieee8021MstpCistPortAdminPathCost OBJECT-TYPE
@@ -565,21 +570,21 @@ ieee8021MstpCistPortAdminPathCost OBJECT-TYPE
     MAX-ACCESS  read-write
     STATUS      current
     DESCRIPTION 
-        "The administratively assigned value for the contribution of 
-         this port to the path cost of paths toward the spanning tree 
-         root.
+        "The administratively assigned value for the contribution 
+         of this port to the path cost of paths toward the spanning 
+         tree root.
          
          Writing a value of '0' assigns the automatically calculated 
-         default Path Cost value to the port.  If the default Path Cost 
-         is being used, this object returns '0' when read.
+         default Path Cost value to the port.  If the default Path 
+         Cost is being used, this object returns '0' when read.
          
-         This complements the object ieee8021MstpCistPortPathCost, which 
-         returns the operational value of the path cost.
+         This complements the object ieee8021MstpCistPortPathCost, 
+         which returns the operational value of the path cost.
          
          The value of this object MUST be retained across 
          reinitializations of the management system."
     REFERENCE   
-        "13.22:p, 17.13.11 or IEEE Std 802.1D"
+        "13.27.25, 17.13.11 of IEEE Std 802.1D"
     ::= { ieee8021MstpCistPortEntry 4 }
 
 ieee8021MstpCistPortDesignatedRoot OBJECT-TYPE
@@ -590,7 +595,7 @@ ieee8021MstpCistPortDesignatedRoot OBJECT-TYPE
         "The CIST Regional Root Identifier component of the Port's port 
          priority vector, as defined in 13.10, for the CIST."
     REFERENCE   
-        "13.24.12"
+	"13.25.7"
     ::= { ieee8021MstpCistPortEntry 5 }
 
 ieee8021MstpCistPortTopologyChangeAck OBJECT-TYPE
@@ -600,7 +605,7 @@ ieee8021MstpCistPortTopologyChangeAck OBJECT-TYPE
     DESCRIPTION 
         "The Port's Topology Change Acknowledge parameter value.  
          True(1) if a Configuration Message with a topology change 
-         acknowledge flag set is to be transmitted."
+         acknowledge flag set is to be transmitted. "
     REFERENCE   
         "17.19.41 of IEEE Std 802.1D"
     ::= { ieee8021MstpCistPortEntry 6 }
@@ -611,10 +616,10 @@ ieee8021MstpCistPortHelloTime OBJECT-TYPE
     MAX-ACCESS  read-only
     STATUS      current
     DESCRIPTION 
-        "The Port's Hello Time timer parameter value, for the CIST.  In 
-         centi-seconds."
+        "The Port's Hello Time timer parameter value, for the CIST.  
+         In centi-seconds"
     REFERENCE   
-        "13.24.13, 17.19.22 of IEEE Std 802.1D"
+	"13.27.48, 17.19.22 of IEEE Std 802.1D"
     ::= { ieee8021MstpCistPortEntry 7 }
 
 ieee8021MstpCistPortAdminEdgePort OBJECT-TYPE
@@ -646,12 +651,12 @@ ieee8021MstpCistPortMacEnabled OBJECT-TYPE
     MAX-ACCESS  read-write
     STATUS      current
     DESCRIPTION 
-        "In a Bridge that supports the MAC Enabled parameter, the 
-         current state of the MAC Enabled parameter.  True(1) indicates 
-         that administratively the MAC is set as if it was connected to 
-         a point-to-point LAN."
+        "In a Bridge that supports the MAC Enabled parameter, the current 
+         state of the MAC Enabled parameter.
+         True(1) indicates that adminstratively the MAC is set as if it 
+         was connected to a point-to-point LAN."
     REFERENCE   
-        "12.8.2.1.3 (m)"
+	"12.8.2.1.3 p)"
     ::= { ieee8021MstpCistPortEntry 10 }
 
 ieee8021MstpCistPortMacOperational OBJECT-TYPE
@@ -660,10 +665,10 @@ ieee8021MstpCistPortMacOperational OBJECT-TYPE
     STATUS      current
     DESCRIPTION 
         "In a Bridge that supports the MAC Operational parameter, the 
-         current state of the MAC Operational parameter.  True(1) 
-         indicates the MAC is operational."
+         current state of the MAC Operational parameter.
+         True(1) indicates the MAC is operational."
     REFERENCE   
-        "12.8.2.1.3 (n)"
+	"12.8.2.1.3 q)"
     ::= { ieee8021MstpCistPortEntry 11 }
 
 ieee8021MstpCistPortRestrictedRole OBJECT-TYPE
@@ -673,9 +678,9 @@ ieee8021MstpCistPortRestrictedRole OBJECT-TYPE
     DESCRIPTION 
         "The current state of the restrictedRole parameter for the Port.  
          True(1) causes the Port not to be selected as Root Port for the 
-         CIST or any MSTI."
+         CIST or any MSTI. "
     REFERENCE   
-        "13.25.14"
+	"13.27.64"
     ::= { ieee8021MstpCistPortEntry 12 }
 
 ieee8021MstpCistPortRestrictedTcn OBJECT-TYPE
@@ -687,7 +692,7 @@ ieee8021MstpCistPortRestrictedTcn OBJECT-TYPE
          True(1) causes the Port not to propagate topology changes to 
          other Ports."
     REFERENCE   
-        "13.25.15"
+	"13.27.65"
     ::= { ieee8021MstpCistPortEntry 13 }
 
 ieee8021MstpCistPortRole OBJECT-TYPE
@@ -699,7 +704,7 @@ ieee8021MstpCistPortRole OBJECT-TYPE
         "The current Port Role for the Port (i.e., Root, Alternate, 
          Designated, or Backup), for the CIST."
     REFERENCE   
-        "12.2.8.1.3 (s)"
+        "12.8.2.1.3 v)"
     ::= { ieee8021MstpCistPortEntry 14 }
 
 ieee8021MstpCistPortDisputed OBJECT-TYPE
@@ -707,12 +712,12 @@ ieee8021MstpCistPortDisputed OBJECT-TYPE
     MAX-ACCESS  read-only
     STATUS      current
     DESCRIPTION 
-        "The current value of the disputed variable for the CIST for the 
-         Port.  A value of true(1) indicates that the disrupted variable 
-         is set.  A value of false(2) indicates that the agreed variable 
-         is cleared."
+        "The current value of the disputed variable for the CIST for 
+         the Port.  A value of true(1) indicates that the disputed 
+         variable is set.  A value of false(2) indicates that the 
+         agreed variable is cleared."
     REFERENCE   
-        "13.24:u, and 17.19.6 of IEEE Std 802.1D"
+        "13.27.22, and 17.19.6 of IEEE Std 802.1D"
     ::= { ieee8021MstpCistPortEntry 15 }
 
 ieee8021MstpCistPortCistRegionalRootId OBJECT-TYPE
@@ -720,11 +725,10 @@ ieee8021MstpCistPortCistRegionalRootId OBJECT-TYPE
     MAX-ACCESS  read-only
     STATUS      current
     DESCRIPTION 
-        "In an MST Bridge, the CIST Regional Root Identifier, i.e. the 
-         Bridge Identifier of the current CIST Regional Root, for the 
-         CIST."
+        "In an MSTP Bridge, the CIST Regional Root Identifier, i.e. the 
+         Bridge Identifier of the current CIST Regional Root, for the CIST."
     REFERENCE   
-        "13.9:c, 13.10, 13.24.12"
+        "13.9:c, 13.10, 13.27.47"
     ::= { ieee8021MstpCistPortEntry 16 }
 
 ieee8021MstpCistPortCistPathCost OBJECT-TYPE
@@ -732,15 +736,15 @@ ieee8021MstpCistPortCistPathCost OBJECT-TYPE
     MAX-ACCESS  read-only
     STATUS      current
     DESCRIPTION 
-        "In an MST Bridge, the CIST Internal Root Path Cost, i.e. the 
-         CIST path cost from the transmitting Bridge to the CIST 
-         Regional Root, for the CIST.
+        "In an MSTP Bridge, the CIST Internal Root Path Cost, i.e. the 
+         CIST path cost from the transmitting Bridge to the CIST Regional 
+         Root, for the CIST.
          
-         The sum (about 20 possible out of the given range) of mulitple 
-         port path costs.  Also, if the 'transmitting Bridge' is the 
-         'CIST Regional Root', then this value could be zero."
+         The sum (about 20 possible out of the given range) of multiple 
+         port path costs.  Also, if the 'the transmitting Bridge' is 
+         'the CIST Regional Root', then this value could be zero."
     REFERENCE   
-        "13.9:d, 13.10, 13.24.12"
+        "13.9:d, 13.10, 13.27.47"
     ::= { ieee8021MstpCistPortEntry 17 }
 
 ieee8021MstpCistPortProtocolMigration OBJECT-TYPE
@@ -748,7 +752,7 @@ ieee8021MstpCistPortProtocolMigration OBJECT-TYPE
     MAX-ACCESS  read-write
     STATUS      current
     DESCRIPTION 
-        "In an MST Bridge, the current value of the mcheck variable for 
+        "In an MSTP Bridge, the current value of the mcheck variable for 
          the Port.  A value of true(1) forces the state machine to 
          perform functions as per 17.19.13."
     REFERENCE   
@@ -760,11 +764,11 @@ ieee8021MstpCistPortEnableBPDURx OBJECT-TYPE
     MAX-ACCESS  read-write
     STATUS      current
     DESCRIPTION 
-        "In an MST Bridge, the enableBPDUrx parameter value.  A value of 
-         false(2) indicates that BPDUs are ignored."
+        "In an MSTP Bridge, the enableBPDUrx parameter value.  A value 
+         of false(2) indicates that BPDUs are ignored."
     REFERENCE   
-        "13.25.18"
-    DEFVAL      { false }
+        "13.27.23"
+    DEFVAL      { true }
     ::= { ieee8021MstpCistPortEntry 19 }
 
 ieee8021MstpCistPortEnableBPDUTx OBJECT-TYPE
@@ -772,11 +776,11 @@ ieee8021MstpCistPortEnableBPDUTx OBJECT-TYPE
     MAX-ACCESS  read-write
     STATUS      current
     DESCRIPTION 
-        "In an MST Bridge, the enableBPDUtx parameter value.  A value of 
-         false(2) indicates that BPDUs are not transmitted."
+        "In an MSTP Bridge, the enableBPDUtx parameter value.  A value 
+         of false(2) indicates that BPDUs are not transmitted."
     REFERENCE   
-        "13.25.19"
-    DEFVAL      { false }
+        "13.27.24"
+    DEFVAL      { true }
     ::= { ieee8021MstpCistPortEntry 20 }
 
 ieee8021MstpCistPortPseudoRootId OBJECT-TYPE
@@ -784,9 +788,9 @@ ieee8021MstpCistPortPseudoRootId OBJECT-TYPE
     MAX-ACCESS  read-write
     STATUS      current
     DESCRIPTION 
-        "In an MST Bridge, the pseudoRootId parameter value."
+        "In an MSTP Bridge, the pseudoRootId parameter value."
     REFERENCE   
-        "13.25.20"
+        "13.27.51"
     ::= { ieee8021MstpCistPortEntry 21 }
 
 ieee8021MstpCistPortIsL2Gp OBJECT-TYPE
@@ -794,10 +798,10 @@ ieee8021MstpCistPortIsL2Gp OBJECT-TYPE
     MAX-ACCESS  read-write
     STATUS      current
     DESCRIPTION 
-        "In an MST Bridge, the isL2gp parameter value.  A value of 
+        "In an MSTP Bridge, the isL2gp parameter value.  A value of 
          true(1) indicates this is an L2GP port."
     REFERENCE   
-        "13.25.21"
+        "13.27.26"
     DEFVAL      { false }
     ::= { ieee8021MstpCistPortEntry 22 }
 
@@ -810,17 +814,17 @@ ieee8021MstpPortTable OBJECT-TYPE
     MAX-ACCESS  not-accessible
     STATUS      current
     DESCRIPTION 
-        "The MSTP Port Table.  Each row in the Table represents 
-         information regarding a specific Port within the Bridge's 
-         Bridge Protocol Entity, for a given MSTI.
+        "The MSTP Port Table.  Each row in the Table represents information 
+         regarding a specific Port within the Bridge's Bridge Protocol 
+         Entity, for a given MSTI.
          
          The values of all writable objects in this table MUST be 
          retained across reinitializations of the management system.
          
          Note that entries will exist in this table only for bridge 
          components for which the corresponding instance of 
-         ieee8021SpanningTreeVersion (from the 
-         IEEE8021-SPANNING-TREE-MIB) has as a value mstp(2)."
+         ieee8021SpanningTreeVersion (from the IEEE8021-SPANNING-TREE-MIB) 
+         has a value of mstp(2)."
     REFERENCE   
         "12.8.2.2, 12.8.2.4"
     ::= { ieee8021MstpObjects 4 }
@@ -867,7 +871,7 @@ ieee8021MstpPortMstId OBJECT-TYPE
     MAX-ACCESS  not-accessible
     STATUS      current
     DESCRIPTION 
-        "In an MST Bridge, this parameter is the MSTID, i.e. the 
+        "In an MSTP Bridge, this parameter is the MSTID, i.e. the 
          identifier of a Spanning Tree (or MST) Instance."
     ::= { ieee8021MstpPortEntry 2 }
 
@@ -876,7 +880,7 @@ ieee8021MstpPortNum OBJECT-TYPE
     MAX-ACCESS  not-accessible
     STATUS      current
     DESCRIPTION 
-        "In an MST Bridge, the Port's Port Number parameter value for 
+        "In an MSTP Bridge, the Port's Port Number parameter value for 
          the MSTI, i.e. the number of the Bridge Port for the MSTI."
     ::= { ieee8021MstpPortEntry 3 }
 
@@ -886,9 +890,9 @@ ieee8021MstpPortUptime OBJECT-TYPE
     MAX-ACCESS  read-only
     STATUS      current
     DESCRIPTION 
-        "In an MST Bridge, the Port's Uptime parameter value for the 
+        "In an MSTP Bridge, the Port's Uptime parameter value for the 
          MSTI, i.e. the count in seconds of the time elapsed since the 
-         Port was last reset or initialized (BEGIN, 13.23)."
+         Port was last reset or initialized (BEGIN, Annex E)."
     ::= { ieee8021MstpPortEntry 4 }
 
 ieee8021MstpPortState OBJECT-TYPE
@@ -897,11 +901,10 @@ ieee8021MstpPortState OBJECT-TYPE
     MAX-ACCESS  read-only
     STATUS      current
     DESCRIPTION 
-        "In an MST Bridge, the current state of the Port (i.e., 
-         Disabled, Listening, Learning, Forwarding, or Blocking), for 
-         the MSTI."
+        "In an MSTP Bridge, the current state of the Port (i.e., Disabled, 
+         Listening, Learning, Forwarding, or Blocking), for the MSTI."
     REFERENCE   
-        "13.35, and 17.10 of IEEE Std 802.1D"
+        "13.38, and 17.10 of IEEE Std 802.1D"
     ::= { ieee8021MstpPortEntry 5 }
 
 ieee8021MstpPortPriority OBJECT-TYPE
@@ -909,11 +912,11 @@ ieee8021MstpPortPriority OBJECT-TYPE
     MAX-ACCESS  read-write
     STATUS      current
     DESCRIPTION 
-        "In an MST Bridge, the Port's Port Priority parameter value for 
-         the MSTI, i.e. the priority field for the Port Identifier for 
-         the Port for the MSTI."
+        "In an MSTP Bridge, the Port's Port Priority parameter value for 
+         the MSTI, i.e. the priority field for the Port Identifier for the 
+         Port for the MSTI."
     REFERENCE   
-        "13.24.12"
+        "13.27.47"
     ::= { ieee8021MstpPortEntry 6 }
 
 ieee8021MstpPortPathCost OBJECT-TYPE
@@ -921,10 +924,10 @@ ieee8021MstpPortPathCost OBJECT-TYPE
     MAX-ACCESS  read-write
     STATUS      current
     DESCRIPTION 
-        "In an MST Bridge, the Port's Port Path Cost parameter value for 
+        "In an MSTP Bridge, the Port's Port Path Cost parameter value for 
          the MSTI."
     REFERENCE   
-        "13.37.1"
+        "13.27.33"
     ::= { ieee8021MstpPortEntry 7 }
 
 ieee8021MstpPortDesignatedRoot OBJECT-TYPE
@@ -932,11 +935,10 @@ ieee8021MstpPortDesignatedRoot OBJECT-TYPE
     MAX-ACCESS  read-only
     STATUS      current
     DESCRIPTION 
-        "In an MST Bridge, the Regional Root Identifier component of the 
-         Port's MSTI port priority vector, as defined in 13.11, for the 
-         MSTI."
+        "In an MSTP Bridge, the Regional Root Identifier component of the 
+         Port's MSTI port priority vector, as defined in 13.11, for the MSTI."
     REFERENCE   
-        "13.24.12"
+        "13.27.47"
     ::= { ieee8021MstpPortEntry 8 }
 
 ieee8021MstpPortDesignatedCost OBJECT-TYPE
@@ -944,11 +946,10 @@ ieee8021MstpPortDesignatedCost OBJECT-TYPE
     MAX-ACCESS  read-only
     STATUS      current
     DESCRIPTION 
-        "In an MST Bridge, the Internal Root Path Cost component of the 
-         Port's MSTI port priority vector, as defined in 13.11, for the 
-         MSTI."
+        "In an MSTP Bridge, the Internal Root Path Cost component of the 
+         Port's MSTI port priority vector, as defined in 13.11, for the MSTI."
     REFERENCE   
-        "13.24.12"
+        "13.27.47"
     ::= { ieee8021MstpPortEntry 9 }
 
 ieee8021MstpPortDesignatedBridge OBJECT-TYPE
@@ -956,11 +957,11 @@ ieee8021MstpPortDesignatedBridge OBJECT-TYPE
     MAX-ACCESS  read-only
     STATUS      current
     DESCRIPTION 
-        "In an MST Bridge, the Designated Bridge Identifier component of 
+        "In an MSTP Bridge, the Designated Bridge Identifier component of 
          the Port's MSTI port priority vector, as defined in 13.11, for 
          the MSTI."
     REFERENCE   
-        "13.24.12"
+        "13.27.47"
     ::= { ieee8021MstpPortEntry 10 }
 
 ieee8021MstpPortDesignatedPort OBJECT-TYPE
@@ -968,11 +969,10 @@ ieee8021MstpPortDesignatedPort OBJECT-TYPE
     MAX-ACCESS  read-only
     STATUS      current
     DESCRIPTION 
-        "In an MST Bridge, the Designated Port Identifier component of 
-         the Port's MSTI port priority vector, as defined in 13.11, for 
-         the MSTI."
+        "In an MSTP Bridge, the Designated Port Identifier component of the 
+         Port's MSTI port priority vector, as defined in 13.11, for the MSTI."
     REFERENCE   
-        "13.24.12"
+        "13.27.47"
     ::= { ieee8021MstpPortEntry 11 }
 
 ieee8021MstpPortRole OBJECT-TYPE
@@ -981,8 +981,8 @@ ieee8021MstpPortRole OBJECT-TYPE
     MAX-ACCESS  read-only
     STATUS      current
     DESCRIPTION 
-        "In an MST Bridge, the current Port Role for the Port (i.e., 
-         Root, Alternate, Designated, or Backup), for the MSTI."
+        "In an MSTP Bridge, the current Port Role for the Port (i.e., Root, 
+         Alternate, Designated, or Backup), for the MSTI."
     ::= { ieee8021MstpPortEntry 12 }
 
 ieee8021MstpPortDisputed OBJECT-TYPE
@@ -990,16 +990,14 @@ ieee8021MstpPortDisputed OBJECT-TYPE
     MAX-ACCESS  read-only
     STATUS      current
     DESCRIPTION 
-        "In an MST Bridge, the current value of the disputed variable 
-         for the MSTI for the Port."
+        "In an MSTP Bridge, the current value of the disputed variable for 
+         the MSTI for the Port."
     REFERENCE   
-        "13.24:u, and 17.19.6 of IEEE Std 802.1D"
+        "13.27.22, and 17.19.6 of IEEE Std 802.1D"
     ::= { ieee8021MstpPortEntry 13 }
-
 
 -- ============================================================
 -- ieee8021MstpFidToMstiTable  deprecated
--- see ieee8021MstpFidToMstiV2Table below
 -- ============================================================
 
 ieee8021MstpFidToMstiTable OBJECT-TYPE
@@ -1007,20 +1005,20 @@ ieee8021MstpFidToMstiTable OBJECT-TYPE
     MAX-ACCESS  not-accessible
     STATUS      deprecated
     DESCRIPTION 
-        "In an MST Bridge, the fixed-length FID to MSTID Allocation 
-         Table entry.  Each entry in the Table corresponds to a FID, and 
-         the value of the entry specifies the MSTID of the spanning tree 
-         to which the set of VLANs supported by that FID are assigned.  
-         A value of zero in an entry specifies that the set of VLANs 
-         supported by that FID are assigned to the CST.
+        "In an MSTP Bridge, the fixed-length FID to MSTID Allocation Table 
+         entry.  Each entry in the Table corresponds to a FID, and the value 
+         of the entry specifies the MSTID of the spanning tree to which the 
+         set of VLANs supported by that FID are assigned.  A value of zero 
+         in an entry specifies that the set of VLANs supported by that FID 
+         are assigned to the CST.
          
          The values of all writable objects in this table MUST be 
          retained across reinitializations of the management system.
          
          Note that entries will exist in this table only for bridge 
          components for which the corresponding instance of 
-         ieee8021SpanningTreeVersion (from the 
-         IEEE8021-SPANNING-TREE-MIB) has a value of mstp(2)."
+         ieee8021SpanningTreeVersion (from the IEEE8021-SPANNING-TREE-MIB) 
+         has a value of mstp(2)."
     REFERENCE   
         "12.12.2"
     ::= { ieee8021MstpObjects 5 }
@@ -1030,7 +1028,7 @@ ieee8021MstpFidToMstiEntry OBJECT-TYPE
     MAX-ACCESS  not-accessible
     STATUS      deprecated
     DESCRIPTION 
-        "In an MST Bridge, a FID to MSTID Allocation Table entry."
+        "In an MSTP Bridge, a FID to MSTID Allocation Table entry."
     INDEX       { ieee8021MstpFidToMstiComponentId, 
                   ieee8021MstpFidToMstiFid }
     ::= { ieee8021MstpFidToMstiTable 1 }
@@ -1048,7 +1046,7 @@ ieee8021MstpFidToMstiComponentId OBJECT-TYPE
     DESCRIPTION 
         "The component identifier is used to distinguish between the 
          multiple virtual bridge instances within a PBB.  In simple 
-         situations where there is only a single component the defulat 
+         situations where there is only a single component the default 
          value is 1."
     ::= { ieee8021MstpFidToMstiEntry 1 }
 
@@ -1057,7 +1055,7 @@ ieee8021MstpFidToMstiFid OBJECT-TYPE
     MAX-ACCESS  not-accessible
     STATUS      deprecated
     DESCRIPTION 
-        "In an MST Bridge, the FID of the entry in the FID to MSTID 
+        "In an MSTP Bridge, the FID of the entry in the FID to MSTID 
          Allocation Table."
     ::= { ieee8021MstpFidToMstiEntry 2 }
 
@@ -1066,8 +1064,8 @@ ieee8021MstpFidToMstiMstId OBJECT-TYPE
     MAX-ACCESS  read-write
     STATUS      deprecated
     DESCRIPTION 
-        "In an MST Bridge, the MSTID to which the FID (of the entry in 
-         the FID to MSTID ALlocation Table) is to be allocated."
+        "In an MSTP Bridge, the MSTID to which the FID (of the entry in 
+         the FID to MSTID Allocation Table) is to be allocated."
     ::= { ieee8021MstpFidToMstiEntry 3 }
 
 -- ============================================================
@@ -1080,23 +1078,22 @@ ieee8021MstpVlanTable OBJECT-TYPE
     MAX-ACCESS  not-accessible
     STATUS      deprecated
     DESCRIPTION 
-        "In an MST Bridge, the fixed-length (4096 elements), read-only, 
+        "In an MSTP Bridge, the fixed-length (4096 elements), read-only, 
          MST Configuration Table.  Its elements are derived from other 
          configuration information held by the Bridge; specifically, the 
          current state of the VID to FID Allocation Table (8.8.7.1, 
-         12.10.3), and the FID MSTID Allocation Table (8.9.3, 12.12.2).  
-         Hence, changes made to either of these Tables can in turn 
-         affect the contents of the MST COnfiguration Table, and also 
-         affect the value of the digest element of the MST Configuration 
-         Identifier.
+         12.10.3),and the FID to MSTID Allocation Table (8.9.3, 12.12.2).  
+         Hence, changes made to either of these Tables can in turn affect 
+         the contents of the MST Configuration Table, and also affect the 
+         value of the digest element of the MST Configuration Identifier.
          
          The values of all writable objects in this table MUST be 
-         retained across reinitializations of the management systeme.
+         retained across reinitializations of the management system.
          
          Note that entries will exist in this table only for bridge 
          components for which the corresponding instance of 
-         ieee8021SpanningTreeVersion (from the 
-         IEEE8021-SPANNING-TREE-MIB) has a value of mstp(2)."
+         ieee8021SpanningTreeVersion (from the IEEE8021-SPANNING-TREE-MIB) 
+         has a value of mstp(2)."
     REFERENCE   
         "12.12.3.1"
     ::= { ieee8021MstpObjects 6 }
@@ -1106,7 +1103,7 @@ ieee8021MstpVlanEntry OBJECT-TYPE
     MAX-ACCESS  not-accessible
     STATUS      deprecated
     DESCRIPTION 
-        "In an MST Bridge, a MST Configuration Table entry."
+        "In an MSTP Bridge, a MST Configuration Table entry."
     INDEX       { ieee8021MstpVlanComponentId, ieee8021MstpVlanId }
     ::= { ieee8021MstpVlanTable 1 }
 
@@ -1132,8 +1129,8 @@ ieee8021MstpVlanId OBJECT-TYPE
     MAX-ACCESS  not-accessible
     STATUS      deprecated
     DESCRIPTION 
-        "In an MST Bridge, the VID of the entry in the MST Configuration 
-         Table."
+        "In an MSTP Bridge, the VID of the entry in the MST 
+         Configuration Table."
     ::= { ieee8021MstpVlanEntry 2 }
 
 ieee8021MstpVlanMstId OBJECT-TYPE
@@ -1141,8 +1138,8 @@ ieee8021MstpVlanMstId OBJECT-TYPE
     MAX-ACCESS  read-only
     STATUS      deprecated
     DESCRIPTION 
-        "In an MST Bridge, the MSTID value corresponding to the VID of 
-         the entry in the MST COnfiguration Table."
+        "In an MSTP Bridge, the MSTID value corresponding to the VID 
+         of the entry in the MST Configuration Table."
     ::= { ieee8021MstpVlanEntry 3 }
 
 
@@ -1156,17 +1153,17 @@ ieee8021MstpConfigIdTable OBJECT-TYPE
     STATUS      current
     DESCRIPTION 
         "A table containing the MST Configuration Identifier for each 
-         virtual bridge.  In simple situations where there is only a 
-         single component, there will only be a single entry in this 
-         table (i.e., only a single MST Configuratino Identifier).
+         virtual bridge.  In simple situations where there is only 
+         a single component, there will only be a single entry in 
+         this table (i.e., only a single MST Configuration Identifier).
          
          The values of all writable objects in this table MUST be 
          retained across reinitializations of the management system.
          
          Note that entries will exist in this table only for bridge 
          components for which the corresponding instance of 
-         ieee8021SpanningTreeVersion (from the 
-         IEEE8021-SPANNING-TREE-MIB) has a value of mstp(2)."
+         ieee8021SpanningTreeVersion (from the IEEE8021-SPANNING-TREE-MIB) 
+         has a value of mstp(2)."
     REFERENCE   
         "12.12.3.3, 12.12.3.4"
     ::= { ieee8021MstpObjects 7 }
@@ -1176,8 +1173,7 @@ ieee8021MstpConfigIdEntry OBJECT-TYPE
     MAX-ACCESS  not-accessible
     STATUS      current
     DESCRIPTION 
-        "An entry containing the MST Configuration Identifier of a 
-         bridge."
+        "An entry contining the MST Configuration Identifier of a bridge."
     INDEX       { ieee8021MstpConfigIdComponentId }
     ::= { ieee8021MstpConfigIdTable 1 }
 
@@ -1205,12 +1201,11 @@ ieee8021MstpConfigIdFormatSelector OBJECT-TYPE
     MAX-ACCESS  read-write
     STATUS      current
     DESCRIPTION 
-        "In an MST Bridge, the Configuration Identifier Format Selector 
-         in use by the Bridge, in the MST Configuration Identifier.  
-         This has a valud of 0 to indicate the format specified in IEEE 
-         Std 802.1Q."
+        "In an MSTP Bridge, the Configuration Identifier Format Selector 
+         in use by the Bridge, in the MST Configuration Identifier.  This 
+         has a value of 0 to indicate the format specified in IEEE Std 802.1Q."
     REFERENCE   
-        "13.7:1"
+        "13.8:1"
     ::= { ieee8021MstpConfigIdEntry 2 }
 
 ieee8021MstpConfigurationName OBJECT-TYPE
@@ -1218,10 +1213,10 @@ ieee8021MstpConfigurationName OBJECT-TYPE
     MAX-ACCESS  read-write
     STATUS      current
     DESCRIPTION 
-        "In an MST Bridge, the Configuration Name in the MST 
-         Configuration Identiifer."
+        "In an MSTP Bridge, the Configuration Name in the MST 
+         Configuration Identifier."
     REFERENCE   
-        "13.7:2"
+        "13.8:2"
     ::= { ieee8021MstpConfigIdEntry 3 }
 
 ieee8021MstpRevisionLevel OBJECT-TYPE
@@ -1229,10 +1224,10 @@ ieee8021MstpRevisionLevel OBJECT-TYPE
     MAX-ACCESS  read-write
     STATUS      current
     DESCRIPTION 
-        "IN a MST Bridge, the Revision Level in the MST Configuration 
-         Identifier."
+        "In an MSTP Bridge, the Revision Level in the MST 
+         Configuration Identifier."
     REFERENCE   
-        "13.7:3"
+        "13.8:3"
     ::= { ieee8021MstpConfigIdEntry 4 }
 
 ieee8021MstpConfigurationDigest OBJECT-TYPE
@@ -1240,10 +1235,10 @@ ieee8021MstpConfigurationDigest OBJECT-TYPE
     MAX-ACCESS  read-only
     STATUS      current
     DESCRIPTION 
-        "In an MST Bridge, the Configuration Digest in the MST 
+        "In an MSTP Bridge, the Configuration Digest in the MST 
          Configuration Identifier."
     REFERENCE   
-        "13.7:4"
+        "13.8:4"
     ::= { ieee8021MstpConfigIdEntry 5 }
 
 -- ============================================================
@@ -1256,8 +1251,9 @@ ieee8021MstpCistPortExtensionTable OBJECT-TYPE
     STATUS      current
     DESCRIPTION 
         "The CIST Port Extensions Table.  Each row in the Table 
-         represents information regarding a specific Port within the 
-         Bridge's Bridge Protocol Entity, for the CIST."
+         represents information 
+         regarding a specific Port within the Bridge's Bridge Protocol 
+         Entity, for the CIST."
     REFERENCE   
         "12.8.2"
     ::= { ieee8021MstpObjects 8 }
@@ -1267,8 +1263,9 @@ ieee8021MstpCistPortExtensionEntry OBJECT-TYPE
     MAX-ACCESS  not-accessible
     STATUS      current
     DESCRIPTION 
-        "A list of additional objects containing information maintained 
-         by every port about the CIST state for that port."
+        "A list of additional objects containing information 
+         maintained by every port about the CIST 
+         state for that port."
     AUGMENTS    { ieee8021MstpCistPortEntry }
     ::= { ieee8021MstpCistPortExtensionTable 1 }
 
@@ -1282,14 +1279,15 @@ ieee8021MstpCistPortAutoEdgePort OBJECT-TYPE
     MAX-ACCESS  read-write
     STATUS      current
     DESCRIPTION 
-        "The administrative value of the Auto Edge Port parameter.  A 
-         value of true(1) indicates if the bridge detection state 
-         machine (BDM, 13.31) is to detect other bridges attached to the 
-         LAN, and set ieee8021SpanningTreeRstpPortOperEdgePort 
-         automatically.  The default value is true(1).
+        "The administrative value of the Auto Edge Port parameter.  
+         A value of true(1) indicates if the bridge detection state 
+         machine (BDM, 13.31) is to detect other bridges 
+         attached to the LAN, and set 
+         ieee8021SpanningTreeRstpPortOperEdgePort automatically.  
+         The default value is true(1)
          
-         This is optional and provided only by implementations that 
-         support the automatic identification of edge ports.
+         This is optional and provided only by implementations 
+         that support the automatic identification of edge ports.
          
          The value of this object MUST be retained across 
          reinitializations of the management system."
@@ -1304,56 +1302,58 @@ ieee8021MstpCistPortAutoIsolatePort OBJECT-TYPE
     DESCRIPTION 
         "The operational value of the Isolate Port parameter.
          
-         A value of true(1) indicates a Designated Port will transition 
-         to discarding if both ieee8021SpanningTreeRstpPortAdminEdgePort 
-         and ieee8021SpanningTreeRstpPortAutoEdgePort are FALSE and the 
-         other bridge presumed to be attached to the same point-to-point 
-         LAN does not transmit periodic BPDUs.
+         A value of true(1) indicates a Designated Port will 
+         transition to discarding if both 
+         ieee8021SpanningTreeRstpPortAdminEdgePort and 
+         ieee8021SpanningTreeRstpPortAutoEdgePort are FALSE and 
+         the other bridge presumed to be attached to the same 
+         point-to-point LAN does not transmit periodic BPDUs.
          
-         This is optional and provided only by implementations that 
-         support the automatic identification of fragile bridges."
+         This is optional and provided only by implementations 
+         that support the automatic identification of fragile 
+         bridges."
     REFERENCE   
         "12.8.2.1.3"
     ::= { ieee8021MstpCistPortExtensionEntry 2 }
 
 -- ============================================================
--- ieee8021MstpPidToMstiV2Table
+-- ieee8021MstpFidToMstiV2Table
 -- ============================================================
 
-ieee8021MstpPidToMstiV2Table OBJECT-TYPE
-    SYNTAX      SEQUENCE OF Ieee8021MstpPidToMstiV2Entry
+ieee8021MstpFidToMstiV2Table OBJECT-TYPE
+    SYNTAX      SEQUENCE OF Ieee8021MstpFidToMstiV2Entry
     MAX-ACCESS  not-accessible
     STATUS      current
     DESCRIPTION 
-        "In an MST Bridge, the fixed-length PID to MSTID Allocation 
-         Table entry.  Each entry in the Table corresponds to a FID, and 
-         the value of the entry specifies the MSTID of the spanning tree 
-         to which the set of VLANs supported by that FID are assigned.  
-         A value of zero in an entry spefifies that the set of VLANs 
-         supported by that FID are assinged to the CST.
+        "In an MSTP Bridge, the fixed-length FID to MSTID Allocation Table 
+         entry.  Each entry in the Table corresponds to a FID, and the value 
+         of the entry specifies the MSTID of the spanning tree to which the 
+         set of VLANs supported by that FID are assigned.  A value of zero 
+         in an entry specifies that the set of VLANs supported by that FID 
+         are assigned to the CST.
          
          The values of all writable objects in this table MUST be 
          retained across reinitializations of the management system.
          
          Note that entries will exist in this table only for bridge 
          components for which the corresponding instance of 
-         ieee8021SpanningTreeVersion (from the 
-         IEEE8021-SPANNING-TREE-MIB) has a value of mstp(2)."
+         ieee8021SpanningTreeVersion (from the IEEE8021-SPANNING-TREE-MIB) 
+         has a value of mstp(2)."
     REFERENCE   
         "12.12.2"
     ::= { ieee8021MstpObjects 9 }
 
-ieee8021MstpPidToMstiV2Entry OBJECT-TYPE
-    SYNTAX      Ieee8021MstpPidToMstiV2Entry
+ieee8021MstpFidToMstiV2Entry OBJECT-TYPE
+    SYNTAX      Ieee8021MstpFidToMstiV2Entry
     MAX-ACCESS  not-accessible
     STATUS      current
     DESCRIPTION 
-        "In an MST Bridge, a FID to MSTID Allocation Table entry."
+        "In an MSTP Bridge, a FID to MSTID Allocation Table entry."
     INDEX       { ieee8021MstpFidToMstiV2ComponentId, 
                   ieee8021MstpFidToMstiV2Fid }
-    ::= { ieee8021MstpPidToMstiV2Table 1 }
+    ::= { ieee8021MstpFidToMstiV2Table 1 }
 
-Ieee8021MstpPidToMstiV2Entry ::= SEQUENCE {
+Ieee8021MstpFidToMstiV2Entry ::= SEQUENCE {
     ieee8021MstpFidToMstiV2ComponentId  IEEE8021PbbComponentIdentifier,
     ieee8021MstpFidToMstiV2Fid          Unsigned32,
     ieee8021MstpFidToMstiV2MstId        Unsigned32
@@ -1365,30 +1365,30 @@ ieee8021MstpFidToMstiV2ComponentId OBJECT-TYPE
     STATUS      current
     DESCRIPTION 
         "The component identifier is used to distinguish between the 
-         multiple virtual bridge instance within a PBB.  In simple 
+         multiple virtual bridge instances within a PBB.  In simple 
          situations where there is only a single component the default 
          value is 1."
-    ::= { ieee8021MstpPidToMstiV2Entry 1 }
+    ::= { ieee8021MstpFidToMstiV2Entry 1 }
 
 ieee8021MstpFidToMstiV2Fid OBJECT-TYPE
     SYNTAX      Unsigned32 (1..4095)
     MAX-ACCESS  not-accessible
     STATUS      current
     DESCRIPTION 
-        "In an MST Bridge, the FID of the entry in the FID to MSTID 
+        "In an MSTP Bridge, the FID of the entry in the FID to MSTID 
          Allocation Table."
-    ::= { ieee8021MstpPidToMstiV2Entry 2 }
+    ::= { ieee8021MstpFidToMstiV2Entry 2 }
 
 ieee8021MstpFidToMstiV2MstId OBJECT-TYPE
     SYNTAX      Unsigned32 (0..4095)
     MAX-ACCESS  read-write
     STATUS      current
     DESCRIPTION 
-        "In an MST Bridge, the MSTID to which the FID (of the entry in 
-         the FID to MSTID Allocation Table) is to be allocated.  In an 
-         SPT Bridge, the value 4095 is used to indicate unused 
+        "In an MSTP Bridge, the MSTID to which the FID (of the entry in 
+         the FID to MSTID Allocation Table) is to be allocated.  
+         In an SPT Bridge, the value 4095 is used to indicate unused 
          (non-filtering) FIDs."
-    ::= { ieee8021MstpPidToMstiV2Entry 3 }
+    ::= { ieee8021MstpFidToMstiV2Entry 3 }
 
 -- ============================================================
 -- ieee8021MstpVlanV2Table
@@ -1399,23 +1399,22 @@ ieee8021MstpVlanV2Table OBJECT-TYPE
     MAX-ACCESS  not-accessible
     STATUS      current
     DESCRIPTION 
-        "In an MST Bridge, the fixed-length (4096 elements), read-only, 
-         MST Configuration Table.  Its elements are derived frm other 
+        "In an MSTP Bridge, the fixed-length (4096 elements), read-only, 
+         MST Configuration Table.  Its elements are derived from other 
          configuration information held by the Bridge; specifically, the 
          current state of the VID to FID Allocation Table (8.8.7.1, 
-         12.10.3), and the FID to MSTID Allocation Table (8.9.3, 
-         12.12.2).  Hence, changes made to either of these Tables can in 
-         turn affect the contents of the MST Configuration Table, and 
-         also affect the value of the digest element of the MST 
-         COnfiguration Identifier.
+         12.10.3),and the FID to MSTID Allocation Table (8.9.3, 12.12.2).  
+         Hence, changes made to either of these Tables can in turn affect 
+         the contents of the MST Configuration Table, and also affect the 
+         value of the digest element of the MST Configuration Identifier.
          
          The values of all writable objects in this table MUST be 
          retained across reinitializations of the management system.
          
          Note that entries will exist in this table only for bridge 
          components for which the corresponding instance of 
-         ieee8021SpanningTreeVersion (from the 
-         IEEE8021-SPANNING-TREE-MIB) has a value of mstp(2)."
+         ieee8021SpanningTreeVersion (from the IEEE8021-SPANNING-TREE-MIB) 
+         has a value of mstp(2)."
     REFERENCE   
         "12.12.3.1"
     ::= { ieee8021MstpObjects 10 }
@@ -1425,7 +1424,7 @@ ieee8021MstpVlanV2Entry OBJECT-TYPE
     MAX-ACCESS  not-accessible
     STATUS      current
     DESCRIPTION 
-        "In an MST Bridge, a MST Configuration Table entry."
+        "In an MSTP Bridge, a MST Configuration Table entry."
     INDEX       { ieee8021MstpVlanV2ComponentId, ieee8021MstpVlanV2Id }
     ::= { ieee8021MstpVlanV2Table 1 }
 
@@ -1451,8 +1450,8 @@ ieee8021MstpVlanV2Id OBJECT-TYPE
     MAX-ACCESS  not-accessible
     STATUS      current
     DESCRIPTION 
-        "In a MST Bridge, the VID of the entry in the MST COnfiguration 
-         Table."
+        "In an MSTP Bridge, the VID of the entry in the MST 
+         Configuration Table."
     ::= { ieee8021MstpVlanV2Entry 2 }
 
 ieee8021MstpVlanV2MstId OBJECT-TYPE
@@ -1460,9 +1459,10 @@ ieee8021MstpVlanV2MstId OBJECT-TYPE
     MAX-ACCESS  read-only
     STATUS      current
     DESCRIPTION 
-        "In an MST Bridge, the MSTID value corresponding to the VID of 
-         the entry in the MST Configuration Table.  In an SPT Bridge, a 
-         value of 4095 is used to indicate SPVIDs."
+        "In an MSTP Bridge, the MSTID value corresponding to the VID 
+         of the entry in the MST Configuration Table.  
+         In an SPT Bridge, a value of 4095 is used to indicate 
+         SPVIDs."
     ::= { ieee8021MstpVlanV2Entry 3 }
 
 -- ============================================================
@@ -1503,7 +1503,7 @@ ieee8021MstpGroup OBJECT-GROUP
                   ieee8021MstpVids3, ieee8021MstpRowStatus }
     STATUS      current
     DESCRIPTION 
-        "Obects for the MST group"
+        "Objects for the MST group"
     ::= { ieee8021MstpGroups 2 }
 
 ieee8021MstpCistPortGroup OBJECT-GROUP
@@ -1541,7 +1541,7 @@ ieee8021MstpPortGroup OBJECT-GROUP
                   ieee8021MstpPortDisputed }
     STATUS      current
     DESCRIPTION 
-        "OBjects for the MST Port group"
+        "Objects for the MST Port group"
     ::= { ieee8021MstpGroups 4 }
 
 ieee8021MstpFidToMstiGroup OBJECT-GROUP
@@ -1565,7 +1565,7 @@ ieee8021MstpConfigIdGroup OBJECT-GROUP
                   ieee8021MstpConfigurationDigest }
     STATUS      current
     DESCRIPTION 
-        "Objects for the MST Configurationn Identifier group"
+        "Objects for the MST Configuration Identifier group"
     ::= { ieee8021MstpGroups 7 }
 
 ieee8021MstpCistPortExtensionGroup OBJECT-GROUP
@@ -1573,15 +1573,16 @@ ieee8021MstpCistPortExtensionGroup OBJECT-GROUP
                   ieee8021MstpCistPortAutoIsolatePort }
     STATUS      current
     DESCRIPTION 
-        "Objects for the CIST Port Extension group for fragile bridges"
+        "Objects for the CIST Port Extension group 
+         for fragile bridges"
     ::= { ieee8021MstpGroups 8 }
 
 ieee8021MstpFidToMstiV2Group OBJECT-GROUP
     OBJECTS     { ieee8021MstpFidToMstiV2MstId }
     STATUS      current
     DESCRIPTION 
-        "Objects for the MST FID to MSTID Allocation Table group for 
-         SPB"
+        "Objects for the MST FID to MSTID Allocation Table group 
+         for SPB"
     ::= { ieee8021MstpGroups 9 }
 
 ieee8021MstpVlanV2Group OBJECT-GROUP
