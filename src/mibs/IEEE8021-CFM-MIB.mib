@@ -1,0 +1,387 @@
+IEEE8021-CFM-MIB DEFINITIONS ::= BEGIN
+
+-- *******************************************************************
+-- IEEE 802.1ag(TM) CFM MIB
+-- *******************************************************************
+
+IMPORTS
+    MODULE-IDENTITY,
+    OBJECT-TYPE,
+    NOTIFICATION-TYPE,
+    Integer32, Counter32,
+    Unsigned32              FROM SNMPv2-SMI     -- [RFC2578]
+    TEXTUAL-CONVENTION,
+    TimeInterval,
+    TimeStamp, RowStatus,
+    TruthValue, MacAddress,
+    TDomain, TAddress       FROM SNMPv2-TC      -- [RFC2579]
+    MODULE-COMPLIANCE,
+    OBJECT-GROUP,
+    NOTIFICATION-GROUP      FROM SNMPv2-CONF    -- [RFC2580]
+    InterfaceIndex,
+    InterfaceIndexOrZero    FROM IF-MIB         -- [RFC2863]
+    LldpChassisId,
+    LldpChassisIdSubtype,
+    LldpPortId,
+    LldpPortIdSubtype       FROM LLDP-MIB       -- [IEEE Std 802.1AB-2005]
+    VlanIdOrNone, VlanId    FROM Q-BRIDGE-MIB   -- [RFC4363]
+    ieee802dot1mibs,
+    IEEE8021VlanIndex       FROM IEEE8021-TC-MIB
+    ;
+
+ieee8021CfmMib MODULE-IDENTITY
+    LAST-UPDATED "201102270000Z" -- February 27, 2011
+    ORGANIZATION 
+        "IEEE 802.1 Working Group"
+    CONTACT-INFO 
+        "  WG-URL: http://grouper.ieee.org/groups/802/1/index.html
+         WG-EMail: stds-802-1@ieee.org
+         
+          Contact: David Levi
+           Postal: C/O IEEE 802.1 Working Group
+                   IEEE Standards Association
+                   445 Hoes Lane
+                   P.O. Box 1331
+                   Piscataway
+                   NJ 08855-1331
+                   USA
+           E-mail: STDS-802-1-L@LISTSERV.IEEE.ORG"
+    DESCRIPTION 
+        "Connectivity Fault Management module.
+         
+         Unless otherwise indicated, the reference in this MIB 
+         module are to IEEE 802.1Q-2011.
+         
+         Copyright (C) IEEE.
+         This version of this MIB module is part of IEEE802.1Q; 
+         see the draft itself for full legal notices."
+    REVISION    "201102270000Z" -- February 27, 2011
+    DESCRIPTION 
+        "Addition of support for ICC format and minor edits 
+         as part of 2011 revision of IEEE Std 802.1Q."
+    REVISION    "200811180000Z" -- November 18, 2008
+    DESCRIPTION 
+        "Added new columns to the dot1agCfmMepTable to support new MEP 
+         functionality required for PBB-TE support.  Modified 
+         dot1agCfmMepDbTable to support new functionality required for 
+         PBB-TE.  Modified conformance clauses to indicate objects 
+         needed for PBB-TE support."
+    REVISION    "200810150000Z" -- October 15, 2008
+    DESCRIPTION 
+        "The IEEE8021-CFM-MIB Module was originally included in IEEE 
+         802.1ag-2007.  Some objects in this module are deprecated and 
+         replaced by objects in the IEEE8021-CFM-V2-MIB module defined 
+         in 802.1ap.
+         
+         This revision is included in IEEE 802.1ap"
+    REVISION    "20070610000Z" -- 06/10/2007 00:00GMT
+    DESCRIPTION 
+        "Included in IEEE 802.1ag-2007
+
+         Copyright (C) IEEE802.1."
+    ::= { ieee802dot1mibs 8 }
+
+dot1agNotifications OBJECT IDENTIFIER
+    ::= { ieee8021CfmMib 0 }
+
+dot1agMIBObjects OBJECT IDENTIFIER
+    ::= { ieee8021CfmMib 1 }
+
+dot1agCfmConformance OBJECT IDENTIFIER
+    ::= { ieee8021CfmMib 2 }
+
+-- *******************************************************************
+-- Groups in the CFM MIB Module
+-- *******************************************************************
+
+dot1agCfmStack OBJECT IDENTIFIER
+    ::= { dot1agMIBObjects 1 }
+
+dot1agCfmDefaultMd OBJECT IDENTIFIER
+    ::= { dot1agMIBObjects 2 }
+
+dot1agCfmVlan OBJECT IDENTIFIER
+    ::= { dot1agMIBObjects 3 }
+
+dot1agCfmConfigErrorList OBJECT IDENTIFIER
+    ::= { dot1agMIBObjects 4 }
+
+dot1agCfmMd OBJECT IDENTIFIER
+    ::= { dot1agMIBObjects 5 }
+
+dot1agCfmMa OBJECT IDENTIFIER
+    ::= { dot1agMIBObjects 6 }
+
+dot1agCfmMep OBJECT IDENTIFIER
+    ::= { dot1agMIBObjects 7 }
+
+-- *******************************************************************
+-- Textual conventions
+-- *******************************************************************
+Dot1agCfmMaintDomainNameType ::= TEXTUAL-CONVENTION
+    STATUS      current
+    DESCRIPTION 
+        "A value that represents a type (and thereby the format) of a 
+         Dot1agCfmMaintDomainName.  The value can be one of the 
+         following:
+         
+         ieeeReserved(0)    Reserved for definition by IEEE 802.1 
+                            recommend to not use zero unless absolutely 
+                            needed.
+         none(1)            No format specified, usually because there 
+                            is not (yet) a Maintenance Domain Name.  In 
+                            this case, a zero length OCTET STRING for 
+                            the Domain Name field is acceptable.
+        dnsLikeName(2)      Domain Name like string, globally unique 
+                            text string derived from a DNS name.
+        macAddrAndUint(3)   MAC address + 2-octet (unsigned) integer.
+        charString(4)       RFC2579 DisplayString, execpt that the 
+                            character codes 0-31 (decimal) are not used.
+        ieeeReserved(xx)    Reserved for definition by IEEE 802.1 
+                            xx values can be [5..31] and [64..255]
+        ituReserved(xx)     Rserved for definition by ITU-T Y.1731 
+                            xx values range from [32..63]
+        
+        To support future extensions, the Dot1agCfmMaintDomainNameType 
+        textual convention SHOULD NOT be sub-typed in object type 
+        definitions.  It MAY be sub-typed in compliance statements in 
+        order to require only a subset of these address types for a 
+        compliant implementation.
+        
+        Implementations MUST ensure that Dot1agCfmMaintDomainNameType 
+        objects and any dependent objects (e.g., Dot1agCfmMainDomainName 
+        objects) are consistent.  An inconsistentValue error MUST be 
+        generated if an attempt to change an 
+        Dot1agCfmMaintDomainNameType object would, for example, lead to 
+        an undefined Dot1agCfmMaintDomainName value.  In particular, 
+        Dot1agCfmMaintDomainNameType/Dot1agCfmMaintDomainName pairs MUST 
+        be changed together if the nameType changes.
+       "
+    REFERENCE   
+        "21.6.5, Table 21-19"
+    SYNTAX      INTEGER { none(1), dnsLikeName(2), macAddressAndUint(3), 
+                          charString(4) }
+
+Dot1agCfmMaintAssocNameType ::= TEXTUAL-CONVENTION
+    STATUS      current
+    DESCRIPTION 
+        "A value that represents a type (and thereby the format) of a 
+         Dot1agCfmMainAssocName.  The value can be one of the following:
+         
+         ieeeReserved(0)    Reserved for definition by IEEE 802.1 
+                            recommend to not use zero unless absolutely 
+                            needed.
+         primaryVid(1)      Primary VLAN ID.
+                            12 bits represented in a 2-octet integer 
+                            - 4 least significant bits of the first byte 
+                            contains the 4 most significant bits of the 
+                            12 bits primary VID
+                            - second byte contains the 8 least 
+                            significant bits of the primary VID
+                            
+                                 0 1 2 3 4 5 6 7 8
+                                 +-+-+-+-+-+-+-+-+
+                                 |0 0 0 0| {MSB} |
+                                 +-+-+-+-+-+-+-+-+
+                                 |  VID   LSB    |
+                                 +-+-+-+-+-+-+-+-+
+                                 
+         charString(2)      RFC2579 DisplayString, except that character 
+                            codes 0-31 (decimal) are not used.  (1..45) 
+                            octets
+         unsignedInt16(3)   2-octet integer/big endian
+         rfc2865VpnId(4)    RFC 2865 VPN ID
+                            3 octet VPN authority Organizationally 
+                            Unique Identifier followed by 4 octet VPN 
+                            index identifying VPN according to the OUI:
+                            
+                                 0 1 2 3 4 5 6 7 8
+                                 +-+-+-+-+-+-+-+-+
+                                 | VPN OUI {MSB} |
+                                 +-+-+-+-+-+-+-+-+
+                                 |   VPN OUI     |
+                                 +-+-+-+-+-+-+-+-+
+                                 | VPN OUI {LSB} |
+                                 +-+-+-+-+-+-+-+-+
+                                 |VPN Index (MSB)|
+                                 +-+-+-+-+-+-+-+-+
+                                 |  VPN Index    |
+                                 +-+-+-+-+-+-+-+-+
+                                 |  VPN Index    |
+                                 +-+-+-+-+-+-+-+-+
+                                 |VPN Index {LSB}|
+                                 +-+-+-+-+-+-+-+-+
+         
+         ieeeReserved(xx)   Reserved for definition by IEEE 802.1 
+                            xx values can be [5..31] and [64.255]
+         ICCformat(32)      ICC-based format as specified in ITU-T 
+                            Y.1731
+         ituReserved(xx)    Reserved for definition by ITU-T Y.1731 
+                            xx values range from [33..63]
+         
+         To support future extensions, the Dot1agCfmMaintAssocNameType 
+         textual convention SHOULD NOT be sub-typed in object type 
+         definitions.  It MAY be sub-typed in compliance statements in 
+         order to require only a subset of these address types for a 
+         compliant implementation.
+         
+         Implementations MUST ensure that Dot1agCfmMaintAssocNameType 
+         objects and any dependent objects (e.g., 
+         Dot1agCfmMaintAssocName objects) are consistent.  An 
+         inconsitentValue error MUST be generated if an attempt to 
+         change an Dot1agCfmMaintAssocNameType object would, for 
+         example, lead to an undefined Dot1agCfmMaintAssocName value.  
+         In particular, 
+         Dot1agCfmMaintAssocNameType/Dot1agCrmMaintAssocName pairs MUST 
+         be changed together if the nameType changes.
+         
+         The Maintenance Domain name and Maintenance Association name, 
+         when put together into the CCM PDU, MUST total 58 octets or 
+         less.  If the Dpt1agCrmMaintDomainNameType object contains 
+         none(1), then the Dot1agCfmMaintAssocName object MUST be 45 
+         octets or less in length.  Otherwise, the lenght of the 
+         Dot1agCfmMaintDomainName object plus the length of the 
+         Dot1agCfmMaintAssocName object, added together, MUST total less 
+         than or equal to 44 octets.
+        "
+    REFERENCE   
+        "21.6.5.4, Table 21-20"
+    SYNTAX      INTEGER { primaryVid(1), charString(2), 
+                          unsignedInt16(3), rfc2865VpnId(4), ICCformat(21) }
+
+Dot1agCfmMaintAssocName ::= TEXTUAL-CONVENTION
+    STATUS      current
+    DESCRIPTION 
+        "Denotes a generic Maintenance Association Name.  It is the part 
+         of the Maintenance Association Identifier which is unique 
+         within the Maintenance Domain Name and is appended to the 
+         Maintenance Domain Name to form the Maintenance Association 
+         Identifier (MAID).
+         
+         A Dot1agCfmMaintAssocName value is always interpreted within 
+         the context of a Dot1agCfmMaintAssocNameType value.  Every 
+         usage of the Dot1agCfmMaintAssocName textual convention is 
+         required to specify the Dot1agCfmMaintAssocNameType object that 
+         provides the context.  It is suggested that the 
+         Dot1agCfmMaintAssocNameType object be logically registered 
+         before the object(s) that use the Dot1agCfmMaintAssocName 
+         textual convention, if they appear in the same logical row.
+         
+         The value of a Dot1agCfmMaintAssocName object MUST always be 
+         consistent with the value of the associated 
+         Dot1agCfmMaintAssocName object.  Attempts to set an 
+         Dot1agCfmMaintAssocName to a value inconsistent with the 
+         associated Dot1agCfmMaintAssocNameType MUST fail with an 
+         inconsistentValue error.
+         
+         When this textual convention is used as the syntax of an index 
+         object, there may be issues with the limit of 128 
+         sub-identifiers specified in SMIv2, IETF STD 58.  In this case, 
+         the object definition MUST include a 'SIZE' clause to limit the 
+         number of potential instance sub-identifiers; otherwise the 
+         applicable constraints MUST be state in the appropriate 
+         conceptual row DESCRIPTION clauses, or in the surrounding 
+         documentation if there is no single DESCRIPTION clause that is 
+         appropriate.
+        "
+    REFERENCE   
+        "802.1ag clauses 21.6.5.4, 21.6.5.5, 21.6.5.6"
+    SYNTAX      OCTET STRING (SIZE(1..45))
+
+Dot1agCfmMDLevel ::= TEXTUAL-CONVENTION
+    DISPLAY-HINT "d"
+    STATUS      current
+    DESCRIPTION 
+        "Integer identifying the Maintenance Domain Level (MD Level).  
+         Higher numbers correspond to higher Maintenance Domains, those 
+         with the greatest physical reach, with the highest value for 
+         customers' CFM PDUs.  Lower numbers correspond to lower 
+         Maintenance Domains, those with more limited physical reach, 
+         with the lowest values for CFM PDUs protecting single bridges 
+         or physical links.
+        "
+    REFERENCE   
+        "802.1ag clauses 18.3, 21.4.1"
+    SYNTAX      Integer32 (0..7)
+
+Dot1agCfmMDLevelOrNone ::= TEXTUAL-CONVENTION
+    DISPLAY-HINT "d"
+    STATUS      current
+    DESCRIPTION 
+        "Integer identifying the Maintenance Domain Level (MD Leve).  
+         Higher numbers correspond to higher Maintenance Domains, those 
+         with the greatest physical reach, with the highest values for 
+         customers' CFM packets.  Lower numbers correspond to lower 
+         Maintenance Domains, those with more limited physical reach, 
+         with the lowest values for CFM PDUs protecting single bridges 
+         or physical links.
+         
+         The value (-1) is reserved to indicate that no MA Level has 
+         been assigned."
+    REFERENCE   
+        "802.1ag clauses 18.3, 12.14.3.1.3:c"
+    SYNTAX      Integer32 (-1 | 0..7)
+
+Dot1agCfmMpDirection ::= TEXTUAL-CONVENTION
+    STATUS      current
+    DESCRIPTION 
+        "Indicates the direction in which the Maintenance association 
+         (MEP or MIP) faces on the bridge port:
+         
+         done(1)    Sends Continuity Check Messages away from the 
+                    MAC Relay Entity.
+         up(2)      Sends Continuity Check Messages towards the 
+                    MAC Relay Entity.
+        "
+    REFERENCE   
+        "802.1ag clauses 12.14.6.3.2:c"
+    SYNTAX      INTEGER { down(1), up(2) }
+
+Dot1agCfmPortStatus ::= TEXTUAL-CONVENTION
+    STATUS      current
+    DESCRIPTION 
+        "An enumerated value from the Port Status TLV from the last CCM 
+         received from the last MEP.  It indicates the ability of the  
+         Bridge Port on which the transmitting MEP resides to pass 
+         ordinary data, regardless of the status of the MAC (Table 
+         21-10).
+         
+         psNoPortStateTLV(0) Indicates either that no CCM has been 
+                             received or that no port status TLV was 
+                             present in the last CCM received.
+                             
+         psBlocked(1)        Ordinary data cannot pass freelyl through 
+                             the port on which the remote MEP resides.  
+                             Value of enableRmepDefect is equal to 
+                             false.
+                             
+         psUp(2)             Ordinary data can pass freely through the 
+                             port on which the remote MEP resides.  
+                             Value of enableRmepDefect is equal to true.
+                             
+         NOTE: A 0 value is used for psNoPortStateTLV, so that 
+               additional code points can be added in a manner 
+               consistent with the Dot1agCfmInterfaceStatus textual 
+               convention.
+        "
+    REFERENCE   
+        "12.14.7.6.3:f, 20.19.3 and 21.5.4"
+    SYNTAX      INTEGER { psNoPortStateTLV(0), psBlocked(1), psUp(2) }
+
+Dot1agCfmInterfaceStatus ::= TEXTUAL-CONVENTION
+    STATUS      current
+    DESCRIPTION 
+        "An enumerated value from the Interface Status TLV from the last 
+         CCM received from the last MEP.  It indicates the status of the 
+         Interface within which the MEP transmitting the CCM is 
+         configured, or the next lower Interface in the Interface Stack, 
+         if the MEP is not configured within an Interface.
+         
+         isNotInterfaceStatusTLV(0) Indicates either"
+
+
+END -- end of module IEEE8021-CFM-MIB.
+
+-- ============================================================
+-- *******************************************************************
+-- vim: ft=mib comments=\f\:\",\b\:\-\-,\:\-\-,\f\b\:- fo+=tcqlornw tw=72 nocin nosi sts=4 sw=4 et

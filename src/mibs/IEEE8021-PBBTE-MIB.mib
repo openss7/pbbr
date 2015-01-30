@@ -7,7 +7,7 @@ IMPORTS
         FROM IEEE8021-Q-BRIDGE-MIB
     IEEE8021BridgePortNumber, IEEE8021PbbComponentIdentifier, 
     IEEE8021PbbServiceIdentifier, IEEE8021PbbTeEsp, 
-    IEEE8021PbbTeProtectionGroupActiveRequest, 
+    IEEE8021PbbTeProtectionGroupActiveRequests, 
     IEEE8021PbbTeProtectionGroupConfigAdmin, 
     IEEE8021PbbTeProtectionGroupId, IEEE8021PbbTeTSidId, 
     IEEE8021VlanIndexOrWildcard, ieee802dot1mibs
@@ -421,7 +421,7 @@ Ieee8021PbbTeProtectionGroupConfigEntry ::= SEQUENCE {
     ieee8021PbbTeProtectionGroupConfigCommandStatus     IEEE8021PbbTeProtectionGroupConfigAdmin,
     ieee8021PbbTeProtectionGroupConfigCommandLast       IEEE8021PbbTeProtectionGroupConfigAdmin,
     ieee8021PbbTeProtectionGroupConfigCommandAdmin      IEEE8021PbbTeProtectionGroupConfigAdmin,
-    ieee8021PbbTeProtectionGroupConfigActiveRequests    IEEE8021PbbTeProtectionGroupActiveRequest,
+    ieee8021PbbTeProtectionGroupConfigActiveRequests    IEEE8021PbbTeProtectionGroupActiveRequests,
     ieee8021PbbTeProtectionGroupConfigWTR               Unsigned32,
     ieee8021PbbTeProtectionGroupConfigHoldOff           Unsigned32,
     ieee8021PbbTeProtectionGroupConfigNotifyEnable      TruthValue,
@@ -484,7 +484,7 @@ ieee8021PbbTeProtectionGroupConfigCommandAdmin OBJECT-TYPE
     ::= { ieee8021PbbTeProtectionGroupConfigEntry 4 }
 
 ieee8021PbbTeProtectionGroupConfigActiveRequests OBJECT-TYPE
-    SYNTAX      IEEE8021PbbTeProtectionGroupActiveRequest
+    SYNTAX      IEEE8021PbbTeProtectionGroupActiveRequests
     MAX-ACCESS  read-only
     STATUS      current
     DESCRIPTION 
