@@ -1950,7 +1950,7 @@ ieee8021QBridgeVIDXEntry OBJECT-TYPE
     SYNTAX      Ieee8021QBridgeVIDXEntry
     MAX-ACCESS  not-accessible
     STATUS      current
-    DESCRIPTION
+    DESCRIPTION 
         "An entry for the S-VID translation table which includes both 
          the Local and Relay S-VIDs."
     INDEX       { ieee8021BridgeBasePortComponentId, 
