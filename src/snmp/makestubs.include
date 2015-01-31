@@ -323,7 +323,31 @@ ieee8021TcMib_openss7.c ieee8021TcMib_openss7.h: mib2c mib2c.conf ../mibs/IEEE80
 	./mib2c -c ./mib2c.openss7.conf -f ieee8021TcMib_openss7 IEEE8021-TC-MIB::ieee8021TcMib
 	indent -nhnl ieee8021TcMib_openss7.[ch]
 
-# root = MODULE-IDENTITY,
+# root = isisMIB
+
+MIBPREFIXES += isisMIB
+
+isisMIB.mib: ../mibs/ISIS-MIB.mib
+	smidump -k ../mibs/ISIS-MIB.mib>$@ || :
+
+isisMIB.lint: ../mibs/ISIS-MIB.mib
+	smilint $(SMILINTIGNORES) -ms ../mibs/ISIS-MIB.mib>$@ 2>&1 || :
+
+isisMIB.tree: ../mibs/ISIS-MIB.mib
+	snmptranslate -Tp ISIS-MIB::isisMIB>$@ || :
+
+isisMIB_simple.c isisMIB_simple.h: mib2c mib2c.conf ../mibs/ISIS-MIB.mib
+	./mib2c -c ./mib2c.conf -f isisMIB_simple ISIS-MIB::isisMIB
+	indent -nhnl isisMIB_simple.[ch]
+
+isisMIB_storage.c isisMIB_storage.h: mib2c mib2c.conf ../mibs/ISIS-MIB.mib
+	./mib2c -c ./mib2c.storage.conf -f isisMIB_storage ISIS-MIB::isisMIB
+	indent -nhnl isisMIB_storage.[ch]
+
+isisMIB_openss7.c isisMIB_openss7.h: mib2c mib2c.conf ../mibs/ISIS-MIB.mib
+	./mib2c -c ./mib2c.openss7.conf -f isisMIB_openss7 ISIS-MIB::isisMIB
+	indent -nhnl isisMIB_openss7.[ch]
+
 # root = lldpXDot1EvbExtensions
 
 MIBPREFIXES += lldpXDot1EvbExtensions
@@ -374,7 +398,6 @@ lldpXdot1MIB_openss7.c lldpXdot1MIB_openss7.h: mib2c mib2c.conf ../mibs/LLDP-EXT
 	./mib2c -c ./mib2c.openss7.conf -f lldpXdot1MIB_openss7 LLDP-EXT-DOT1-MIB::lldpXdot1MIB
 	indent -nhnl lldpXdot1MIB_openss7.[ch]
 
-# root = MODULE-IDENTITY,
 # root = lldpV2Xdot1MIB
 
 MIBPREFIXES += lldpV2Xdot1MIB
@@ -425,7 +448,6 @@ lldpXdot3MIB_openss7.c lldpXdot3MIB_openss7.h: mib2c mib2c.conf ../mibs/LLDP-EXT
 	./mib2c -c ./mib2c.openss7.conf -f lldpXdot3MIB_openss7 LLDP-EXT-DOT3-MIB::lldpXdot3MIB
 	indent -nhnl lldpXdot3MIB_openss7.[ch]
 
-# root = MODULE-IDENTITY,
 # root = lldpV2Xdot3MIB
 
 MIBPREFIXES += lldpV2Xdot3MIB
@@ -501,7 +523,6 @@ lldpMIB_openss7.c lldpMIB_openss7.h: mib2c mib2c.conf ../mibs/LLDP-MIB.mib
 	./mib2c -c ./mib2c.openss7.conf -f lldpMIB_openss7 LLDP-MIB::lldpMIB
 	indent -nhnl lldpMIB_openss7.[ch]
 
-# root = MODULE-IDENTITY,
 # root = lldpV2MIB
 
 MIBPREFIXES += lldpV2MIB
@@ -527,7 +548,6 @@ lldpV2MIB_openss7.c lldpV2MIB_openss7.h: mib2c mib2c.conf ../mibs/LLDP-V2-MIB.mi
 	./mib2c -c ./mib2c.openss7.conf -f lldpV2MIB_openss7 LLDP-V2-MIB::lldpV2MIB
 	indent -nhnl lldpV2MIB_openss7.[ch]
 
-# root = MODULE-IDENTITY,
 # root = lldpV2TcMIB
 
 MIBPREFIXES += lldpV2TcMIB
@@ -552,4 +572,29 @@ lldpV2TcMIB_storage.c lldpV2TcMIB_storage.h: mib2c mib2c.conf ../mibs/LLDP-V2-TC
 lldpV2TcMIB_openss7.c lldpV2TcMIB_openss7.h: mib2c mib2c.conf ../mibs/LLDP-V2-TC-MIB.mib
 	./mib2c -c ./mib2c.openss7.conf -f lldpV2TcMIB_openss7 LLDP-V2-TC-MIB::lldpV2TcMIB
 	indent -nhnl lldpV2TcMIB_openss7.[ch]
+
+# root = ptopoMIB
+
+MIBPREFIXES += ptopoMIB
+
+ptopoMIB.mib: ../mibs/PTOPO-MIB.mib
+	smidump -k ../mibs/PTOPO-MIB.mib>$@ || :
+
+ptopoMIB.lint: ../mibs/PTOPO-MIB.mib
+	smilint $(SMILINTIGNORES) -ms ../mibs/PTOPO-MIB.mib>$@ 2>&1 || :
+
+ptopoMIB.tree: ../mibs/PTOPO-MIB.mib
+	snmptranslate -Tp PTOPO-MIB::ptopoMIB>$@ || :
+
+ptopoMIB_simple.c ptopoMIB_simple.h: mib2c mib2c.conf ../mibs/PTOPO-MIB.mib
+	./mib2c -c ./mib2c.conf -f ptopoMIB_simple PTOPO-MIB::ptopoMIB
+	indent -nhnl ptopoMIB_simple.[ch]
+
+ptopoMIB_storage.c ptopoMIB_storage.h: mib2c mib2c.conf ../mibs/PTOPO-MIB.mib
+	./mib2c -c ./mib2c.storage.conf -f ptopoMIB_storage PTOPO-MIB::ptopoMIB
+	indent -nhnl ptopoMIB_storage.[ch]
+
+ptopoMIB_openss7.c ptopoMIB_openss7.h: mib2c mib2c.conf ../mibs/PTOPO-MIB.mib
+	./mib2c -c ./mib2c.openss7.conf -f ptopoMIB_openss7 PTOPO-MIB::ptopoMIB
+	indent -nhnl ptopoMIB_openss7.[ch]
 
