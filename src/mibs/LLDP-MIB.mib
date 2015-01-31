@@ -1735,7 +1735,7 @@ lldpRemOrgDefInfoSubtype OBJECT-TYPE
         "The integer value used to identify the subtype of the 
          organizationally defined information received from the 
          remote system.
-
+         
          The subtype value is required to identify different instances 
          of organizationally defined information that could not be 
          retrieved without a unique identifier that indicates the 
