@@ -5,26 +5,25 @@
 IEEE8021-SPB-MIB DEFINITIONS ::= BEGIN
 
 IMPORTS
-	MODULE-IDENTITY, OBJECT-TYPE, Integer32, Unsigned32
-		FROM SNMPv2-SMI
-	RowStatus, MacAddress, TruthValue, TEXTUAL-CONVENTION
-		FROM SNMPv2-TC
-	ieee802dot1mibs, IEEE8021PbbIngressEgress, 
-	IEEE8021BridgePortNumber, IEEE8021PbbServiceIdentifier,
-        IEEE8021PbbTeEsp
-		FROM IEEE8021-TC-MIB
-	ieee8021BridgeBasePort
-		FROM IEEE8021-BRIDGE-MIB
-	VlanId, VlanIdOrNone, VlanIdOrAny
-		FROM Q-BRIDGE-MIB
-	dot1agCfmMepEntry, dot1agCfmMdIndex, dot1agCfmMaIndex
-		FROM IEEE8021-CFM-MIB
-	InterfaceIndexOrZero
-		FROM IF-MIB
-	SnmpAdminString
-		FROM SNMP-FRAMEWORK-MIB
-	MODULE-COMPLIANCE, OBJECT-GROUP
-		FROM SNMPv2-CONF;
+    ieee8021BridgeBasePort
+        FROM IEEE8021-BRIDGE-MIB
+    dot1agCfmMaIndex, dot1agCfmMdIndex, dot1agCfmMepEntry
+        FROM IEEE8021-CFM-MIB
+    IEEE8021BridgePortNumber, IEEE8021PbbIngressEgress, 
+    IEEE8021PbbServiceIdentifier, IEEE8021PbbTeEsp, ieee802dot1mibs
+        FROM IEEE8021-TC-MIB
+    InterfaceIndexOrZero
+        FROM IF-MIB
+    VlanId, VlanIdOrAny, VlanIdOrNone
+        FROM Q-BRIDGE-MIB
+    SnmpAdminString
+        FROM SNMP-FRAMEWORK-MIB
+    MODULE-COMPLIANCE, OBJECT-GROUP
+        FROM SNMPv2-CONF
+    Integer32, MODULE-IDENTITY, OBJECT-TYPE, Unsigned32
+        FROM SNMPv2-SMI
+    MacAddress, RowStatus, TEXTUAL-CONVENTION, TruthValue
+        FROM SNMPv2-TC;
 
 ieee8021SpbMib MODULE-IDENTITY
     LAST-UPDATED "201305130000Z"
