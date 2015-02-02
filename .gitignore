@@ -1,2 +1,4 @@
 .*.sw[nop]
 README.html
+*.log
+tmp*.txt
