@@ -3,11 +3,12 @@
 This package is an implementation of Provider Backbone Bridging (PBB) as specified
 in IEEE 802.1ah and IEEE 802.1Q (2011).  It provides a separate 'bridge' device for
 the Linux Kernel that can act as a PBB-BEB and/or PBB-TE backbone bridge.
+It also implements IEEE 802.1aq-2012 (SPB) and IEEE 802.1Qbp-2014 (ECMP).
 
 ## Objectives
 
 The objective of PBBR is to create a bridge device for Linux that provides an SPBM
-Level-1/Level-2 bridge for the Linux kernel.
+ECMP Level-1/Level-2 bridge for the Linux kernel.
 The primary uses are as follows:
 
 1. Using the Linux Kernel as a PBB-TE provider-bridge (Level-2 Intermediate System).
@@ -49,10 +50,12 @@ back holes or significant network degradation dues to broadcast/multicast loops.
 
 SPB (Shortest Path Bridging) using the IS-IS link-state protocol is far more
 resilient to network component and path outages than is STP and MSTP, and
-exhibits faster convergence than STP.  When **`tun/tap`** ports are utilized on a
-BEB bridge in the host system, there is no longer a need for "learning"
-customer MACs on these **`virtio`** ports.  This means that network convergence is
-faster, for both startup and shutdown of **`virtio`** NIC instances.
+exhibits faster convergence than STP.  ECMP (Equal Cost Multiple Path) and flow
+filtering (F-TAG) can also be optionally activated for efficient load-sharing.
+When **`tun/tap`** ports are utilized on a BEB bridge in the host system, there
+is no longer a need for "learning" customer MACs on these **`virtio`** ports.
+This means that network convergence is faster, for both startup and shutdown of
+**`virtio`** NIC instances.
 
 ### Security
 
@@ -109,8 +112,9 @@ Port aggregation utilizing the **`macvtap`** approach relies on coordination
 between the host and external bridges.  Port aggregation with GRE and VxLAN
 approaches is complex and inefficient.
 
-Utilizing SPBM and ECF at the BEB in the host achieves port aggregation and load
-balancing that is completely transparent to non-participating backbone bridges.
+Utilizing SPBM, ECF and ECMP at the BEB in the host achieves port aggregation
+and load balancing that is completely transparent to non-participating backbone
+bridges.
 
 ### Full Mesh
 
@@ -137,6 +141,10 @@ GRE or VxLAN tunnels.
 Monitoring of failures with PBB utilizes traditional and standard approaches.
 On the other hand, GRE tunnels, VxLAN and Open vSwitch approaches make failure
 monitoring difficult.
+
+Furthermore, as IS-IS is a link-state protocol that provides an entire network
+view at each IS-IS node, it is possible to determine the total state of the
+network by simply having a management station participate in the IS-IS protocol.
 
 ### Data Path Performance
 
