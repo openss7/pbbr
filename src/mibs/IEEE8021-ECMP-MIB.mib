@@ -27,7 +27,7 @@ ieee8021EcmpMib MODULE-IDENTITY
     ORGANIZATION 
         "IEEE 802.1 Working Group"
     CONTACT-INFO 
-        "  WG-URL: http://grouper.ieee.org/groups/802/1/index.html
+        "WG-URL:   http://grouper.ieee.org/groups/802/1/index.html
          WG-EMail: stds-802-1@ieee.org
          
           Contact: Ben Mack-Crane
