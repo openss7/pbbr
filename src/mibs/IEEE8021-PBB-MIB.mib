@@ -210,7 +210,7 @@ ieee8021PbbVipISid OBJECT-TYPE
         "The I-SID for this VIP.
          
          Within an I-Component, an VIP can only be serviced by one 
-         I-SID.  And the ISID is a configurable parameter of the VIP.
+         I-SID.  And the I-SID is a configurable parameter of the VIP.
          
          The value of this object must be persistent across 
          reinitializations of the management system."
@@ -384,7 +384,7 @@ ieee8021PbbPipName OBJECT-TYPE
     MAX-ACCESS  read-create
     STATUS      current
     DESCRIPTION 
-        "A test string of local significance which identifies the PIP 
+        "A text string of local significance which identifies the PIP 
          within a BEB."
     DEFVAL      { "" }
     ::= { ieee8021PbbPipEntry 3 }
