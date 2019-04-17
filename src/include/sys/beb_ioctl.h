@@ -71,6 +71,17 @@ typedef unsigned long beb_timer_t;
  * Data link options
  */
 typedef struct beb_opt_conf_dl {
+	unsigned int ifIndex;
+	uint64_t delayExceededDiscards;
+	uint64_t mtuExceededDiscards;
+	uint32_t capabilities;
+	uint32_t typeCapabilities;
+	uint32_t type;
+	bool external;
+	uint32_t adminPointToPoint;
+	bool operPointToPoint;
+	char name[32];
+	int nameLen;
 } beb_opt_conf_dl_t;
 
 /*
@@ -79,10 +90,39 @@ typedef struct beb_opt_conf_dl {
 typedef struct beb_opt_conf_ts {
 } beb_opt_conf_ts_t;
 
+enum ieee8021BridgeBaseComponentType {
+	iComponent = 1,
+	bComponent = 2,
+	cVlanComponent = 3,
+	sVlanComponent = 4,
+	dBridgeComponent = 5,
+	erComponrnt = 6,
+	tComponent = 7,
+};
+
+enum ieee8021BridgeBaseDeviceCapabilities {
+	dot1ExtendedFilteringServices = 0,
+	dot1DTrafficClasses = 1,
+	dot1QStaticEntryIndividualPOrt = 2,
+	dot1QIVLCapable = 3,
+	dot1QSVLCapable = 4,
+	dot1QHybridCapable = 5,
+	dot1QConfigurablePVIDTagging = 6,
+	dot1DLocalVLANCapable = 7,
+};
+
 /*
  * Bridge options
  */
 typedef struct beb_opt_conf_br {
+	uint8_t address[6];
+	int addressLen;
+	int numPorts;
+	enum ieee8021BridgeBaseComponentType componentType;
+	unsigned int deviceCapablities;
+	bool trafficClassesEnabled;
+	bool mmrpEnabledStatus;
+	unsigned int rowStatus;
 } beb_opt_conf_br_t;
 
 /*
