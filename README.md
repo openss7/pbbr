@@ -1,9 +1,10 @@
 # PBBR (Provider Backbone Bridge)
 
-This package is an implementation of Provider Backbone Bridging (PBB) as specified
-in IEEE 802.1ah and IEEE 802.1Q (2011).  It provides a separate 'bridge' device for
-the Linux Kernel that can act as a PBB-BEB and/or PBB-TE backbone bridge.
-It also implements IEEE 802.1aq-2012 (SPB) and IEEE 802.1Qbp-2014 (ECMP).
+This package is an implementation of Provider Backbone Bridging (PBB) as specified in IEEE 802.1ah
+and IEEE 802.1Q (2011) (both now part of IEEE 802.1Q-2018).  It provides a separate 'bridge' device
+for the Linux Kernel that can act as a PBB-BEB and/or PBB-TE backbone bridge.  It also implements
+IEEE 802.1aq-2012 (SPB) and IEEE 802.1Qbp-2014 (ECMP) (both now part of IEEE
+802.1Q-2018).
 
 ## Objectives
 
